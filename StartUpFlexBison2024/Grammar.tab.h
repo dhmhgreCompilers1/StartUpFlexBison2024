@@ -44,6 +44,15 @@
 
 #ifndef YY_YY_GRAMMAR_TAB_H_INCLUDED
 # define YY_YY_GRAMMAR_TAB_H_INCLUDED
+// "%code requires" blocks.
+#line 3 "Grammar.y"
+
+	#include <map>
+	#include <string>
+	using namespace std;
+	extern map<string, int> symbol_table;
+
+#line 56 "Grammar.tab.h"
 
 
 # include <cstdlib> // std::abort
@@ -178,7 +187,7 @@
 #endif
 
 namespace yy {
-#line 182 "Grammar.tab.h"
+#line 191 "Grammar.tab.h"
 
 
 
@@ -224,7 +233,7 @@ namespace yy {
     YYerror = 256,                 // error
     YYUNDEF = 257,                 // "invalid token"
     NUMBER = 258,                  // NUMBER
-    PLUS = 259                     // PLUS
+    IDENTIFIER = 259               // IDENTIFIER
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -241,18 +250,25 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 7, ///< Number of tokens.
+        YYNTOKENS = 13, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
         S_YYUNDEF = 2,                           // "invalid token"
         S_NUMBER = 3,                            // NUMBER
-        S_PLUS = 4,                              // PLUS
+        S_IDENTIFIER = 4,                        // IDENTIFIER
         S_5_ = 5,                                // '+'
-        S_6_ = 6,                                // ';'
-        S_YYACCEPT = 7,                          // $accept
-        S_expression_list = 8,                   // expression_list
-        S_expression = 9                         // expression
+        S_6_ = 6,                                // '-'
+        S_7_ = 7,                                // '*'
+        S_8_ = 8,                                // '/'
+        S_9_ = 9,                                // '^'
+        S_10_ = 10,                              // '='
+        S_11_ = 11,                              // ';'
+        S_12_n_ = 12,                            // '\n'
+        S_YYACCEPT = 13,                         // $accept
+        S_expression_list = 14,                  // expression_list
+        S_separator = 15,                        // separator
+        S_expression = 16                        // expression
       };
     };
 
@@ -736,9 +752,9 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 9,     ///< Last index in yytable_.
-      yynnts_ = 3,  ///< Number of nonterminal symbols.
-      yyfinal_ = 4 ///< Termination state number.
+      yylast_ = 24,     ///< Last index in yytable_.
+      yynnts_ = 4,  ///< Number of nonterminal symbols.
+      yyfinal_ = 6 ///< Termination state number.
     };
 
 
@@ -747,7 +763,7 @@ namespace yy {
 
 
 } // yy
-#line 751 "Grammar.tab.h"
+#line 767 "Grammar.tab.h"
 
 
 

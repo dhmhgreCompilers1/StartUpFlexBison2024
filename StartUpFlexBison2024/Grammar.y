@@ -1,29 +1,50 @@
 %language "C++"
 
+%code requires{
+	#include <map>
+	#include <string>
+	using namespace std;
+	extern map<string, int> symbol_table;
+}
+
 %{
+using namespace std;
 #include <iostream>
 #include <stdlib.h>
 #include "grammar.tab.h"
+#include <cmath>
 extern int yylex(yy::parser::value_type *val);
 extern FILE *yyin;
+
+
 %}
 
 
 
 %start expression_list
-%token NUMBER PLUS
-%left '+'
+%token NUMBER IDENTIFIER
+%left '+' '-' 
+%left '*' '/'
+%left '^'
+%right '='
 %%
 
 // one or more expressions 
 expression_list: 
-	  expression_list  expression ';' { std::cout << "Result: " << $2 << std::endl; }
-	| expression ';'  { std::cout << "Result: " << $1 << std::endl; }
+	  expression_list  expression separator { std::cout << "Result: " << $2 << std::endl; }
+	| expression separator  { std::cout << "Result: " << $1 << std::endl; }
 	;
+separator: ';' | '\n';
 	
 expression : 
-	  expression '+' expression	{ $$ = $1 + $3;}
-	| NUMBER  { $$ = $1; }	
+	   expression '+' expression	{ $$ = $1 + $3;}
+	 | expression '-' expression	{ $$ = $1 - $3;}
+	 | expression '*' expression	{ $$ = $1 * $3;}
+	 | expression '/' expression	{ $$ = $1 / $3;}
+	 | expression '^' expression	{ $$ = (int)pow((double)$1,(double)($3));}
+	 | IDENTIFIER '=' expression	{ $$ = $3; }
+	 | IDENTIFIER 
+	 | NUMBER  { $$ = $1; }	
 	;
 
 
