@@ -49,10 +49,11 @@
 
 	#include <map>
 	#include <string>
+	#include "Tree.h"
 	using namespace std;
 	extern map<string, int> symbol_table;
 
-#line 56 "Grammar.tab.h"
+#line 57 "Grammar.tab.h"
 
 
 # include <cstdlib> // std::abort
@@ -187,7 +188,7 @@
 #endif
 
 namespace yy {
-#line 191 "Grammar.tab.h"
+#line 192 "Grammar.tab.h"
 
 
 
@@ -203,7 +204,15 @@ namespace yy {
     typedef YYSTYPE value_type;
 #else
     /// Symbol semantic values.
-    typedef int value_type;
+    union value_type
+    {
+#line 22 "Grammar.y"
+
+	CNode *node;
+
+#line 214 "Grammar.tab.h"
+
+    };
 #endif
     /// Backward compatibility (Bison 3.8).
     typedef value_type semantic_type;
@@ -250,7 +259,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 13, ///< Number of tokens.
+        YYNTOKENS = 12, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -264,11 +273,10 @@ namespace yy {
         S_9_ = 9,                                // '^'
         S_10_ = 10,                              // '='
         S_11_ = 11,                              // ';'
-        S_12_n_ = 12,                            // '\n'
-        S_YYACCEPT = 13,                         // $accept
-        S_expression_list = 14,                  // expression_list
-        S_separator = 15,                        // separator
-        S_expression = 16                        // expression
+        S_YYACCEPT = 12,                         // $accept
+        S_expression_list = 13,                  // expression_list
+        S_separator = 14,                        // separator
+        S_expression = 15                        // expression
       };
     };
 
@@ -752,7 +760,7 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 24,     ///< Last index in yytable_.
+      yylast_ = 23,     ///< Last index in yytable_.
       yynnts_ = 4,  ///< Number of nonterminal symbols.
       yyfinal_ = 6 ///< Termination state number.
     };
@@ -763,7 +771,7 @@ namespace yy {
 
 
 } // yy
-#line 767 "Grammar.tab.h"
+#line 775 "Grammar.tab.h"
 
 
 

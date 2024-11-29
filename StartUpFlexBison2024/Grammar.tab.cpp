@@ -37,19 +37,18 @@
 
 
 // First part of user prologue.
-#line 10 "Grammar.y"
+#line 11 "Grammar.y"
 
 using namespace std;
 #include <iostream>
 #include <stdlib.h>
+#include "Tree.h"
 #include "grammar.tab.h"
 #include <cmath>
 extern int yylex(yy::parser::value_type *val);
 extern FILE *yyin;
 
-
-
-#line 53 "Grammar.tab.cpp"
+#line 52 "Grammar.tab.cpp"
 
 
 #include "Grammar.tab.h"
@@ -127,7 +126,7 @@ extern FILE *yyin;
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 131 "Grammar.tab.cpp"
+#line 130 "Grammar.tab.cpp"
 
   /// Build a parser object.
   parser::parser ()
@@ -581,61 +580,61 @@ namespace yy {
           switch (yyn)
             {
   case 2: // expression_list: expression_list expression separator
-#line 34 "Grammar.y"
-                                                { std::cout << "Result: " << yystack_[1].value << std::endl; }
-#line 587 "Grammar.tab.cpp"
+#line 37 "Grammar.y"
+                                                {  }
+#line 586 "Grammar.tab.cpp"
     break;
 
   case 3: // expression_list: expression separator
-#line 35 "Grammar.y"
-                                { std::cout << "Result: " << yystack_[1].value << std::endl; }
-#line 593 "Grammar.tab.cpp"
+#line 38 "Grammar.y"
+                                {  }
+#line 592 "Grammar.tab.cpp"
     break;
 
-  case 6: // expression: expression '+' expression
-#line 40 "Grammar.y"
-                                        { yylhs.value = yystack_[2].value + yystack_[0].value;}
-#line 599 "Grammar.tab.cpp"
-    break;
-
-  case 7: // expression: expression '-' expression
-#line 41 "Grammar.y"
-                                        { yylhs.value = yystack_[2].value - yystack_[0].value;}
-#line 605 "Grammar.tab.cpp"
-    break;
-
-  case 8: // expression: expression '*' expression
-#line 42 "Grammar.y"
-                                        { yylhs.value = yystack_[2].value * yystack_[0].value;}
-#line 611 "Grammar.tab.cpp"
-    break;
-
-  case 9: // expression: expression '/' expression
+  case 5: // expression: expression '+' expression
 #line 43 "Grammar.y"
-                                        { yylhs.value = yystack_[2].value / yystack_[0].value;}
-#line 617 "Grammar.tab.cpp"
+                                        { }
+#line 598 "Grammar.tab.cpp"
     break;
 
-  case 10: // expression: expression '^' expression
+  case 6: // expression: expression '-' expression
 #line 44 "Grammar.y"
-                                        { yylhs.value = (int)pow((double)yystack_[2].value,(double)(yystack_[0].value));}
-#line 623 "Grammar.tab.cpp"
+                                        { }
+#line 604 "Grammar.tab.cpp"
     break;
 
-  case 11: // expression: IDENTIFIER '=' expression
+  case 7: // expression: expression '*' expression
 #line 45 "Grammar.y"
-                                        { yylhs.value = yystack_[0].value; }
-#line 629 "Grammar.tab.cpp"
+                                        { }
+#line 610 "Grammar.tab.cpp"
     break;
 
-  case 13: // expression: NUMBER
+  case 8: // expression: expression '/' expression
+#line 46 "Grammar.y"
+                                        { }
+#line 616 "Grammar.tab.cpp"
+    break;
+
+  case 9: // expression: expression '^' expression
 #line 47 "Grammar.y"
-                   { yylhs.value = yystack_[0].value; }
-#line 635 "Grammar.tab.cpp"
+                                        { }
+#line 622 "Grammar.tab.cpp"
+    break;
+
+  case 10: // expression: IDENTIFIER '=' expression
+#line 48 "Grammar.y"
+                                        { }
+#line 628 "Grammar.tab.cpp"
+    break;
+
+  case 12: // expression: NUMBER
+#line 50 "Grammar.y"
+                   {  }
+#line 634 "Grammar.tab.cpp"
     break;
 
 
-#line 639 "Grammar.tab.cpp"
+#line 638 "Grammar.tab.cpp"
 
             default:
               break;
@@ -832,66 +831,66 @@ namespace yy {
   parser::yypact_[] =
   {
        0,   -10,    -9,    15,     5,     0,   -10,     5,     0,     0,
-       0,     0,     0,   -10,   -10,   -10,   -10,   -10,    13,    13,
-      14,    14,   -10
+       0,     0,     0,   -10,   -10,   -10,   -10,    13,    13,     8,
+       8,   -10
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       0,    13,    12,     0,     0,     0,     1,     0,     0,     0,
-       0,     0,     0,     4,     5,     3,    11,     2,     6,     7,
-       8,     9,    10
+       0,    12,    11,     0,     0,     0,     1,     0,     0,     0,
+       0,     0,     0,     4,     3,    10,     2,     5,     6,     7,
+       8,     9
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -10,   -10,    17,    -3
+     -10,   -10,    16,    -3
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     3,    15,     4
+       0,     3,    14,     4
   };
 
   const signed char
   parser::yytable_[] =
   {
-       7,     5,    16,     1,     2,    18,    19,    20,    21,    22,
-       8,     9,    10,    11,    12,     6,    13,    14,     1,     2,
-      10,    11,    12,    12,    17
+       7,     5,    15,     1,     2,    17,    18,    19,    20,    21,
+       8,     9,    10,    11,    12,     6,    13,    12,     1,     2,
+      10,    11,    12,    16
   };
 
   const signed char
   parser::yycheck_[] =
   {
        3,    10,     5,     3,     4,     8,     9,    10,    11,    12,
-       5,     6,     7,     8,     9,     0,    11,    12,     3,     4,
-       7,     8,     9,     9,     7
+       5,     6,     7,     8,     9,     0,    11,     9,     3,     4,
+       7,     8,     9,     7
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     3,     4,    14,    16,    10,     0,    16,     5,     6,
-       7,     8,     9,    11,    12,    15,    16,    15,    16,    16,
-      16,    16,    16
+       0,     3,     4,    13,    15,    10,     0,    15,     5,     6,
+       7,     8,     9,    11,    14,    15,    14,    15,    15,    15,
+      15,    15
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    13,    14,    14,    15,    15,    16,    16,    16,    16,
-      16,    16,    16,    16
+       0,    12,    13,    13,    14,    15,    15,    15,    15,    15,
+      15,    15,    15
   };
 
   const signed char
   parser::yyr2_[] =
   {
-       0,     2,     3,     2,     1,     1,     3,     3,     3,     3,
-       3,     3,     1,     1
+       0,     2,     3,     2,     1,     3,     3,     3,     3,     3,
+       3,     1,     1
   };
 
 
@@ -902,7 +901,7 @@ namespace yy {
   const parser::yytname_[] =
   {
   "\"end of file\"", "error", "\"invalid token\"", "NUMBER", "IDENTIFIER",
-  "'+'", "'-'", "'*'", "'/'", "'^'", "'='", "';'", "'\\n'", "$accept",
+  "'+'", "'-'", "'*'", "'/'", "'^'", "'='", "';'", "$accept",
   "expression_list", "separator", "expression", YY_NULLPTR
   };
 #endif
@@ -912,8 +911,8 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    34,    34,    35,    37,    37,    40,    41,    42,    43,
-      44,    45,    46,    47
+       0,    37,    37,    38,    40,    43,    44,    45,    46,    47,
+      48,    49,    50
   };
 
   void
@@ -953,7 +952,7 @@ namespace yy {
     translate_table[] =
     {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-      12,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     7,     5,     2,     6,     2,     8,     2,     2,
@@ -991,9 +990,9 @@ namespace yy {
   }
 
 } // yy
-#line 995 "Grammar.tab.cpp"
+#line 994 "Grammar.tab.cpp"
 
-#line 51 "Grammar.y"
+#line 54 "Grammar.y"
 
 
 int main(int argc, char **argv){

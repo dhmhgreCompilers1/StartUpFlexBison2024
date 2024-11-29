@@ -3,6 +3,7 @@
 %code requires{
 	#include <map>
 	#include <string>
+	#include "Tree.h"
 	using namespace std;
 	extern map<string, int> symbol_table;
 }
@@ -11,14 +12,16 @@
 using namespace std;
 #include <iostream>
 #include <stdlib.h>
+#include "Tree.h"
 #include "grammar.tab.h"
 #include <cmath>
 extern int yylex(yy::parser::value_type *val);
 extern FILE *yyin;
-
-
 %}
 
+%union {
+	CNode *node;
+};
 
 
 %start expression_list
@@ -31,20 +34,20 @@ extern FILE *yyin;
 
 // one or more expressions 
 expression_list: 
-	  expression_list  expression separator { std::cout << "Result: " << $2 << std::endl; }
-	| expression separator  { std::cout << "Result: " << $1 << std::endl; }
+	  expression_list  expression separator {  }
+	| expression separator  {  }
 	;
-separator: ';' | '\n';
+separator: ';';
 	
 expression : 
-	   expression '+' expression	{ $$ = $1 + $3;}
-	 | expression '-' expression	{ $$ = $1 - $3;}
-	 | expression '*' expression	{ $$ = $1 * $3;}
-	 | expression '/' expression	{ $$ = $1 / $3;}
-	 | expression '^' expression	{ $$ = (int)pow((double)$1,(double)($3));}
-	 | IDENTIFIER '=' expression	{ $$ = $3; }
+	   expression '+' expression	{ }
+	 | expression '-' expression	{ }
+	 | expression '*' expression	{ }
+	 | expression '/' expression	{ }
+	 | expression '^' expression	{ }
+	 | IDENTIFIER '=' expression	{ }
 	 | IDENTIFIER 
-	 | NUMBER  { $$ = $1; }	
+	 | NUMBER  {  }	
 	;
 
 

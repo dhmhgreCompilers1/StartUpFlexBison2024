@@ -355,8 +355,8 @@ static void yynoreturn yy_fatal_error ( const char* msg  );
 	(yy_hold_char) = *yy_cp; \
 	*yy_cp = '\0'; \
 	(yy_c_buf_p) = yy_cp;
-#define YY_NUM_RULES 11
-#define YY_END_OF_BUFFER 12
+#define YY_NUM_RULES 10
+#define YY_END_OF_BUFFER 11
 /* This struct is not used in this scanner,
    but its presence is necessary. */
 struct yy_trans_info
@@ -364,24 +364,24 @@ struct yy_trans_info
 	flex_int32_t yy_verify;
 	flex_int32_t yy_nxt;
 	};
-static const flex_int16_t yy_accept[18] =
+static const flex_int16_t yy_accept[17] =
     {   0,
-        0,    0,   12,   11,   10,    9,    4,    2,    3,    5,
-        8,    8,    1,    7,    6,    8,    0
+        0,    0,   11,   10,    9,    4,    2,    3,    5,    8,
+        8,    1,    7,    6,    8,    0
     } ;
 
 static const YY_CHAR yy_ec[256] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
+        1,    1,    1,    1,    1,    1,    1,    1,    2,    2,
         1,    1,    2,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    2,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    4,    5,    1,    6,    1,    7,    8,    9,    9,
-        9,    9,    9,    9,    9,    9,    9,    1,   10,    1,
-       11,    1,    1,    1,    1,    1,    1,    1,    1,    1,
+        1,    3,    4,    1,    5,    1,    6,    7,    8,    8,
+        8,    8,    8,    8,    8,    8,    8,    1,    9,    1,
+       10,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,   12,    1,    1,    1,    1,    1,    1,
+        1,    1,    1,   11,    1,    1,    1,    1,    1,    1,
 
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -402,36 +402,36 @@ static const YY_CHAR yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static const YY_CHAR yy_meta[13] =
+static const YY_CHAR yy_meta[12] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    2,    2,    1,
-        1,    1
+        1,    1,    1,    1,    1,    1,    2,    2,    1,    1,
+        1
     } ;
 
-static const flex_int16_t yy_base[19] =
+static const flex_int16_t yy_base[18] =
     {   0,
-        0,    0,   14,   15,   15,   15,   15,   15,   15,   15,
-       15,    0,   15,   15,   15,    0,   15,   11
+        0,    0,   13,   14,   14,   14,   14,   14,   14,   14,
+        0,   14,   14,   14,    0,   14,   10
     } ;
 
-static const flex_int16_t yy_def[19] =
+static const flex_int16_t yy_def[18] =
     {   0,
-       17,    1,   17,   17,   17,   17,   17,   17,   17,   17,
-       17,   18,   17,   17,   17,   18,    0,   17
+       16,    1,   16,   16,   16,   16,   16,   16,   16,   16,
+       17,   16,   16,   16,   17,    0,   16
     } ;
 
-static const flex_int16_t yy_nxt[28] =
+static const flex_int16_t yy_nxt[26] =
     {   0,
         4,    5,    6,    7,    8,    9,   10,   11,   12,   13,
-       14,   15,   16,   17,    3,   17,   17,   17,   17,   17,
-       17,   17,   17,   17,   17,   17,   17
+       14,   15,   16,    3,   16,   16,   16,   16,   16,   16,
+       16,   16,   16,   16,   16
     } ;
 
-static const flex_int16_t yy_chk[28] =
+static const flex_int16_t yy_chk[26] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,   18,    3,   17,   17,   17,   17,   17,   17,
-       17,   17,   17,   17,   17,   17,   17
+        1,   17,    3,   16,   16,   16,   16,   16,   16,   16,
+       16,   16,   16,   16,   16
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -450,10 +450,13 @@ int yy_flex_debug = 0;
 char *yytext;
 #line 1 "Grammar.l"
 #line 4 "Grammar.l"
+#include <iostream>
+#include <stdlib.h>
 #include "grammar.tab.h"
+#include "Tree.h"
 #define YY_DECL int yylex(yy::parser::value_type *val)
-#line 455 "Grammar.flex.cpp"
-#line 456 "Grammar.flex.cpp"
+#line 458 "Grammar.flex.cpp"
+#line 459 "Grammar.flex.cpp"
 
 #define INITIAL 0
 
@@ -667,10 +670,10 @@ YY_DECL
 		}
 
 	{
-#line 8 "Grammar.l"
+#line 11 "Grammar.l"
 
 
-#line 673 "Grammar.flex.cpp"
+#line 676 "Grammar.flex.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -697,13 +700,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 18 )
+				if ( yy_current_state >= 17 )
 					yy_c = yy_meta[yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 15 );
+		while ( yy_base[yy_current_state] != 14 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -729,64 +732,59 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 10 "Grammar.l"
+#line 13 "Grammar.l"
 return ';';
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 11 "Grammar.l"
+#line 14 "Grammar.l"
 return '+';
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 12 "Grammar.l"
+#line 15 "Grammar.l"
 return '-';
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 13 "Grammar.l"
+#line 16 "Grammar.l"
 return '*';
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 14 "Grammar.l"
+#line 17 "Grammar.l"
 return '/';
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 15 "Grammar.l"
+#line 18 "Grammar.l"
 return '^';
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 16 "Grammar.l"
+#line 19 "Grammar.l"
 return '=';
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 18 "Grammar.l"
+#line 21 "Grammar.l"
 {
-	*val = atoi(yytext);
+	//val->node = new CNode(1);	
 	return yy::parser::token::NUMBER;
 }
 	YY_BREAK
 case 9:
 /* rule 9 can match eol */
 YY_RULE_SETUP
-#line 23 "Grammar.l"
-return '\n';
+#line 27 "Grammar.l"
+;
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 24 "Grammar.l"
-;
-	YY_BREAK
-case 11:
-YY_RULE_SETUP
-#line 26 "Grammar.l"
+#line 29 "Grammar.l"
 ECHO;
 	YY_BREAK
-#line 789 "Grammar.flex.cpp"
+#line 787 "Grammar.flex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1083,7 +1081,7 @@ static int yy_get_next_buffer (void)
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 18 )
+			if ( yy_current_state >= 17 )
 				yy_c = yy_meta[yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
@@ -1111,11 +1109,11 @@ static int yy_get_next_buffer (void)
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 18 )
+		if ( yy_current_state >= 17 )
 			yy_c = yy_meta[yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + yy_c];
-	yy_is_jam = (yy_current_state == 17);
+	yy_is_jam = (yy_current_state == 16);
 
 		return yy_is_jam ? 0 : yy_current_state;
 }
@@ -1791,7 +1789,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 26 "Grammar.l"
+#line 29 "Grammar.l"
 
 
 

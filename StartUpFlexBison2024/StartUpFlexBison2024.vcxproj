@@ -136,9 +136,11 @@
   <ItemGroup>
     <ClCompile Include="Grammar.flex.cpp" />
     <ClCompile Include="Grammar.tab.cpp" />
+    <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grammar.tab.h" />
+    <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="expressions.txt" />
