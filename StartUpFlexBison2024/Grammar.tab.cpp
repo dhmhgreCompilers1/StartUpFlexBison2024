@@ -580,56 +580,56 @@ namespace yy {
           switch (yyn)
             {
   case 2: // expression_list: expression_list expression separator
-#line 37 "Grammar.y"
-                                                {  }
+#line 38 "Grammar.y"
+                                         { root =(yylhs.value.node) = new CExpressionList((yystack_[2].value.node),(yystack_[1].value.node));  }
 #line 586 "Grammar.tab.cpp"
     break;
 
   case 3: // expression_list: expression separator
-#line 38 "Grammar.y"
-                                {  }
+#line 39 "Grammar.y"
+                                { root= (yylhs.value.node) = new CExpressionList((yystack_[1].value.node)); }
 #line 592 "Grammar.tab.cpp"
     break;
 
   case 5: // expression: expression '+' expression
-#line 43 "Grammar.y"
-                                        { }
+#line 44 "Grammar.y"
+                                { (yylhs.value.node) = new CAddition((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 598 "Grammar.tab.cpp"
     break;
 
   case 6: // expression: expression '-' expression
-#line 44 "Grammar.y"
-                                        { }
+#line 45 "Grammar.y"
+                                { (yylhs.value.node) = new CSubtraction((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 604 "Grammar.tab.cpp"
     break;
 
   case 7: // expression: expression '*' expression
-#line 45 "Grammar.y"
-                                        { }
+#line 46 "Grammar.y"
+                                { (yylhs.value.node) = new CMultiplication((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 610 "Grammar.tab.cpp"
     break;
 
   case 8: // expression: expression '/' expression
-#line 46 "Grammar.y"
-                                        { }
+#line 47 "Grammar.y"
+                                { (yylhs.value.node) = new CDivision((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 616 "Grammar.tab.cpp"
     break;
 
-  case 9: // expression: expression '^' expression
-#line 47 "Grammar.y"
-                                        { }
+  case 9: // expression: IDENTIFIER '=' expression
+#line 48 "Grammar.y"
+                                { (yylhs.value.node) = new CAssignment((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 622 "Grammar.tab.cpp"
     break;
 
-  case 10: // expression: IDENTIFIER '=' expression
-#line 48 "Grammar.y"
-                                        { }
+  case 10: // expression: IDENTIFIER
+#line 49 "Grammar.y"
+    { (yylhs.value.node) = (yystack_[0].value.node); }
 #line 628 "Grammar.tab.cpp"
     break;
 
-  case 12: // expression: NUMBER
+  case 11: // expression: NUMBER
 #line 50 "Grammar.y"
-                   {  }
+    { (yylhs.value.node) = (yystack_[0].value.node); }
 #line 634 "Grammar.tab.cpp"
     break;
 
@@ -830,67 +830,62 @@ namespace yy {
   const signed char
   parser::yypact_[] =
   {
-       0,   -10,    -9,    15,     5,     0,   -10,     5,     0,     0,
-       0,     0,     0,   -10,   -10,   -10,   -10,    13,    13,     8,
-       8,   -10
+       0,   -10,    -9,    13,     4,     0,   -10,     4,     0,     0,
+       0,     0,   -10,   -10,   -10,   -10,    11,    11,   -10,   -10
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       0,    12,    11,     0,     0,     0,     1,     0,     0,     0,
-       0,     0,     0,     4,     3,    10,     2,     5,     6,     7,
-       8,     9
+       0,    11,    10,     0,     0,     0,     1,     0,     0,     0,
+       0,     0,     4,     3,     9,     2,     5,     6,     7,     8
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-     -10,   -10,    16,    -3
+     -10,   -10,     7,    -3
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     3,    14,     4
+       0,     3,    13,     4
   };
 
   const signed char
   parser::yytable_[] =
   {
-       7,     5,    15,     1,     2,    17,    18,    19,    20,    21,
-       8,     9,    10,    11,    12,     6,    13,    12,     1,     2,
-      10,    11,    12,    16
+       7,     5,    14,     1,     2,    16,    17,    18,    19,     8,
+       9,    10,    11,     6,    15,    12,     1,     2,    10,    11
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       3,    10,     5,     3,     4,     8,     9,    10,    11,    12,
-       5,     6,     7,     8,     9,     0,    11,     9,     3,     4,
-       7,     8,     9,     7
+       3,    10,     5,     3,     4,     8,     9,    10,    11,     5,
+       6,     7,     8,     0,     7,    11,     3,     4,     7,     8
   };
 
   const signed char
   parser::yystos_[] =
   {
        0,     3,     4,    13,    15,    10,     0,    15,     5,     6,
-       7,     8,     9,    11,    14,    15,    14,    15,    15,    15,
-      15,    15
+       7,     8,    11,    14,    15,    14,    15,    15,    15,    15
   };
 
   const signed char
   parser::yyr1_[] =
   {
        0,    12,    13,    13,    14,    15,    15,    15,    15,    15,
-      15,    15,    15
+      15,    15
   };
 
   const signed char
   parser::yyr2_[] =
   {
        0,     2,     3,     2,     1,     3,     3,     3,     3,     3,
-       3,     1,     1
+       1,     1
   };
 
 
@@ -911,8 +906,8 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    37,    37,    38,    40,    43,    44,    45,    46,    47,
-      48,    49,    50
+       0,    38,    38,    39,    41,    44,    45,    46,    47,    48,
+      49,    50
   };
 
   void
@@ -990,17 +985,11 @@ namespace yy {
   }
 
 } // yy
-#line 994 "Grammar.tab.cpp"
+#line 989 "Grammar.tab.cpp"
 
 #line 54 "Grammar.y"
 
 
-int main(int argc, char **argv){
-	fopen_s(&yyin, argv[1], "r");
-	yy::parser parser;
-	parser.parse();
-	return 0;
-}
 
 void yy::parser::error(const std::string& msg){
 	std::cerr << msg << std::endl;

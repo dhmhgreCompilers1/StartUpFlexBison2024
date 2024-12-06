@@ -760,7 +760,7 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 23,     ///< Last index in yytable_.
+      yylast_ = 19,     ///< Last index in yytable_.
       yynnts_ = 4,  ///< Number of nonterminal symbols.
       yyfinal_ = 6 ///< Termination state number.
     };

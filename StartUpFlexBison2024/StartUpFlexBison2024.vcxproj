@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="Grammar.flex.cpp" />
     <ClCompile Include="Grammar.tab.cpp" />
+    <ClCompile Include="main.cpp" />
     <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <ItemGroup>

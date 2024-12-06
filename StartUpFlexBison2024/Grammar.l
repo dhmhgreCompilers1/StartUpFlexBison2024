@@ -19,8 +19,13 @@
 "=" return '=';
 
 0|[1-9][0-9]* {
-	//val->node = new CNode(1);	
+	val->node = new CNUMBER(atoi(yytext));	
 	return yy::parser::token::NUMBER;
+}
+
+[a-zA-Z][a-zA-Z0-9]* {
+	val->node = new CVARIABLE(yytext);
+	return yy::parser::token::IDENTIFIER;
 }
 
 
