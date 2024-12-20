@@ -823,15 +823,15 @@ namespace yy {
 
 
 
-  const signed char parser::yypact_ninf_ = -10;
+  const signed char parser::yypact_ninf_ = -5;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-       0,   -10,    -9,    13,     4,     0,   -10,     4,     0,     0,
-       0,     0,   -10,   -10,   -10,   -10,    11,    11,   -10,   -10
+       0,    -5,    -4,    13,     3,     0,    -5,     3,     0,     0,
+       0,     0,    -5,    -5,    12,    -5,    14,    14,    -5,    -5
   };
 
   const signed char
@@ -844,7 +844,7 @@ namespace yy {
   const signed char
   parser::yypgoto_[] =
   {
-     -10,   -10,     7,    -3
+      -5,    -5,     8,    -3
   };
 
   const signed char
@@ -857,21 +857,23 @@ namespace yy {
   parser::yytable_[] =
   {
        7,     5,    14,     1,     2,    16,    17,    18,    19,     8,
-       9,    10,    11,     6,    15,    12,     1,     2,    10,    11
+       9,    10,    11,     6,    12,    15,     1,     2,     8,     9,
+      10,    11,    10,    11
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       3,    10,     5,     3,     4,     8,     9,    10,    11,     5,
-       6,     7,     8,     0,     7,    11,     3,     4,     7,     8
+       3,     5,     5,     3,     4,     8,     9,    10,    11,     6,
+       7,     8,     9,     0,    11,     7,     3,     4,     6,     7,
+       8,     9,     8,     9
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     3,     4,    13,    15,    10,     0,    15,     5,     6,
-       7,     8,    11,    14,    15,    14,    15,    15,    15,    15
+       0,     3,     4,    13,    15,     5,     0,    15,     6,     7,
+       8,     9,    11,    14,    15,    14,    15,    15,    15,    15
   };
 
   const signed char
@@ -896,7 +898,7 @@ namespace yy {
   const parser::yytname_[] =
   {
   "\"end of file\"", "error", "\"invalid token\"", "NUMBER", "IDENTIFIER",
-  "'+'", "'-'", "'*'", "'/'", "'^'", "'='", "';'", "$accept",
+  "'='", "'+'", "'-'", "'*'", "'/'", "'^'", "';'", "$accept",
   "expression_list", "separator", "expression", YY_NULLPTR
   };
 #endif
@@ -950,12 +952,12 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     7,     5,     2,     6,     2,     8,     2,     2,
+       2,     2,     8,     6,     2,     7,     2,     9,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,    11,
-       2,    10,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     5,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     9,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    10,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -985,7 +987,7 @@ namespace yy {
   }
 
 } // yy
-#line 989 "Grammar.tab.cpp"
+#line 991 "Grammar.tab.cpp"
 
 #line 54 "Grammar.y"
 

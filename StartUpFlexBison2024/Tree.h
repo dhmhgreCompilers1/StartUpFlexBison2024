@@ -16,17 +16,19 @@ typedef enum NodeType {
 } NODETYPE;
 extern string g_nodeNames[];
 
+
 class CNode {
 public:
 	CNode(NODETYPE symbolType,int count, ...);
-	void AppendNodeName(string str){
-		_symbolNameGV += str;	
-	} // inline function
+	void AppendNodeName(string str);
+	void SetNodeName(string str) { _symbolNameGV = str; }
 	void SetParent(CNode* parent) { _parent = parent; }
-
+	string GetNodeName() { return _symbolNameGV; }
+	NODETYPE GetNodeType() { return _symbolType; }
+	int GetSerial() { return _serial; }
 	void virtual PrintSyntaxTree(ofstream *file);	
 
-private:
+public:
 	CNode * _parent;
 	list<CNode*>* _children;
 	NODETYPE _symbolType;

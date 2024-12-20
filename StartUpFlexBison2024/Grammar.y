@@ -26,10 +26,10 @@ extern FILE *yyin;
 
 %start expression_list
 %token <node> NUMBER IDENTIFIER 
+%right '='
 %left '+' '-' 
 %left '*' '/'
 %left '^'
-%right '='
 %type <node> expression expression_list 
 %%
 

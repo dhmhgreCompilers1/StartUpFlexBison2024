@@ -8,6 +8,22 @@ CNode* root = NULL;
 string g_nodeNames[] = { "EXPRESSSION_LIST", "EXPRESSION", "SEPARATOR", "NUMBER"
 	, "VARIABLE", "ADDITION", "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT" };
 
+std::string trimCharacter(const std::string& str, char ch) {
+	size_t start = str.find_first_not_of(ch); // Find the first non-ch character
+	if (start == std::string::npos) {
+		return ""; // String contains only the character to trim
+	}
+
+	size_t end = str.find_last_not_of(ch); // Find the last non-ch character
+	return str.substr(start, end - start + 1);
+}
+
+void CNode::AppendNodeName(string str) {
+	trimCharacter(_symbolNameGV, '"');
+	_symbolNameGV = "\"" + _symbolNameGV + str + "\"";
+} // inline function
+
+
 CNode::CNode(NODETYPE symbolType,int count, ...) {
 	_symbolType = symbolType;	
 	_serial = _serialCounter++;
@@ -22,7 +38,7 @@ CNode::CNode(NODETYPE symbolType,int count, ...) {
 	}
 	va_end(args);
 	// SymbolName = NODETYPE_SERIALNUMBER
-	_symbolNameGV = g_nodeNames[_symbolType] + "_" + to_string(_serial);
+	_symbolNameGV = "\""+g_nodeNames[_symbolType] + "_" + to_string(_serial) + "\"";
 }
 
 void CNode::PrintSyntaxTree(ofstream *file) {
@@ -30,7 +46,7 @@ void CNode::PrintSyntaxTree(ofstream *file) {
 	if ( _parent != NULL) {
 		*file << _parent->_symbolNameGV << " -> " << _symbolNameGV << endl;
 	}
-	(*file) << _symbolNameGV << "[label=\"" << g_nodeNames[_symbolType] << "\"]" << endl;
+	//(*file) << _symbolNameGV << "[label=\"" << g_nodeNames[_symbolType] << "\"]" << endl;
 	
 	for (list<CNode*>::iterator it = _children->begin();
 		 it != _children->end();
@@ -80,14 +96,14 @@ CExpression(ASSIGNMENT, expression1, expression2) {
 }
 
 CVARIABLE::CVARIABLE(string name) :
-CExpression(VARIABLE, NULL) {
+CExpression(VARIABLE) {
 	m_name= name;
-	AppendNodeName("_" + m_name);
+	SetNodeName("\"" + g_nodeNames[GetNodeType()]+ "_"+ to_string(GetSerial()) +"_"+ name + "\"");
 }
 
 CNUMBER::CNUMBER(int value) :
 CExpression(NUMBER){
 	m_value = value;
-	AppendNodeName("_" + to_string(m_value));
+	SetNodeName("\"" + g_nodeNames[GetNodeType()] + "_" + to_string(GetSerial()) +"_" + to_string(value) + "\"");
 }
 

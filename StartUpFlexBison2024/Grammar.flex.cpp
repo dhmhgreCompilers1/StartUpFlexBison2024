@@ -453,10 +453,11 @@ char *yytext;
 #include <iostream>
 #include <stdlib.h>
 #include "grammar.tab.h"
+#include "SymbolTable.h"
 #include "Tree.h"
 #define YY_DECL int yylex(yy::parser::value_type *val)
-#line 458 "Grammar.flex.cpp"
 #line 459 "Grammar.flex.cpp"
+#line 460 "Grammar.flex.cpp"
 
 #define INITIAL 0
 
@@ -670,10 +671,10 @@ YY_DECL
 		}
 
 	{
-#line 11 "Grammar.l"
+#line 12 "Grammar.l"
 
 
-#line 676 "Grammar.flex.cpp"
+#line 677 "Grammar.flex.cpp"
 
 	while ( /*CONSTCOND*/1 )		/* loops until end-of-file is reached */
 		{
@@ -732,42 +733,42 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 13 "Grammar.l"
+#line 14 "Grammar.l"
 return ';';
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 14 "Grammar.l"
+#line 15 "Grammar.l"
 return '+';
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 15 "Grammar.l"
+#line 16 "Grammar.l"
 return '-';
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 16 "Grammar.l"
+#line 17 "Grammar.l"
 return '*';
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 17 "Grammar.l"
+#line 18 "Grammar.l"
 return '/';
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 18 "Grammar.l"
+#line 19 "Grammar.l"
 return '^';
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 19 "Grammar.l"
+#line 20 "Grammar.l"
 return '=';
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 21 "Grammar.l"
+#line 22 "Grammar.l"
 {
 	val->node = new CNUMBER(atoi(yytext));	
 	return yy::parser::token::NUMBER;
@@ -775,24 +776,27 @@ YY_RULE_SETUP
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 26 "Grammar.l"
+#line 27 "Grammar.l"
 {
-	val->node = new CVARIABLE(yytext);
+	SymbolTable *symbolTable;
+	symbolTable = SymbolTable::GetSymbolTable();
+	
+	val->node = symbolTable->GetSymbol(yytext);
 	return yy::parser::token::IDENTIFIER;
 }
 	YY_BREAK
 case 10:
 /* rule 10 can match eol */
 YY_RULE_SETUP
-#line 32 "Grammar.l"
+#line 36 "Grammar.l"
 ;
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 34 "Grammar.l"
+#line 38 "Grammar.l"
 ECHO;
 	YY_BREAK
-#line 795 "Grammar.flex.cpp"
+#line 799 "Grammar.flex.cpp"
 case YY_STATE_EOF(INITIAL):
 	yyterminate();
 
@@ -1797,7 +1801,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 34 "Grammar.l"
+#line 38 "Grammar.l"
 
 
 

@@ -137,10 +137,12 @@
     <ClCompile Include="Grammar.flex.cpp" />
     <ClCompile Include="Grammar.tab.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="SymbolTable.cpp" />
     <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grammar.tab.h" />
+    <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Tree.h" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="graph.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="graph.dot" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

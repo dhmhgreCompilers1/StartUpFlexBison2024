@@ -266,12 +266,12 @@ namespace yy {
         S_YYUNDEF = 2,                           // "invalid token"
         S_NUMBER = 3,                            // NUMBER
         S_IDENTIFIER = 4,                        // IDENTIFIER
-        S_5_ = 5,                                // '+'
-        S_6_ = 6,                                // '-'
-        S_7_ = 7,                                // '*'
-        S_8_ = 8,                                // '/'
-        S_9_ = 9,                                // '^'
-        S_10_ = 10,                              // '='
+        S_5_ = 5,                                // '='
+        S_6_ = 6,                                // '+'
+        S_7_ = 7,                                // '-'
+        S_8_ = 8,                                // '*'
+        S_9_ = 9,                                // '/'
+        S_10_ = 10,                              // '^'
         S_11_ = 11,                              // ';'
         S_YYACCEPT = 12,                         // $accept
         S_expression_list = 13,                  // expression_list
@@ -760,7 +760,7 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 19,     ///< Last index in yytable_.
+      yylast_ = 23,     ///< Last index in yytable_.
       yynnts_ = 4,  ///< Number of nonterminal symbols.
       yyfinal_ = 6 ///< Termination state number.
     };
