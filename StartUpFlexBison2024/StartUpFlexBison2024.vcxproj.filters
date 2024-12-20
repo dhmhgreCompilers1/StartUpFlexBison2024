@@ -49,4 +49,9 @@
   <ItemGroup>
     <Text Include="expressions.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="graph.gif">
+      <Filter>GrammarFiles</Filter>
+    </Image>
+  </ItemGroup>
 </Project>

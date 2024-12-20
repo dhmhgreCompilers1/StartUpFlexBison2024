@@ -46,8 +46,8 @@ expression :
   | expression '*' expression	{ $$ = new CMultiplication((CExpression *)$1,(CExpression *)$3); }
   | expression '/' expression	{ $$ = new CDivision((CExpression *)$1,(CExpression *)$3); }	 
   | IDENTIFIER '=' expression	{ $$ = new CAssignment((CExpression *)$1,(CExpression *)$3); }
-  | IDENTIFIER
-  | NUMBER  	
+  | IDENTIFIER { $$=$1; }
+  | NUMBER  	{ $$=$1; }
 	;
 
 

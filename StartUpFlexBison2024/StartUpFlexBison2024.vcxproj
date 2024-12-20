@@ -146,6 +146,9 @@
   <ItemGroup>
     <Text Include="expressions.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="graph.gif" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="..\..\..\..\..\..\FlexBison\custom_build_rules\win_flex_bison_custom_build.targets" />

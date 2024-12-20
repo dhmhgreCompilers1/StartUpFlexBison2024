@@ -623,13 +623,13 @@ namespace yy {
 
   case 10: // expression: IDENTIFIER
 #line 49 "Grammar.y"
-    { (yylhs.value.node) = (yystack_[0].value.node); }
+               { (yylhs.value.node)=(yystack_[0].value.node); }
 #line 628 "Grammar.tab.cpp"
     break;
 
   case 11: // expression: NUMBER
 #line 50 "Grammar.y"
-    { (yylhs.value.node) = (yystack_[0].value.node); }
+                { (yylhs.value.node)=(yystack_[0].value.node); }
 #line 634 "Grammar.tab.cpp"
     break;
 

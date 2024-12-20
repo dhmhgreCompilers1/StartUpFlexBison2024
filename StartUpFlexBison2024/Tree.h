@@ -2,7 +2,9 @@
 #define TREE_H
 #include <iostream>
 #include <list>
+#include <fstream>
 #include <stdlib.h>
+class CNUMBER;
 class CNode;
 using namespace std;
 
@@ -12,15 +14,23 @@ typedef enum NodeType {
 	EXPRESSSION_LIST, EXPRESSION, SEPARATOR, NUMBER
 	, VARIABLE, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT
 } NODETYPE;
+extern string g_nodeNames[];
 
 class CNode {
 public:
-	CNode(NODETYPE symbolType, ...);
+	CNode(NODETYPE symbolType,int count, ...);
+	void AppendNodeName(string str){
+		_symbolNameGV += str;	
+	} // inline function
+	void SetParent(CNode* parent) { _parent = parent; }
+
+	void virtual PrintSyntaxTree(ofstream *file);	
 
 private:
+	CNode * _parent;
 	list<CNode*>* _children;
 	NODETYPE _symbolType;
-	string _symbolNameGV;
+	string _symbolNameGV; // NODETYPE_SERIALNUMBER_SEMANTICVALUE
 	int _serial;
 	static int _serialCounter;
 };
@@ -33,6 +43,7 @@ public:
 
 class CExpression : public CNode {
 public:
+	CExpression(NODETYPE symbolType);
 	CExpression(NODETYPE symbolType, CExpression *expr1);
 	CExpression(NODETYPE symbolType, CExpression* expr1,CExpression *expr2);
 };
@@ -67,6 +78,11 @@ public:
 	string m_name;
 	CVARIABLE(string name);
 };
+
+/*class CNumberExpression : CExpression {
+public:
+	CNumberExpression(CNUMBER value);
+};*/
 
 class CNUMBER : public CExpression {
 public :
