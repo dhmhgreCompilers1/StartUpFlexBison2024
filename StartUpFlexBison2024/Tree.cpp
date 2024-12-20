@@ -41,17 +41,17 @@ CNode::CNode(NODETYPE symbolType,int count, ...) {
 	_symbolNameGV = "\""+g_nodeNames[_symbolType] + "_" + to_string(_serial) + "\"";
 }
 
-void CNode::PrintSyntaxTree(ofstream *file) {
+void CNode::PrintSyntaxTree(ofstream *file, CNode *parent) {
 
-	if ( _parent != NULL) {
-		*file << _parent->_symbolNameGV << " -> " << _symbolNameGV << endl;
+	if ( parent != NULL) {
+		*file << parent->_symbolNameGV << " -> " << _symbolNameGV << endl;
 	}
 	//(*file) << _symbolNameGV << "[label=\"" << g_nodeNames[_symbolType] << "\"]" << endl;
 	
 	for (list<CNode*>::iterator it = _children->begin();
 		 it != _children->end();
 		 it++) {
-		(*it)->PrintSyntaxTree(file);
+		(*it)->PrintSyntaxTree(file,this);
 	}
 }
 

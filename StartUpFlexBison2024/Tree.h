@@ -26,7 +26,7 @@ public:
 	string GetNodeName() { return _symbolNameGV; }
 	NODETYPE GetNodeType() { return _symbolType; }
 	int GetSerial() { return _serial; }
-	void virtual PrintSyntaxTree(ofstream *file);	
+	void virtual PrintSyntaxTree(ofstream *file,CNode *parent);	
 
 public:
 	CNode * _parent;

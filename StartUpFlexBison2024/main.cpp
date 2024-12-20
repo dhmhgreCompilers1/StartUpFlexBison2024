@@ -12,7 +12,7 @@ int main(int argc, char** argv) {
 	_root = root;
 
 	(*dotFile) << "digraph G{\n";
-	root->PrintSyntaxTree(dotFile);
+	root->PrintSyntaxTree(dotFile,NULL);
 	(*dotFile) << "}\n";
 	dotFile->close();
 	system("dot -Tgif graph.dot -o graph.gif");
