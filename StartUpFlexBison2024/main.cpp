@@ -3,6 +3,9 @@
 #include "grammar.tab.h"
 extern FILE* yyin;
 
+int i;
+int j = i;
+
 int main(int argc, char** argv) {
 	CNode *_root;
 	ofstream *dotFile = new ofstream("graph.dot", ios::out);

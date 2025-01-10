@@ -580,61 +580,145 @@ namespace yy {
           switch (yyn)
             {
   case 2: // expression_list: expression_list expression separator
-#line 38 "Grammar.y"
+#line 45 "Grammar.y"
                                          { root =(yylhs.value.node) = new CExpressionList((yystack_[2].value.node),(yystack_[1].value.node));  }
 #line 586 "Grammar.tab.cpp"
     break;
 
   case 3: // expression_list: expression separator
-#line 39 "Grammar.y"
+#line 46 "Grammar.y"
                                 { root= (yylhs.value.node) = new CExpressionList((yystack_[1].value.node)); }
 #line 592 "Grammar.tab.cpp"
     break;
 
   case 5: // expression: expression '+' expression
-#line 44 "Grammar.y"
+#line 51 "Grammar.y"
                                 { (yylhs.value.node) = new CAddition((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 598 "Grammar.tab.cpp"
     break;
 
   case 6: // expression: expression '-' expression
-#line 45 "Grammar.y"
+#line 52 "Grammar.y"
                                 { (yylhs.value.node) = new CSubtraction((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 604 "Grammar.tab.cpp"
     break;
 
   case 7: // expression: expression '*' expression
-#line 46 "Grammar.y"
+#line 53 "Grammar.y"
                                 { (yylhs.value.node) = new CMultiplication((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 610 "Grammar.tab.cpp"
     break;
 
   case 8: // expression: expression '/' expression
-#line 47 "Grammar.y"
+#line 54 "Grammar.y"
                                 { (yylhs.value.node) = new CDivision((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 616 "Grammar.tab.cpp"
     break;
 
-  case 9: // expression: IDENTIFIER '=' expression
-#line 48 "Grammar.y"
-                                { (yylhs.value.node) = new CAssignment((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+  case 9: // expression: expression '%' expression
+#line 55 "Grammar.y"
+                                { (yylhs.value.node) = new CModulo((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 622 "Grammar.tab.cpp"
     break;
 
-  case 10: // expression: IDENTIFIER
-#line 49 "Grammar.y"
-               { (yylhs.value.node)=(yystack_[0].value.node); }
+  case 10: // expression: IDENTIFIER '=' expression
+#line 56 "Grammar.y"
+                                { (yylhs.value.node) = new CAssignment((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
 #line 628 "Grammar.tab.cpp"
     break;
 
-  case 11: // expression: NUMBER
-#line 50 "Grammar.y"
-                { (yylhs.value.node)=(yystack_[0].value.node); }
+  case 11: // expression: '-' expression
+#line 57 "Grammar.y"
+                        { (yylhs.value.node) = new CNegation((CExpression *)(yystack_[0].value.node)); }
 #line 634 "Grammar.tab.cpp"
     break;
 
+  case 12: // expression: '+' expression
+#line 58 "Grammar.y"
+                        { (yylhs.value.node) = new CIdentity((CExpression *)(yystack_[0].value.node)); }
+#line 640 "Grammar.tab.cpp"
+    break;
 
-#line 638 "Grammar.tab.cpp"
+  case 13: // expression: expression '^' expression
+#line 59 "Grammar.y"
+                                { (yylhs.value.node) = new CPower((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 646 "Grammar.tab.cpp"
+    break;
+
+  case 14: // expression: '(' expression ')'
+#line 60 "Grammar.y"
+                        { (yylhs.value.node) = (yystack_[1].value.node); }
+#line 652 "Grammar.tab.cpp"
+    break;
+
+  case 15: // expression: expression '>' expression
+#line 61 "Grammar.y"
+                              { (yylhs.value.node) = new CGreaterThan((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 658 "Grammar.tab.cpp"
+    break;
+
+  case 16: // expression: expression '<' expression
+#line 62 "Grammar.y"
+                              { (yylhs.value.node) = new CLessThan((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 664 "Grammar.tab.cpp"
+    break;
+
+  case 17: // expression: expression EQ expression
+#line 63 "Grammar.y"
+                             { (yylhs.value.node) = new CEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 670 "Grammar.tab.cpp"
+    break;
+
+  case 18: // expression: expression NE expression
+#line 64 "Grammar.y"
+                             { (yylhs.value.node) = new CNotEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 676 "Grammar.tab.cpp"
+    break;
+
+  case 19: // expression: expression GE expression
+#line 65 "Grammar.y"
+                             { (yylhs.value.node) = new CGreaterEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 682 "Grammar.tab.cpp"
+    break;
+
+  case 20: // expression: expression LE expression
+#line 66 "Grammar.y"
+                             { (yylhs.value.node) = new CLessEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 688 "Grammar.tab.cpp"
+    break;
+
+  case 21: // expression: expression AND expression
+#line 67 "Grammar.y"
+                              { (yylhs.value.node) = new CAnd((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 694 "Grammar.tab.cpp"
+    break;
+
+  case 22: // expression: expression OR expression
+#line 68 "Grammar.y"
+                             { (yylhs.value.node) = new COr((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
+#line 700 "Grammar.tab.cpp"
+    break;
+
+  case 23: // expression: '!' expression
+#line 69 "Grammar.y"
+                   { (yylhs.value.node) = new CNot((CExpression *)(yystack_[0].value.node)); }
+#line 706 "Grammar.tab.cpp"
+    break;
+
+  case 24: // expression: IDENTIFIER
+#line 70 "Grammar.y"
+               { (yylhs.value.node)=(yystack_[0].value.node); }
+#line 712 "Grammar.tab.cpp"
+    break;
+
+  case 25: // expression: NUMBER
+#line 71 "Grammar.y"
+                { (yylhs.value.node)=(yystack_[0].value.node); }
+#line 718 "Grammar.tab.cpp"
+    break;
+
+
+#line 722 "Grammar.tab.cpp"
 
             default:
               break;
@@ -666,7 +750,8 @@ namespace yy {
     if (!yyerrstatus_)
       {
         ++yynerrs_;
-        std::string msg = YY_("syntax error");
+        context yyctx (*this, yyla);
+        std::string msg = yysyntax_error_ (yyctx);
         error (YY_MOVE (msg));
       }
 
@@ -807,98 +892,290 @@ namespace yy {
     error (yyexc.what ());
   }
 
-#if YYDEBUG || 0
-  const char *
+  /* Return YYSTR after stripping away unnecessary quotes and
+     backslashes, so that it's suitable for yyerror.  The heuristic is
+     that double-quoting is unnecessary unless the string contains an
+     apostrophe, a comma, or backslash (other than backslash-backslash).
+     YYSTR is taken from yytname.  */
+  std::string
+  parser::yytnamerr_ (const char *yystr)
+  {
+    if (*yystr == '"')
+      {
+        std::string yyr;
+        char const *yyp = yystr;
+
+        for (;;)
+          switch (*++yyp)
+            {
+            case '\'':
+            case ',':
+              goto do_not_strip_quotes;
+
+            case '\\':
+              if (*++yyp != '\\')
+                goto do_not_strip_quotes;
+              else
+                goto append;
+
+            append:
+            default:
+              yyr += *yyp;
+              break;
+
+            case '"':
+              return yyr;
+            }
+      do_not_strip_quotes: ;
+      }
+
+    return yystr;
+  }
+
+  std::string
   parser::symbol_name (symbol_kind_type yysymbol)
   {
-    return yytname_[yysymbol];
+    return yytnamerr_ (yytname_[yysymbol]);
   }
-#endif // #if YYDEBUG || 0
+
+
+
+  // parser::context.
+  parser::context::context (const parser& yyparser, const symbol_type& yyla)
+    : yyparser_ (yyparser)
+    , yyla_ (yyla)
+  {}
+
+  int
+  parser::context::expected_tokens (symbol_kind_type yyarg[], int yyargn) const
+  {
+    // Actual number of expected tokens
+    int yycount = 0;
+
+    const int yyn = yypact_[+yyparser_.yystack_[0].state];
+    if (!yy_pact_value_is_default_ (yyn))
+      {
+        /* Start YYX at -YYN if negative to avoid negative indexes in
+           YYCHECK.  In other words, skip the first -YYN actions for
+           this state because they are default actions.  */
+        const int yyxbegin = yyn < 0 ? -yyn : 0;
+        // Stay within bounds of both yycheck and yytname.
+        const int yychecklim = yylast_ - yyn + 1;
+        const int yyxend = yychecklim < YYNTOKENS ? yychecklim : YYNTOKENS;
+        for (int yyx = yyxbegin; yyx < yyxend; ++yyx)
+          if (yycheck_[yyx + yyn] == yyx && yyx != symbol_kind::S_YYerror
+              && !yy_table_value_is_error_ (yytable_[yyx + yyn]))
+            {
+              if (!yyarg)
+                ++yycount;
+              else if (yycount == yyargn)
+                return 0;
+              else
+                yyarg[yycount++] = YY_CAST (symbol_kind_type, yyx);
+            }
+      }
+
+    if (yyarg && yycount == 0 && 0 < yyargn)
+      yyarg[0] = symbol_kind::S_YYEMPTY;
+    return yycount;
+  }
 
 
 
 
 
 
+  int
+  parser::yy_syntax_error_arguments_ (const context& yyctx,
+                                                 symbol_kind_type yyarg[], int yyargn) const
+  {
+    /* There are many possibilities here to consider:
+       - If this state is a consistent state with a default action, then
+         the only way this function was invoked is if the default action
+         is an error action.  In that case, don't check for expected
+         tokens because there are none.
+       - The only way there can be no lookahead present (in yyla) is
+         if this state is a consistent state with a default action.
+         Thus, detecting the absence of a lookahead is sufficient to
+         determine that there is no unexpected or expected token to
+         report.  In that case, just report a simple "syntax error".
+       - Don't assume there isn't a lookahead just because this state is
+         a consistent state with a default action.  There might have
+         been a previous inconsistent state, consistent state with a
+         non-default action, or user semantic action that manipulated
+         yyla.  (However, yyla is currently not documented for users.)
+       - Of course, the expected token list depends on states to have
+         correct lookahead information, and it depends on the parser not
+         to perform extra reductions after fetching a lookahead from the
+         scanner and before detecting a syntax error.  Thus, state merging
+         (from LALR or IELR) and default reductions corrupt the expected
+         token list.  However, the list is correct for canonical LR with
+         one exception: it will still contain any token that will not be
+         accepted due to an error action in a later state.
+    */
+
+    if (!yyctx.lookahead ().empty ())
+      {
+        if (yyarg)
+          yyarg[0] = yyctx.token ();
+        int yyn = yyctx.expected_tokens (yyarg ? yyarg + 1 : yyarg, yyargn - 1);
+        return yyn + 1;
+      }
+    return 0;
+  }
+
+  // Generate an error message.
+  std::string
+  parser::yysyntax_error_ (const context& yyctx) const
+  {
+    // Its maximum.
+    enum { YYARGS_MAX = 5 };
+    // Arguments of yyformat.
+    symbol_kind_type yyarg[YYARGS_MAX];
+    int yycount = yy_syntax_error_arguments_ (yyctx, yyarg, YYARGS_MAX);
+
+    char const* yyformat = YY_NULLPTR;
+    switch (yycount)
+      {
+#define YYCASE_(N, S)                         \
+        case N:                               \
+          yyformat = S;                       \
+        break
+      default: // Avoid compiler warnings.
+        YYCASE_ (0, YY_("syntax error"));
+        YYCASE_ (1, YY_("syntax error, unexpected %s"));
+        YYCASE_ (2, YY_("syntax error, unexpected %s, expecting %s"));
+        YYCASE_ (3, YY_("syntax error, unexpected %s, expecting %s or %s"));
+        YYCASE_ (4, YY_("syntax error, unexpected %s, expecting %s or %s or %s"));
+        YYCASE_ (5, YY_("syntax error, unexpected %s, expecting %s or %s or %s or %s"));
+#undef YYCASE_
+      }
+
+    std::string yyres;
+    // Argument number.
+    std::ptrdiff_t yyi = 0;
+    for (char const* yyp = yyformat; *yyp; ++yyp)
+      if (yyp[0] == '%' && yyp[1] == 's' && yyi < yycount)
+        {
+          yyres += symbol_name (yyarg[yyi++]);
+          ++yyp;
+        }
+      else
+        yyres += *yyp;
+    return yyres;
+  }
 
 
-
-  const signed char parser::yypact_ninf_ = -5;
+  const signed char parser::yypact_ninf_ = -8;
 
   const signed char parser::yytable_ninf_ = -1;
 
   const signed char
   parser::yypact_[] =
   {
-       0,    -5,    -4,    13,     3,     0,    -5,     3,     0,     0,
-       0,     0,    -5,    -5,    12,    -5,    14,    14,    -5,    -5
+      30,    -8,    -5,    30,    30,    30,    30,    27,    67,    30,
+      19,    19,    -8,    48,    -8,    67,    30,    30,    30,    30,
+      30,    30,    30,    30,    30,    30,    30,    30,    30,    30,
+      -8,    -8,    84,    -8,    -8,    -7,    -7,    -7,    99,   114,
+      -7,    -7,    -7,    19,    19,     9,     9,     9,    -8
   };
 
   const signed char
   parser::yydefact_[] =
   {
-       0,    11,    10,     0,     0,     0,     1,     0,     0,     0,
-       0,     0,     4,     3,     9,     2,     5,     6,     7,     8
+       0,    25,    24,     0,     0,     0,     0,     0,     0,     0,
+      12,    11,    23,     0,     1,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
+       4,     3,    10,    14,     2,    18,    19,    20,    21,    22,
+      15,    16,    17,     5,     6,     7,     8,     9,    13
   };
 
   const signed char
   parser::yypgoto_[] =
   {
-      -5,    -5,     8,    -3
+      -8,    -8,    14,    -3
   };
 
   const signed char
   parser::yydefgoto_[] =
   {
-       0,     3,    13,     4
+       0,     7,    31,     8
   };
 
   const signed char
   parser::yytable_[] =
   {
-       7,     5,    14,     1,     2,    16,    17,    18,    19,     8,
-       9,    10,    11,     6,    12,    15,     1,     2,     8,     9,
-      10,    11,    10,    11
+      10,    11,    12,    13,    15,     9,    32,    24,    25,    26,
+      27,    28,    29,    35,    36,    37,    38,    39,    40,    41,
+      42,    43,    44,    45,    46,    47,    48,    14,    29,    34,
+       1,     2,     0,     1,     2,    26,    27,    28,    29,     0,
+       0,     3,     4,     0,     3,     4,     0,     5,     0,     6,
+       5,     0,     6,    16,    17,    18,    19,    20,     0,    21,
+      22,    23,    24,    25,    26,    27,    28,    29,     0,     0,
+       0,    33,    16,    17,    18,    19,    20,     0,    21,    22,
+      23,    24,    25,    26,    27,    28,    29,     0,    30,    16,
+      17,    18,    19,    20,     0,    21,    22,    23,    24,    25,
+      26,    27,    28,    29,    16,    17,    18,     0,    20,     0,
+      21,    22,    23,    24,    25,    26,    27,    28,    29,    16,
+      17,    18,     0,     0,     0,    21,    22,    23,    24,    25,
+      26,    27,    28,    29
   };
 
   const signed char
   parser::yycheck_[] =
   {
-       3,     5,     5,     3,     4,     8,     9,    10,    11,     6,
-       7,     8,     9,     0,    11,     7,     3,     4,     6,     7,
-       8,     9,     8,     9
+       3,     4,     5,     6,     7,    10,     9,    14,    15,    16,
+      17,    18,    19,    16,    17,    18,    19,    20,    21,    22,
+      23,    24,    25,    26,    27,    28,    29,     0,    19,    15,
+       3,     4,    -1,     3,     4,    16,    17,    18,    19,    -1,
+      -1,    14,    15,    -1,    14,    15,    -1,    20,    -1,    22,
+      20,    -1,    22,     5,     6,     7,     8,     9,    -1,    11,
+      12,    13,    14,    15,    16,    17,    18,    19,    -1,    -1,
+      -1,    23,     5,     6,     7,     8,     9,    -1,    11,    12,
+      13,    14,    15,    16,    17,    18,    19,    -1,    21,     5,
+       6,     7,     8,     9,    -1,    11,    12,    13,    14,    15,
+      16,    17,    18,    19,     5,     6,     7,    -1,     9,    -1,
+      11,    12,    13,    14,    15,    16,    17,    18,    19,     5,
+       6,     7,    -1,    -1,    -1,    11,    12,    13,    14,    15,
+      16,    17,    18,    19
   };
 
   const signed char
   parser::yystos_[] =
   {
-       0,     3,     4,    13,    15,     5,     0,    15,     6,     7,
-       8,     9,    11,    14,    15,    14,    15,    15,    15,    15
+       0,     3,     4,    14,    15,    20,    22,    25,    27,    10,
+      27,    27,    27,    27,     0,    27,     5,     6,     7,     8,
+       9,    11,    12,    13,    14,    15,    16,    17,    18,    19,
+      21,    26,    27,    23,    26,    27,    27,    27,    27,    27,
+      27,    27,    27,    27,    27,    27,    27,    27,    27
   };
 
   const signed char
   parser::yyr1_[] =
   {
-       0,    12,    13,    13,    14,    15,    15,    15,    15,    15,
-      15,    15
+       0,    24,    25,    25,    26,    27,    27,    27,    27,    27,
+      27,    27,    27,    27,    27,    27,    27,    27,    27,    27,
+      27,    27,    27,    27,    27,    27
   };
 
   const signed char
   parser::yyr2_[] =
   {
        0,     2,     3,     2,     1,     3,     3,     3,     3,     3,
-       1,     1
+       3,     2,     2,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     2,     1,     1
   };
 
 
-#if YYDEBUG
+#if YYDEBUG || 1
   // YYTNAME[SYMBOL-NUM] -- String name of the symbol SYMBOL-NUM.
   // First, the terminals, then, starting at \a YYNTOKENS, nonterminals.
   const char*
   const parser::yytname_[] =
   {
   "\"end of file\"", "error", "\"invalid token\"", "NUMBER", "IDENTIFIER",
-  "'='", "'+'", "'-'", "'*'", "'/'", "'^'", "';'", "$accept",
+  "NE", "GE", "LE", "AND", "OR", "'='", "'>'", "'<'", "EQ", "'+'", "'-'",
+  "'*'", "'/'", "'%'", "'^'", "'!'", "';'", "'('", "')'", "$accept",
   "expression_list", "separator", "expression", YY_NULLPTR
   };
 #endif
@@ -908,8 +1185,9 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    38,    38,    39,    41,    44,    45,    46,    47,    48,
-      49,    50
+       0,    45,    45,    46,    48,    51,    52,    53,    54,    55,
+      56,    57,    58,    59,    60,    61,    62,    63,    64,    65,
+      66,    67,    68,    69,    70,    71
   };
 
   void
@@ -951,15 +1229,13 @@ namespace yy {
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     8,     6,     2,     7,     2,     9,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,    11,
-       2,     5,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,    10,     2,     2,     2,     2,     2,
+       2,     2,     2,    20,     2,     2,     2,    18,     2,     2,
+      22,    23,    16,    14,     2,    15,     2,    17,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,    21,
+      12,    10,    11,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,    19,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -973,10 +1249,13 @@ namespace yy {
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     1,     2,     3,     4
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     1,     2,     3,     4,
+       5,     6,     7,     8,     9,    13
     };
     // Last valid token kind.
-    const int code_max = 259;
+    const int code_max = 265;
 
     if (t <= 0)
       return symbol_kind::S_YYEOF;
@@ -987,9 +1266,9 @@ namespace yy {
   }
 
 } // yy
-#line 991 "Grammar.tab.cpp"
+#line 1270 "Grammar.tab.cpp"
 
-#line 54 "Grammar.y"
+#line 75 "Grammar.y"
 
 
 

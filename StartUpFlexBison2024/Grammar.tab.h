@@ -242,7 +242,13 @@ namespace yy {
     YYerror = 256,                 // error
     YYUNDEF = 257,                 // "invalid token"
     NUMBER = 258,                  // NUMBER
-    IDENTIFIER = 259               // IDENTIFIER
+    IDENTIFIER = 259,              // IDENTIFIER
+    NE = 260,                      // NE
+    GE = 261,                      // GE
+    LE = 262,                      // LE
+    AND = 263,                     // AND
+    OR = 264,                      // OR
+    EQ = 265                       // EQ
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -259,24 +265,36 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 12, ///< Number of tokens.
+        YYNTOKENS = 24, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
         S_YYUNDEF = 2,                           // "invalid token"
         S_NUMBER = 3,                            // NUMBER
         S_IDENTIFIER = 4,                        // IDENTIFIER
-        S_5_ = 5,                                // '='
-        S_6_ = 6,                                // '+'
-        S_7_ = 7,                                // '-'
-        S_8_ = 8,                                // '*'
-        S_9_ = 9,                                // '/'
-        S_10_ = 10,                              // '^'
-        S_11_ = 11,                              // ';'
-        S_YYACCEPT = 12,                         // $accept
-        S_expression_list = 13,                  // expression_list
-        S_separator = 14,                        // separator
-        S_expression = 15                        // expression
+        S_NE = 5,                                // NE
+        S_GE = 6,                                // GE
+        S_LE = 7,                                // LE
+        S_AND = 8,                               // AND
+        S_OR = 9,                                // OR
+        S_10_ = 10,                              // '='
+        S_11_ = 11,                              // '>'
+        S_12_ = 12,                              // '<'
+        S_EQ = 13,                               // EQ
+        S_14_ = 14,                              // '+'
+        S_15_ = 15,                              // '-'
+        S_16_ = 16,                              // '*'
+        S_17_ = 17,                              // '/'
+        S_18_ = 18,                              // '%'
+        S_19_ = 19,                              // '^'
+        S_20_ = 20,                              // '!'
+        S_21_ = 21,                              // ';'
+        S_22_ = 22,                              // '('
+        S_23_ = 23,                              // ')'
+        S_YYACCEPT = 24,                         // $accept
+        S_expression_list = 25,                  // expression_list
+        S_separator = 26,                        // separator
+        S_expression = 27                        // expression
       };
     };
 
@@ -334,14 +352,11 @@ namespace yy {
         Base::clear ();
       }
 
-#if YYDEBUG || 0
       /// The user-facing name of this symbol.
-      const char *name () const YY_NOEXCEPT
+      std::string name () const YY_NOEXCEPT
       {
         return parser::symbol_name (this->kind ());
       }
-#endif // #if YYDEBUG || 0
-
 
       /// Backward compatibility (Bison 3.6).
       symbol_kind_type type_get () const YY_NOEXCEPT;
@@ -449,14 +464,27 @@ namespace yy {
     /// Report a syntax error.
     void error (const syntax_error& err);
 
-#if YYDEBUG || 0
     /// The user-facing name of the symbol whose (internal) number is
     /// YYSYMBOL.  No bounds checking.
-    static const char *symbol_name (symbol_kind_type yysymbol);
-#endif // #if YYDEBUG || 0
+    static std::string symbol_name (symbol_kind_type yysymbol);
 
 
 
+    class context
+    {
+    public:
+      context (const parser& yyparser, const symbol_type& yyla);
+      const symbol_type& lookahead () const YY_NOEXCEPT { return yyla_; }
+      symbol_kind_type token () const YY_NOEXCEPT { return yyla_.kind (); }
+      /// Put in YYARG at most YYARGN of the expected tokens, and return the
+      /// number of tokens stored in YYARG.  If YYARG is null, return the
+      /// number of expected tokens (guaranteed to be less than YYNTOKENS).
+      int expected_tokens (symbol_kind_type yyarg[], int yyargn) const;
+
+    private:
+      const parser& yyparser_;
+      const symbol_type& yyla_;
+    };
 
   private:
 #if YY_CPLUSPLUS < 201103L
@@ -470,6 +498,13 @@ namespace yy {
     /// Stored state numbers (used for stacks).
     typedef signed char state_type;
 
+    /// The arguments of the error message.
+    int yy_syntax_error_arguments_ (const context& yyctx,
+                                    symbol_kind_type yyarg[], int yyargn) const;
+
+    /// Generate an error message.
+    /// \param yyctx     the context in which the error occurred.
+    virtual std::string yysyntax_error_ (const context& yyctx) const;
     /// Compute post-reduction state.
     /// \param yystate   the current state
     /// \param yysym     the nonterminal to push on the stack
@@ -491,10 +526,11 @@ namespace yy {
     /// are valid, yet not members of the token_kind_type enum.
     static symbol_kind_type yytranslate_ (int t) YY_NOEXCEPT;
 
-#if YYDEBUG || 0
+    /// Convert the symbol name \a n to a form suitable for a diagnostic.
+    static std::string yytnamerr_ (const char *yystr);
+
     /// For a symbol, its name in clear.
     static const char* const yytname_[];
-#endif // #if YYDEBUG || 0
 
 
     // Tables.
@@ -760,9 +796,9 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 23,     ///< Last index in yytable_.
+      yylast_ = 133,     ///< Last index in yytable_.
       yynnts_ = 4,  ///< Number of nonterminal symbols.
-      yyfinal_ = 6 ///< Termination state number.
+      yyfinal_ = 14 ///< Termination state number.
     };
 
 
@@ -771,7 +807,7 @@ namespace yy {
 
 
 } // yy
-#line 775 "Grammar.tab.h"
+#line 811 "Grammar.tab.h"
 
 
 

@@ -18,6 +18,23 @@
 "/" return '/';
 "^" return '^';
 "=" return '=';
+"(" return '(';
+")" return ')';
+"{" return '{';
+"}" return '}';
+"," return ',';
+"%" return '%';
+"!=" return yy::parser::token::NE;
+"==" return yy::parser::token::EQ;
+"<" return '<';
+"<=" return yy::parser::token::LE;
+">" return '>';
+">=" return yy::parser::token::GE;
+"&&" return yy::parser::token::AND;
+"||" return yy::parser::token::OR;
+"!" return '!';
+
+
 
 0|[1-9][0-9]* {
 	val->node = new CNUMBER(atoi(yytext));	

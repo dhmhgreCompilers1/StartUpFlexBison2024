@@ -23,13 +23,20 @@ extern FILE *yyin;
 	CNode *node;
 };
 
+%verbose
+%error-verbose
+
 
 %start expression_list
-%token <node> NUMBER IDENTIFIER 
+%token <node> NUMBER IDENTIFIER NE GE LE AND OR
 %right '='
+%left AND 
+%left OR
+%left GE LE '>' '<' EQ NE
 %left '+' '-' 
-%left '*' '/'
+%left '*' '/' '%'
 %left '^'
+%right '!'
 %type <node> expression expression_list 
 %%
 
@@ -45,7 +52,21 @@ expression :
   | expression '-' expression	{ $$ = new CSubtraction((CExpression *)$1,(CExpression *)$3); }
   | expression '*' expression	{ $$ = new CMultiplication((CExpression *)$1,(CExpression *)$3); }
   | expression '/' expression	{ $$ = new CDivision((CExpression *)$1,(CExpression *)$3); }	 
+  | expression '%' expression	{ $$ = new CModulo((CExpression *)$1,(CExpression *)$3); }	 
   | IDENTIFIER '=' expression	{ $$ = new CAssignment((CExpression *)$1,(CExpression *)$3); }
+  | '-' expression	{ $$ = new CNegation((CExpression *)$2); }
+  | '+' expression	{ $$ = new CIdentity((CExpression *)$2); }
+  | expression '^' expression	{ $$ = new CPower((CExpression *)$1,(CExpression *)$3); }
+  | '(' expression ')'	{ $$ = $2; }
+  | expression '>' expression { $$ = new CGreaterThan((CExpression *)$1,(CExpression *)$3); }
+  | expression '<' expression { $$ = new CLessThan((CExpression *)$1,(CExpression *)$3); }
+  | expression EQ expression { $$ = new CEqual((CExpression *)$1,(CExpression *)$3); }
+  | expression NE expression { $$ = new CNotEqual((CExpression *)$1,(CExpression *)$3); }
+  | expression GE expression { $$ = new CGreaterEqual((CExpression *)$1,(CExpression *)$3); }
+  | expression LE expression { $$ = new CLessEqual((CExpression *)$1,(CExpression *)$3); }
+  | expression AND expression { $$ = new CAnd((CExpression *)$1,(CExpression *)$3); }
+  | expression OR expression { $$ = new COr((CExpression *)$1,(CExpression *)$3); }
+  | '!' expression { $$ = new CNot((CExpression *)$2); }
   | IDENTIFIER { $$=$1; }
   | NUMBER  	{ $$=$1; }
 	;

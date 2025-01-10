@@ -6,7 +6,10 @@
 int CNode::_serialCounter = 0;
 CNode* root = NULL;
 string g_nodeNames[] = { "EXPRESSSION_LIST", "EXPRESSION", "SEPARATOR", "NUMBER"
-	, "VARIABLE", "ADDITION", "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT" };
+	, "VARIABLE", "ADDITION", "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT",
+	"EQUAL", "NOT_EQUAL", "NEGATION", "AND", "OR", "POWER", "MODULO", "NOT", "GREATER",
+	"GREATER_EQUAL", "IDENTITY", "LESS_THAN", "LESS_EQUAL", "GREATER_THAN"
+ };
 
 std::string trimCharacter(const std::string& str, char ch) {
 	size_t start = str.find_first_not_of(ch); // Find the first non-ch character
@@ -49,11 +52,27 @@ void CNode::PrintSyntaxTree(ofstream *file, CNode *parent) {
 	//(*file) << _symbolNameGV << "[label=\"" << g_nodeNames[_symbolType] << "\"]" << endl;
 	
 	for (list<CNode*>::iterator it = _children->begin();
-		 it != _children->end();
-		 it++) {
+   it != _children->end();
+   it++) {
 		(*it)->PrintSyntaxTree(file,this);
 	}
 }
+
+int CNode::Evaluate() {
+
+	// PREORDER ACTIONS
+
+	// VISIT CHILDREN
+	for (list<CNode*>::iterator it = _children->begin();
+		it != _children->end();
+		it++) {
+		(*it)->Evaluate();
+	}
+
+	// POSTORDER ACTIONS
+}
+
+
 
 CExpressionList::CExpressionList(CNode* expression,
 	CNode* expressionList) :
@@ -79,6 +98,20 @@ CAddition::CAddition(CExpression* expression1, CExpression* expression2) :
 CExpression(ADDITION, expression1, expression2) {
 }
 
+int CAddition::Evaluate()
+{
+	int op1,op2;
+	list<CNode*>::iterator it = _children->begin();
+
+	// VISIT
+	op1 =  (*it)->Evaluate();
+	it++;
+	op2 = (*it)->Evaluate();
+
+	// POSTORDER
+	return op1+op2;
+}
+
 CMultiplication::CMultiplication(CExpression* expression1, CExpression* expression2) :
 CExpression(MULTIPLICATION, expression1, expression2) {
 }
@@ -95,6 +128,77 @@ CAssignment::CAssignment(CExpression* expression1, CExpression* expression2) :
 CExpression(ASSIGNMENT, expression1, expression2) {
 }
 
+CEqual::CEqual(CExpression* expression1, CExpression* expression2)
+: CExpression(EQUAL, expression1, expression2) 
+{
+}
+
+CNotEqual::CNotEqual(CExpression* expression1, CExpression* expression2)
+	: CExpression(NOT_EQUAL, expression1, expression2)
+{
+}
+
+CNegation::CNegation(CExpression* expression)
+	: CExpression(NEGATION, expression)
+{
+}
+
+CAnd::CAnd(CExpression* expression1, CExpression* expression2)
+: CExpression(AND, expression1, expression2){
+}
+
+COr::COr(CExpression* expression1, CExpression* expression2)
+	: CExpression(OR, expression1, expression2)		
+{
+}
+
+CPower::CPower(CExpression* expression1, CExpression* expression2)
+	: CExpression(POWER, expression1, expression2)
+{
+}
+
+CModulo::CModulo(CExpression* expression1, CExpression* expression2)
+	: CExpression(MODULO, expression1, expression2)
+
+{
+}
+
+CNot::CNot(CExpression* expression)
+	: CExpression(NOT, expression)
+{
+}
+
+CGreater::CGreater(CExpression* expression1, CExpression* expression2)
+	: CExpression(GREATER, expression1, expression2)
+{
+}
+
+CGreaterEqual::CGreaterEqual(CExpression* expression1, CExpression* expression2)
+	: CExpression(GREATER_EQUAL, expression1, expression2)
+{
+}
+
+CIdentity::CIdentity(CExpression* expression)
+	:	 CExpression(IDENTITY, expression)
+{
+}
+
+CLessThan::CLessThan(CExpression* expression1, CExpression* expression2)
+	: CExpression(LESS_THAN, expression1, expression2)
+
+{
+}
+
+CLessEqual::CLessEqual(CExpression* expression1, CExpression* expression2)
+	: CExpression(LESS_EQUAL, expression1, expression2)
+{
+}
+
+CGreaterThan::CGreaterThan(CExpression* expression1, CExpression* expression2)
+	: CExpression(GREATER_THAN, expression1, expression2)
+{
+}
+
 CVARIABLE::CVARIABLE(string name) :
 CExpression(VARIABLE) {
 	m_name= name;
@@ -106,4 +210,3 @@ CExpression(NUMBER){
 	m_value = value;
 	SetNodeName("\"" + g_nodeNames[GetNodeType()] + "_" + to_string(GetSerial()) +"_" + to_string(value) + "\"");
 }
-

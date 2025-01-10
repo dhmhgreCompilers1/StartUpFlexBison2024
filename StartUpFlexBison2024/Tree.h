@@ -12,7 +12,9 @@ extern CNode* root;
 
 typedef enum NodeType {
 	EXPRESSSION_LIST, EXPRESSION, SEPARATOR, NUMBER
-	, VARIABLE, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT
+	, VARIABLE, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT,
+	EQUAL, NOT_EQUAL, NEGATION, AND, OR, POWER, MODULO, NOT, GREATER, GREATER_EQUAL, IDENTITY, LESS_THAN, LESS_EQUAL, GREATER_THAN
+
 } NODETYPE;
 extern string g_nodeNames[];
 
@@ -26,10 +28,11 @@ public:
 	string GetNodeName() { return _symbolNameGV; }
 	NODETYPE GetNodeType() { return _symbolType; }
 	int GetSerial() { return _serial; }
-	void virtual PrintSyntaxTree(ofstream *file,CNode *parent);	
+	void virtual PrintSyntaxTree(ofstream *file,CNode *parent);
+	int virtual Evaluate();
 
 public:
-	CNode * _parent;
+	CNode* _parent;
 	list<CNode*>* _children;
 	NODETYPE _symbolType;
 	string _symbolNameGV; // NODETYPE_SERIALNUMBER_SEMANTICVALUE
@@ -53,6 +56,7 @@ public:
 class CAddition : public CExpression {
 public:
 	CAddition(CExpression* expression1, CExpression* expression2);
+	int virtual Evaluate() override;
 };
 
 class CMultiplication : public CExpression {
@@ -75,6 +79,82 @@ public:
 	CAssignment(CExpression* expression1, CExpression* expression2);
 };
 
+class CEqual : public CExpression {
+	public:
+	CEqual(CExpression* expression1, CExpression* expression2);
+};
+
+class CNotEqual : public CExpression {
+public:
+	CNotEqual(CExpression* expression1, CExpression* expression2);
+};
+
+class CNegation : public CExpression {
+public:
+	CNegation(CExpression* expression);
+};
+
+class CAnd : public CExpression {
+public:
+	CAnd(CExpression* expression1, CExpression* expression2);
+};
+
+class COr : public CExpression {
+public:
+	COr(CExpression* expression1, CExpression* expression2);
+};
+
+class CPower : public CExpression {
+public:
+	CPower(CExpression* expression1, CExpression* expression2);
+};
+
+class CModulo : public CExpression {
+public:
+	CModulo(CExpression* expression1, CExpression* expression2);
+};
+
+class CNot : public CExpression {
+public:
+	CNot(CExpression* expression);
+};
+
+class CGreater : public CExpression {
+public:
+	CGreater(CExpression* expression1, CExpression* expression2);
+};
+
+class CGreaterEqual : public CExpression {
+public:
+	CGreaterEqual(CExpression* expression1, CExpression* expression2);
+};
+
+class CIdentity: public CExpression {
+public:
+	CIdentity(CExpression* expression);
+};
+
+class CLessThan : public CExpression {
+public:
+	CLessThan(CExpression* expression1, CExpression* expression2);
+};
+
+class CLessEqual : public CExpression {
+public:
+	CLessEqual(CExpression* expression1, CExpression* expression2);
+};
+
+class CGreaterThan : public CExpression {
+public:
+	CGreaterThan(CExpression* expression1, CExpression* expression2);
+};
+
+
+
+
+
+
+
 class CVARIABLE : public CExpression {
 public:
 	string m_name;
@@ -91,6 +171,8 @@ public :
 	CNUMBER(int value);
 	int m_value;
 };
+
+
 
 
 

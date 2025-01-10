@@ -152,6 +152,7 @@
     <Image Include="graph.gif" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Grammar.output" />
     <None Include="graph.dot" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
