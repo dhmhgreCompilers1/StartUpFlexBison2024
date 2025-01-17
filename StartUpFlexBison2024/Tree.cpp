@@ -70,6 +70,7 @@ int CNode::Evaluate() {
 	}
 
 	// POSTORDER ACTIONS
+	return 0;
 }
 
 

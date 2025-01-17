@@ -142,6 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Grammar.tab.h" />
+    <ClInclude Include="location.hh" />
+    <ClInclude Include="position.hh" />
+    <ClInclude Include="stack.hh" />
     <ClInclude Include="SymbolTable.h" />
     <ClInclude Include="Tree.h" />
   </ItemGroup>

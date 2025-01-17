@@ -15,7 +15,7 @@ using namespace std;
 #include "Tree.h"
 #include "grammar.tab.h"
 #include <cmath>
-extern int yylex(yy::parser::value_type *val);
+extern int yylex(yy::parser::value_type *val, yy::parser::location_type* loc);
 extern FILE *yyin;
 %}
 
@@ -25,6 +25,7 @@ extern FILE *yyin;
 
 %verbose
 %error-verbose
+%locations
 
 
 %start expression_list
@@ -75,6 +76,6 @@ expression :
 %%
 
 
-void yy::parser::error(const std::string& msg){
-	std::cerr << msg << std::endl;
+void yy::parser::error(const location_type& loc, const std::string& msg){
+	std::cerr << msg << " at "<< loc <<  std::endl;
 }

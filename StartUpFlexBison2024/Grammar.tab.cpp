@@ -45,7 +45,7 @@ using namespace std;
 #include "Tree.h"
 #include "grammar.tab.h"
 #include <cmath>
-extern int yylex(yy::parser::value_type *val);
+extern int yylex(yy::parser::value_type *val, yy::parser::location_type* loc);
 extern FILE *yyin;
 
 #line 52 "Grammar.tab.cpp"
@@ -78,6 +78,25 @@ extern FILE *yyin;
 # endif
 #endif
 
+#define YYRHSLOC(Rhs, K) ((Rhs)[K].location)
+/* YYLLOC_DEFAULT -- Set CURRENT to span from RHS[1] to RHS[N].
+   If N is 0, then set CURRENT to the empty location which ends
+   the previous symbol: RHS[0] (always defined).  */
+
+# ifndef YYLLOC_DEFAULT
+#  define YYLLOC_DEFAULT(Current, Rhs, N)                               \
+    do                                                                  \
+      if (N)                                                            \
+        {                                                               \
+          (Current).begin  = YYRHSLOC (Rhs, 1).begin;                   \
+          (Current).end    = YYRHSLOC (Rhs, N).end;                     \
+        }                                                               \
+      else                                                              \
+        {                                                               \
+          (Current).begin = (Current).end = YYRHSLOC (Rhs, 0).end;      \
+        }                                                               \
+    while (false)
+# endif
 
 
 // Enable debugging if requested.
@@ -126,7 +145,7 @@ extern FILE *yyin;
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 130 "Grammar.tab.cpp"
+#line 149 "Grammar.tab.cpp"
 
   /// Build a parser object.
   parser::parser ()
@@ -153,20 +172,23 @@ namespace yy {
   parser::basic_symbol<Base>::basic_symbol (const basic_symbol& that)
     : Base (that)
     , value (that.value)
+    , location (that.location)
   {}
 
 
   /// Constructor for valueless symbols.
   template <typename Base>
-  parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t)
+  parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, YY_MOVE_REF (location_type) l)
     : Base (t)
     , value ()
+    , location (l)
   {}
 
   template <typename Base>
-  parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, YY_RVREF (value_type) v)
+  parser::basic_symbol<Base>::basic_symbol (typename Base::kind_type t, YY_RVREF (value_type) v, YY_RVREF (location_type) l)
     : Base (t)
     , value (YY_MOVE (v))
+    , location (YY_MOVE (l))
   {}
 
 
@@ -191,6 +213,7 @@ namespace yy {
   {
     super_type::move (s);
     value = YY_MOVE (s.value);
+    location = YY_MOVE (s.location);
   }
 
   // by_kind.
@@ -283,7 +306,7 @@ namespace yy {
   {}
 
   parser::stack_symbol_type::stack_symbol_type (YY_RVREF (stack_symbol_type) that)
-    : super_type (YY_MOVE (that.state), YY_MOVE (that.value))
+    : super_type (YY_MOVE (that.state), YY_MOVE (that.value), YY_MOVE (that.location))
   {
 #if 201103L <= YY_CPLUSPLUS
     // that is emptied.
@@ -292,7 +315,7 @@ namespace yy {
   }
 
   parser::stack_symbol_type::stack_symbol_type (state_type s, YY_MOVE_REF (symbol_type) that)
-    : super_type (s, YY_MOVE (that.value))
+    : super_type (s, YY_MOVE (that.value), YY_MOVE (that.location))
   {
     // that is emptied.
     that.kind_ = symbol_kind::S_YYEMPTY;
@@ -304,6 +327,7 @@ namespace yy {
   {
     state = that.state;
     value = that.value;
+    location = that.location;
     return *this;
   }
 
@@ -312,6 +336,7 @@ namespace yy {
   {
     state = that.state;
     value = that.value;
+    location = that.location;
     // that is emptied.
     that.state = empty_state;
     return *this;
@@ -342,7 +367,8 @@ namespace yy {
       {
         symbol_kind_type yykind = yysym.kind ();
         yyo << (yykind < YYNTOKENS ? "token" : "nterm")
-            << ' ' << yysym.name () << " (";
+            << ' ' << yysym.name () << " ("
+            << yysym.location << ": ";
         YY_USE (yykind);
         yyo << ')';
       }
@@ -443,6 +469,9 @@ namespace yy {
     /// The lookahead symbol.
     symbol_type yyla;
 
+    /// The locations where the error started and ended.
+    stack_symbol_type yyerror_range[3];
+
     /// The return value of parse ().
     int yyresult;
 
@@ -491,7 +520,7 @@ namespace yy {
         try
 #endif // YY_EXCEPTIONS
           {
-            yyla.kind_ = yytranslate_ (yylex (&yyla.value));
+            yyla.kind_ = yytranslate_ (yylex (&yyla.value, &yyla.location));
           }
 #if YY_EXCEPTIONS
         catch (const syntax_error& yyexc)
@@ -570,6 +599,12 @@ namespace yy {
       else
         yylhs.value = yystack_[0].value;
 
+      // Default location.
+      {
+        stack_type::slice range (yystack_, yylen);
+        YYLLOC_DEFAULT (yylhs.location, range, yylen);
+        yyerror_range[1].location = yylhs.location;
+      }
 
       // Perform the reduction.
       YY_REDUCE_PRINT (yyn);
@@ -580,145 +615,145 @@ namespace yy {
           switch (yyn)
             {
   case 2: // expression_list: expression_list expression separator
-#line 45 "Grammar.y"
+#line 46 "Grammar.y"
                                          { root =(yylhs.value.node) = new CExpressionList((yystack_[2].value.node),(yystack_[1].value.node));  }
-#line 586 "Grammar.tab.cpp"
+#line 621 "Grammar.tab.cpp"
     break;
 
   case 3: // expression_list: expression separator
-#line 46 "Grammar.y"
+#line 47 "Grammar.y"
                                 { root= (yylhs.value.node) = new CExpressionList((yystack_[1].value.node)); }
-#line 592 "Grammar.tab.cpp"
+#line 627 "Grammar.tab.cpp"
     break;
 
   case 5: // expression: expression '+' expression
-#line 51 "Grammar.y"
+#line 52 "Grammar.y"
                                 { (yylhs.value.node) = new CAddition((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 598 "Grammar.tab.cpp"
+#line 633 "Grammar.tab.cpp"
     break;
 
   case 6: // expression: expression '-' expression
-#line 52 "Grammar.y"
+#line 53 "Grammar.y"
                                 { (yylhs.value.node) = new CSubtraction((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 604 "Grammar.tab.cpp"
+#line 639 "Grammar.tab.cpp"
     break;
 
   case 7: // expression: expression '*' expression
-#line 53 "Grammar.y"
+#line 54 "Grammar.y"
                                 { (yylhs.value.node) = new CMultiplication((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 610 "Grammar.tab.cpp"
+#line 645 "Grammar.tab.cpp"
     break;
 
   case 8: // expression: expression '/' expression
-#line 54 "Grammar.y"
+#line 55 "Grammar.y"
                                 { (yylhs.value.node) = new CDivision((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 616 "Grammar.tab.cpp"
+#line 651 "Grammar.tab.cpp"
     break;
 
   case 9: // expression: expression '%' expression
-#line 55 "Grammar.y"
+#line 56 "Grammar.y"
                                 { (yylhs.value.node) = new CModulo((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 622 "Grammar.tab.cpp"
+#line 657 "Grammar.tab.cpp"
     break;
 
   case 10: // expression: IDENTIFIER '=' expression
-#line 56 "Grammar.y"
+#line 57 "Grammar.y"
                                 { (yylhs.value.node) = new CAssignment((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 628 "Grammar.tab.cpp"
+#line 663 "Grammar.tab.cpp"
     break;
 
   case 11: // expression: '-' expression
-#line 57 "Grammar.y"
+#line 58 "Grammar.y"
                         { (yylhs.value.node) = new CNegation((CExpression *)(yystack_[0].value.node)); }
-#line 634 "Grammar.tab.cpp"
+#line 669 "Grammar.tab.cpp"
     break;
 
   case 12: // expression: '+' expression
-#line 58 "Grammar.y"
+#line 59 "Grammar.y"
                         { (yylhs.value.node) = new CIdentity((CExpression *)(yystack_[0].value.node)); }
-#line 640 "Grammar.tab.cpp"
+#line 675 "Grammar.tab.cpp"
     break;
 
   case 13: // expression: expression '^' expression
-#line 59 "Grammar.y"
+#line 60 "Grammar.y"
                                 { (yylhs.value.node) = new CPower((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 646 "Grammar.tab.cpp"
+#line 681 "Grammar.tab.cpp"
     break;
 
   case 14: // expression: '(' expression ')'
-#line 60 "Grammar.y"
+#line 61 "Grammar.y"
                         { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 652 "Grammar.tab.cpp"
+#line 687 "Grammar.tab.cpp"
     break;
 
   case 15: // expression: expression '>' expression
-#line 61 "Grammar.y"
+#line 62 "Grammar.y"
                               { (yylhs.value.node) = new CGreaterThan((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 658 "Grammar.tab.cpp"
+#line 693 "Grammar.tab.cpp"
     break;
 
   case 16: // expression: expression '<' expression
-#line 62 "Grammar.y"
+#line 63 "Grammar.y"
                               { (yylhs.value.node) = new CLessThan((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 664 "Grammar.tab.cpp"
+#line 699 "Grammar.tab.cpp"
     break;
 
   case 17: // expression: expression EQ expression
-#line 63 "Grammar.y"
+#line 64 "Grammar.y"
                              { (yylhs.value.node) = new CEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 670 "Grammar.tab.cpp"
+#line 705 "Grammar.tab.cpp"
     break;
 
   case 18: // expression: expression NE expression
-#line 64 "Grammar.y"
+#line 65 "Grammar.y"
                              { (yylhs.value.node) = new CNotEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 676 "Grammar.tab.cpp"
+#line 711 "Grammar.tab.cpp"
     break;
 
   case 19: // expression: expression GE expression
-#line 65 "Grammar.y"
+#line 66 "Grammar.y"
                              { (yylhs.value.node) = new CGreaterEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 682 "Grammar.tab.cpp"
+#line 717 "Grammar.tab.cpp"
     break;
 
   case 20: // expression: expression LE expression
-#line 66 "Grammar.y"
+#line 67 "Grammar.y"
                              { (yylhs.value.node) = new CLessEqual((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 688 "Grammar.tab.cpp"
+#line 723 "Grammar.tab.cpp"
     break;
 
   case 21: // expression: expression AND expression
-#line 67 "Grammar.y"
+#line 68 "Grammar.y"
                               { (yylhs.value.node) = new CAnd((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 694 "Grammar.tab.cpp"
+#line 729 "Grammar.tab.cpp"
     break;
 
   case 22: // expression: expression OR expression
-#line 68 "Grammar.y"
+#line 69 "Grammar.y"
                              { (yylhs.value.node) = new COr((CExpression *)(yystack_[2].value.node),(CExpression *)(yystack_[0].value.node)); }
-#line 700 "Grammar.tab.cpp"
+#line 735 "Grammar.tab.cpp"
     break;
 
   case 23: // expression: '!' expression
-#line 69 "Grammar.y"
+#line 70 "Grammar.y"
                    { (yylhs.value.node) = new CNot((CExpression *)(yystack_[0].value.node)); }
-#line 706 "Grammar.tab.cpp"
+#line 741 "Grammar.tab.cpp"
     break;
 
   case 24: // expression: IDENTIFIER
-#line 70 "Grammar.y"
+#line 71 "Grammar.y"
                { (yylhs.value.node)=(yystack_[0].value.node); }
-#line 712 "Grammar.tab.cpp"
+#line 747 "Grammar.tab.cpp"
     break;
 
   case 25: // expression: NUMBER
-#line 71 "Grammar.y"
+#line 72 "Grammar.y"
                 { (yylhs.value.node)=(yystack_[0].value.node); }
-#line 718 "Grammar.tab.cpp"
+#line 753 "Grammar.tab.cpp"
     break;
 
 
-#line 722 "Grammar.tab.cpp"
+#line 757 "Grammar.tab.cpp"
 
             default:
               break;
@@ -752,10 +787,11 @@ namespace yy {
         ++yynerrs_;
         context yyctx (*this, yyla);
         std::string msg = yysyntax_error_ (yyctx);
-        error (YY_MOVE (msg));
+        error (yyla.location, YY_MOVE (msg));
       }
 
 
+    yyerror_range[1].location = yyla.location;
     if (yyerrstatus_ == 3)
       {
         /* If just tried and failed to reuse lookahead token after an
@@ -817,6 +853,7 @@ namespace yy {
         if (yystack_.size () == 1)
           YYABORT;
 
+        yyerror_range[1].location = yystack_[0].location;
         yy_destroy_ ("Error: popping", yystack_[0]);
         yypop_ ();
         YY_STACK_PRINT ();
@@ -824,6 +861,8 @@ namespace yy {
     {
       stack_symbol_type error_token;
 
+      yyerror_range[2].location = yyla.location;
+      YYLLOC_DEFAULT (error_token.location, yyerror_range, 2);
 
       // Shift the error token.
       error_token.state = state_type (yyn);
@@ -889,7 +928,7 @@ namespace yy {
   void
   parser::error (const syntax_error& yyexc)
   {
-    error (yyexc.what ());
+    error (yyexc.location, yyexc.what ());
   }
 
   /* Return YYSTR after stripping away unnecessary quotes and
@@ -1185,9 +1224,9 @@ namespace yy {
   const signed char
   parser::yyrline_[] =
   {
-       0,    45,    45,    46,    48,    51,    52,    53,    54,    55,
-      56,    57,    58,    59,    60,    61,    62,    63,    64,    65,
-      66,    67,    68,    69,    70,    71
+       0,    46,    46,    47,    49,    52,    53,    54,    55,    56,
+      57,    58,    59,    60,    61,    62,    63,    64,    65,    66,
+      67,    68,    69,    70,    71,    72
   };
 
   void
@@ -1266,12 +1305,12 @@ namespace yy {
   }
 
 } // yy
-#line 1270 "Grammar.tab.cpp"
+#line 1309 "Grammar.tab.cpp"
 
-#line 75 "Grammar.y"
+#line 76 "Grammar.y"
 
 
 
-void yy::parser::error(const std::string& msg){
-	std::cerr << msg << std::endl;
+void yy::parser::error(const location_type& loc, const std::string& msg){
+	std::cerr << msg << " at "<< loc <<  std::endl;
 }

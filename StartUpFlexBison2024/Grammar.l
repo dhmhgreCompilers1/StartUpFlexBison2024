@@ -6,10 +6,12 @@
 #include "grammar.tab.h"
 #include "SymbolTable.h"
 #include "Tree.h"
-#define YY_DECL int yylex(yy::parser::value_type *val)
+#define YY_DECL int yylex(yy::parser::value_type *val, yy::parser::location_type* loc)
+#define YY_USER_ACTION loc->columns(yyleng);
 %}
 
 %%
+ loc->step ();
 
 ";" return ';';
 "+" return '+';
@@ -50,8 +52,8 @@
 }
 
 
-[ \t\n\r] ;
-
+[ \t]									{ loc->step (); }
+[\r\n]									{ loc->lines(1);}
 %%
 
 
