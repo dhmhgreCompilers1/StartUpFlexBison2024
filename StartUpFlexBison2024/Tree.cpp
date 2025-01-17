@@ -5,11 +5,18 @@
 
 int CNode::_serialCounter = 0;
 CNode* root = NULL;
-string g_nodeNames[] = { "EXPRESSSION_LIST", "EXPRESSION", "SEPARATOR", "NUMBER"
-	, "VARIABLE", "ADDITION", "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT",
-	"EQUAL", "NOT_EQUAL", "NEGATION", "AND", "OR", "POWER", "MODULO", "NOT", "GREATER",
-	"GREATER_EQUAL", "IDENTITY", "LESS_THAN", "LESS_EQUAL", "GREATER_THAN"
- };
+string g_nodeNames[] = {
+    "TRANSLATION_UNIT",    
+    "DECLARATIONS", "DECLARATION", "FUNCTION_DECLARATIONS", "FUNCTION_DECLARATION",
+    "PARAMETER_LIST", "PARAMETER", "TYPE_SPECIFIER", "STATEMENTS", "STATEMENT",
+    "COMPOUND_STATEMENT", "WHILE_STATEMENT", "DO_WHILE_STATEMENT", "FOR_STATEMENT",
+    "IF_STATEMENT", "CONTINUE_STATEMENT", "BREAK_STATEMENT", "RETURN_STATEMENT",
+    "EMPTY_STATEMENT",
+    "ARGUMENT_LIST", "EXPRESSION", "SEPARATOR", "NUMBER", "VARIABLE", "ADDITION",
+    "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT", "EQUAL", "NOT_EQUAL",
+    "NEGATION", "AND", "OR", "POWER", "MODULO", "NOT", "GREATER", "GREATER_EQUAL",
+    "IDENTITY", "LESS_THAN", "LESS_EQUAL", "GREATER_THAN", "FUNCTION_CALL"
+};
 
 std::string trimCharacter(const std::string& str, char ch) {
 	size_t start = str.find_first_not_of(ch); // Find the first non-ch character
@@ -74,15 +81,20 @@ int CNode::Evaluate() {
 }
 
 
-
-CExpressionList::CExpressionList(CNode* expression,
-	CNode* expressionList) :
-CNode(EXPRESSSION_LIST,2, expression, expressionList) {
+CTranslationUnit::CTranslationUnit(CNode* declarations, CNode* functions, CNode* statements) :
+CNode(TRANSLATION_UNIT, 3, declarations, functions, statements) {
 }
 
-CExpressionList::CExpressionList(CNode* expression) :
-CNode(EXPRESSSION_LIST,1, expression) {
+CDeclarations::CDeclarations(CNode* declarations, CNode* declaration) :
+CNode(DECLARATIONS, 2, declarations, declaration) {
 }
+
+CDeclaration::CDeclaration(CNode* typeSpecifier, CNode* identifier) :
+CNode(DECLARATION, 2, typeSpecifier, identifier) {
+}
+
+CFunctionDeclarations::CFunctionDeclarations(CNode* functionDeclarations, CNode* functionDeclaration) :
+
 
 CExpression::CExpression(NODETYPE symbolType) :CNode(symbolType, 0) {}
 

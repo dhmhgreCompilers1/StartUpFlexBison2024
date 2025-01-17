@@ -41,13 +41,87 @@ extern FILE *yyin;
 %type <node> expression expression_list 
 %%
 
-// one or more expressions 
-expression_list: 
-   expression_list  expression separator { root =$$ = new CExpressionList($1,$2);  }
-	| expression separator  { root= $$ = new CExpressionList($1); } 
-	;
-separator: ';';
-	
+translation_unit: declarations function_declarations statements	
+			| declarations statements
+			| function_declarations statements
+			| statements
+			;
+
+declarations: declarations declaration
+			| declaration
+			;
+
+declaration: type_specifier IDENTIFIER ';' 			
+			;
+
+function_declarations: function_declarations function_declaration
+			| function_declaration
+			;
+
+
+function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements '}'
+					| type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}'
+					| type_specifier IDENTIFIER '(' parameter_list ')' '{' statements '}'
+					| type_specifier IDENTIFIER '(' parameter_list ')' '{' '}'
+			;
+parameter_list: parameter_list ',' parameter
+			| parameter
+			;
+parameter: type_specifier IDENTIFIER
+			;
+
+type_specifier: INT 
+			| FLOAT 
+			| DOUBLE 
+			| CHAR 
+			;
+
+statements: statements statement
+			| statement
+			;
+
+statement : expression ';'
+		  | while_statement
+		  | if_statement
+		  | for_statement
+		  | return_statement
+		  | switch_statement
+		  | break_statement
+		  | continue_statement
+		  | ';' /* empty statement */
+		  | compound_statement
+		  ;
+
+compound_statement: '{' statements '}'
+				 | '{'  '}'
+				;
+
+while_statement:  WHILE '(' expression ')' statement
+				| WHILE '(' expression ')' ';'
+				;
+do_while_statement: DO statement WHILE '(' expression ')' ';'
+				;
+for_statement: FOR '(' expression ';' expression ';' expression ')' statement
+			 | FOR '(' expression ';' expression ';' ')' statement
+			 | FOR '(' expression ';' ';' expression ')' statement
+			 | FOR '(' expression ';' ';' ')' statement
+			 | FOR '(' ';' expression ';' expression ')' statement
+			 | FOR '(' ';' expression ';' ')' statement
+			 | FOR '(' ';' ';' expression ')' statement
+			 | FOR '(' ';' ';' ')' statement
+			 ;
+if_statement: IF '(' expression ')' statement
+		| IF '(' expression ')' statement ELSE statement
+		;
+
+continue_statement: CONTINUE ';'
+				;
+break_statement: BREAK ';'
+				;
+return_statement: RETURN expression ';'
+				| RETURN ';'
+				;
+
 expression : 
     expression '+' expression	{ $$ = new CAddition((CExpression *)$1,(CExpression *)$3); }
   | expression '-' expression	{ $$ = new CSubtraction((CExpression *)$1,(CExpression *)$3); }
@@ -69,9 +143,13 @@ expression :
   | expression OR expression { $$ = new COr((CExpression *)$1,(CExpression *)$3); }
   | '!' expression { $$ = new CNot((CExpression *)$2); }
   | IDENTIFIER { $$=$1; }
+  | IDENTIFIER '(' argument_list ')' { $$ = new CFunctionCall($1, $3); })
   | NUMBER  	{ $$=$1; }
 	;
 
+argument_list: argument_list  ',' expression  { root =$$ = new CExpressionList($1,$2);  }
+	| expression				{ root= $$ = new CExpressionList($1); } 
+	;
 
 %%
 

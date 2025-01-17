@@ -4,6 +4,7 @@
 #include <list>
 #include <fstream>
 #include <stdlib.h>
+#include "SymbolTable.h"
 class CNUMBER;
 class CNode;
 using namespace std;
@@ -11,10 +12,16 @@ using namespace std;
 extern CNode* root;
 
 typedef enum NodeType {
-	EXPRESSSION_LIST, EXPRESSION, SEPARATOR, NUMBER
-	, VARIABLE, ADDITION, SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT,
-	EQUAL, NOT_EQUAL, NEGATION, AND, OR, POWER, MODULO, NOT, GREATER, GREATER_EQUAL, IDENTITY, LESS_THAN, LESS_EQUAL, GREATER_THAN
-
+	TRANSLATION_UNIT,
+	DECLARATIONS, DECLARATION, FUNCTION_DECLARATIONS, FUNCTION_DECLARATION,
+	PARAMETER_LIST, PARAMETER, TYPE_SPECIFIER, STATEMENTS, STATEMENT,
+	COMPOUND_STATEMENT, WHILE_STATEMENT, DO_WHILE_STATEMENT, FOR_STATEMENT,
+	IF_STATEMENT, CONTINUE_STATEMENT, BREAK_STATEMENT, RETURN_STATEMENT,
+	EMPTY_STATEMENT,
+	ARGUMENT_LIST, EXPRESSION, SEPARATOR, NUMBER, VARIABLE, ADDITION,
+	SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT, EQUAL, NOT_EQUAL,
+	NEGATION, AND, OR, POWER, MODULO, NOT, GREATER, GREATER_EQUAL,
+	IDENTITY, LESS_THAN, LESS_EQUAL, GREATER_THAN, FUNCTION_CALL	
 } NODETYPE;
 extern string g_nodeNames[];
 
@@ -40,10 +47,106 @@ public:
 	static int _serialCounter;
 };
 
-class CExpressionList : public CNode {
+class CTranslationUnit : public CNode {
 public:
-	CExpressionList(CNode* expression, CNode* expressionList);
-	CExpressionList(CNode* expression);
+	CTranslationUnit(CNode* declarations, CNode* functions, CNode* statements);	
+};
+
+class CDeclarations : public CNode{
+public :
+		CDeclarations(CNode* declarations, CNode* declaration);
+		CDeclarations(CNode* declaration);
+};
+
+class CDeclaration : public CNode {
+public:
+	CDeclaration(CNode* typeSpecifier, CNode* identifier);
+};
+
+class CFunctionDeclarations : public CNode {
+public:
+	CFunctionDeclarations(CNode* functionDeclarations, CNode* functionDeclaration);
+	CFunctionDeclarations(CNode* functionDeclaration);
+};
+
+class CFunctionDeclaration : public CNode {
+public:
+	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList, CNode* declarations, CNode* statements);
+	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList, CNode* declarations);
+	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList, CNode* statements);
+	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList);
+};
+
+class CParameterList : public CNode {
+public:
+	CParameterList(CNode* parameterList, CNode* parameter);
+	CParameterList(CNode* parameter);
+};
+
+class CParameter : public CNode {
+public:
+	CParameter(CNode* typeSpecifier, CNode* identifier);
+};
+
+class CTypeSpecifier : public CNode {
+public:
+	CTypeSpecifier(SYMBOLTYPE symbolType);
+};
+
+class CStatements : public CNode {
+public:
+		CStatements(CNode* statements, CNode* statement);
+	
+
+};
+
+class CStatement : public CNode {
+public:
+	CStatement(CNode* expression);	
+};
+
+class CCompoundStatement : public CNode {
+public:	
+	CCompoundStatement(CNode* statements);	
+};
+
+class CWhileStatement : public CNode {
+public:
+	CWhileStatement(CNode* expression, CNode* statement);	
+};
+
+
+class CDoWhileStatement : public CNode {
+public:
+	CDoWhileStatement(CNode* expression, CNode* statement);
+};
+
+class CForStatement : public CNode {
+public:
+	CForStatement(CNode* expression1, CNode* expression2, CNode* expression3, CNode* statement);
+};
+
+class CIfStatement : public CNode {
+public:	
+	CIfStatement(CNode* expression, CNode* statement1, CNode* statement2);
+};
+
+class CContinueStatement : public CNode {
+public:
+};
+
+class CBreakStatement : public CNode {
+public:
+};
+
+class CReturnStatement : public CNode {
+public:
+	CReturnStatement(CNode* expression);
+};
+
+class CArgumentList : public CNode {
+public:
+	CArgumentList(CNode* argumentList, CNode* expression);
 };
 
 class CExpression : public CNode {
@@ -148,12 +251,6 @@ class CGreaterThan : public CExpression {
 public:
 	CGreaterThan(CExpression* expression1, CExpression* expression2);
 };
-
-
-
-
-
-
 
 class CVARIABLE : public CExpression {
 public:
