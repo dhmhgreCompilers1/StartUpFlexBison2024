@@ -47,85 +47,86 @@ protected:
 	static int _serialCounter;
 };
 
+#define CONSTRUCTOR(type) type(int params,...);
+
 class CTranslationUnit : public CNode {
 public:
-	CTranslationUnit(int params,...);	
+	CONSTRUCTOR(CTranslationUnit)
 };
 
 class CDeclarations : public CNode{
 public :
-		CDeclarations(int params,...);
+	CONSTRUCTOR(CDeclarations)
 };
 
 class CDeclaration : public CNode {
 public:
-	CDeclaration(int params, ...);
+	CONSTRUCTOR(CDeclaration)
 };
 
 class CFunctionDeclarations : public CNode {
 public:
-	CFunctionDeclarations(int params,...);
+	CONSTRUCTOR(CFunctionDeclarations)
 };
 
 class CFunctionDeclaration : public CNode {
 public:
-	CFunctionDeclaration(int params, ...);
+	CONSTRUCTOR(CFunctionDeclaration)
 };
 
 class CParameterList : public CNode {
 public:
-	CParameterList(int params, ...);
+	CONSTRUCTOR(CParameterList)
 };
 
 class CParameter : public CNode {
 public:
-	CParameter(int params, ...);
+	CONSTRUCTOR(CParameter)
 };
 
 class CTypeSpecifier : public CNode {
 public:
-	CTypeSpecifier(TYPE_SPECIFIER symbolType);
+	CONSTRUCTOR(CTypeSpecifier)
 };
 
 class CStatements : public CNode {
 public:
-		CStatements(int params, ...);
+	CONSTRUCTOR(CStatements)
 };
 
 class CStatement : public CNode {
 public:
-	CStatement(int params,...);
+	CONSTRUCTOR(CStatement)
 };
 
 class CExpressionStatement : public CNode {
 public:
-	CExpressionStatement(int params, ...);
+	CONSTRUCTOR(CExpressionStatement)
 };
 
 class CCompoundStatement : public CNode {
-public:	
-	CCompoundStatement(int params, ...);
+public:
+	CONSTRUCTOR(CCompoundStatement);
 };
 
 class CWhileStatement : public CNode {
 public:
-	CWhileStatement(int params, ...);
+	CONSTRUCTOR(CWhileStatement)
 };
-
 
 class CDoWhileStatement : public CNode {
 public:
-	CDoWhileStatement(int params, ...);
+	CONSTRUCTOR(CDoWhileStatement)
 };
 
 class CForStatement : public CNode {
 public:
-	CForStatement(int params, ...);
+	CONSTRUCTOR(CForStatement)
 };
 
 class CIfStatement : public CNode {
-public:	
-	CIfStatement(int params, ...);
+public:
+	CONSTRUCTOR(CIfStatement)
 };
 
 class CContinueStatement : public CNode {
@@ -140,17 +141,17 @@ public:
 
 class CReturnStatement : public CNode {
 public:
-	CReturnStatement(int params, ...);
+	CONSTRUCTOR(CReturnStatement)
 };
 
 class CEmptyStatement : public CNode {
-public:
+public:	
 	CEmptyStatement();
 };
 
 class CArgumentList : public CNode {
 public:
-	CArgumentList(int params, ...);
+	CONSTRUCTOR(CArgumentList)
 };
 
 class CExpression : public CNode {
@@ -160,48 +161,48 @@ public:
 
 class CAddition : public CExpression {
 public:
-	CAddition(int params, ...);
+	CONSTRUCTOR(CAddition)
 	int virtual Evaluate() override;
 };
 
 class CMultiplication : public CExpression {
 public:
-	CMultiplication(int params, ...);
+	CONSTRUCTOR(CMultiplication)
 };
 
 class CSubtraction : public CExpression {
 public:
-	CSubtraction(int params, ...);
+	CONSTRUCTOR(CSubtraction)
 };
 
 class CDivision : public CExpression {
 public:
-	CDivision(int params, ...);
+	CONSTRUCTOR(CDivision)
 };
 
 class CAssignment : public CExpression {
 public:
-	CAssignment(int params, ...);
+	CONSTRUCTOR(CAssignment)
 };
 
 class CEqual : public CExpression {
 	public:
-	CEqual(int params, ...);
+		CONSTRUCTOR(CEqual)
 };
 
 class CNotEqual : public CExpression {
 public:
-	CNotEqual(int params, ...);
+	CONSTRUCTOR(CNotEqual)
 };
 
 class CNegation : public CExpression {
 public:
-	CNegation(int params, ...);
+	CONSTRUCTOR(CNegation)
 };
 
 class CFunctionCall : public CExpression {
 public:
-	CFunctionCall(int params, ...);
+	CONSTRUCTOR(CFunctionCall)
 };
 
 class CAnd : public CExpression {
