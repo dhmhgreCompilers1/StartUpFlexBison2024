@@ -14,10 +14,10 @@ extern CNode* root;
 typedef enum NodeType {
 	TRANSLATION_UNIT,
 	DECLARATIONS, DECLARATION, FUNCTION_DECLARATIONS, FUNCTION_DECLARATION,
-	PARAMETER_LIST, PARAMETER, TYPE_SPECIFIER, STATEMENTS, STATEMENT,
+	PARAMETER_LIST, PARAMETER, TYPESPECIFIER, STATEMENTS, STATEMENT,
 	COMPOUND_STATEMENT, WHILE_STATEMENT, DO_WHILE_STATEMENT, FOR_STATEMENT,
 	IF_STATEMENT, CONTINUE_STATEMENT, BREAK_STATEMENT, RETURN_STATEMENT,
-	EMPTY_STATEMENT,
+	EMPTY_STATEMENT, EXPRESSION_STATEMENT,
 	ARGUMENT_LIST, EXPRESSION, SEPARATOR, NUMBER, VARIABLE, ADDITION,
 	SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT, EQUAL, NOT_EQUAL,
 	NEGATION, AND, OR, POWER, MODULO, NOT, GREATER, GREATER_EQUAL,
@@ -28,7 +28,7 @@ extern string g_nodeNames[];
 
 class CNode {
 public:
-	CNode(NODETYPE symbolType,int count, ...);
+	CNode(NODETYPE symbolType);
 	void AppendNodeName(string str);
 	void SetNodeName(string str) { _symbolNameGV = str; }
 	void SetParent(CNode* parent) { _parent = parent; }
@@ -38,7 +38,7 @@ public:
 	void virtual PrintSyntaxTree(ofstream *file,CNode *parent);
 	int virtual Evaluate();
 
-public:
+protected:
 	CNode* _parent;
 	list<CNode*>* _children;
 	NODETYPE _symbolType;
@@ -49,207 +49,214 @@ public:
 
 class CTranslationUnit : public CNode {
 public:
-	CTranslationUnit(CNode* declarations, CNode* functions, CNode* statements);	
+	CTranslationUnit(int params,...);	
 };
 
 class CDeclarations : public CNode{
 public :
-		CDeclarations(CNode* declarations, CNode* declaration);
-		CDeclarations(CNode* declaration);
+		CDeclarations(int params,...);
 };
 
 class CDeclaration : public CNode {
 public:
-	CDeclaration(CNode* typeSpecifier, CNode* identifier);
+	CDeclaration(int params, ...);
 };
 
 class CFunctionDeclarations : public CNode {
 public:
-	CFunctionDeclarations(CNode* functionDeclarations, CNode* functionDeclaration);
-	CFunctionDeclarations(CNode* functionDeclaration);
+	CFunctionDeclarations(int params,...);
 };
 
 class CFunctionDeclaration : public CNode {
 public:
-	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList, CNode* declarations, CNode* statements);
-	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList, CNode* declarations);
-	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList, CNode* statements);
-	CFunctionDeclaration(CNode* typeSpecifier, CNode* identifier, CNode* parameterList);
+	CFunctionDeclaration(int params, ...);
 };
 
 class CParameterList : public CNode {
 public:
-	CParameterList(CNode* parameterList, CNode* parameter);
-	CParameterList(CNode* parameter);
+	CParameterList(int params, ...);
 };
 
 class CParameter : public CNode {
 public:
-	CParameter(CNode* typeSpecifier, CNode* identifier);
+	CParameter(int params, ...);
 };
 
 class CTypeSpecifier : public CNode {
 public:
-	CTypeSpecifier(SYMBOLTYPE symbolType);
+	CTypeSpecifier(TYPE_SPECIFIER symbolType);
 };
 
 class CStatements : public CNode {
 public:
-		CStatements(CNode* statements, CNode* statement);
-	
-
+		CStatements(int params, ...);
 };
 
 class CStatement : public CNode {
 public:
-	CStatement(CNode* expression);	
+	CStatement(int params,...);
+};
+
+class CExpressionStatement : public CNode {
+public:
+	CExpressionStatement(int params, ...);
 };
 
 class CCompoundStatement : public CNode {
 public:	
-	CCompoundStatement(CNode* statements);	
+	CCompoundStatement(int params, ...);
 };
 
 class CWhileStatement : public CNode {
 public:
-	CWhileStatement(CNode* expression, CNode* statement);	
+	CWhileStatement(int params, ...);
 };
 
 
 class CDoWhileStatement : public CNode {
 public:
-	CDoWhileStatement(CNode* expression, CNode* statement);
+	CDoWhileStatement(int params, ...);
 };
 
 class CForStatement : public CNode {
 public:
-	CForStatement(CNode* expression1, CNode* expression2, CNode* expression3, CNode* statement);
+	CForStatement(int params, ...);
 };
 
 class CIfStatement : public CNode {
 public:	
-	CIfStatement(CNode* expression, CNode* statement1, CNode* statement2);
+	CIfStatement(int params, ...);
 };
 
 class CContinueStatement : public CNode {
 public:
+	CContinueStatement();
 };
 
 class CBreakStatement : public CNode {
 public:
+	CBreakStatement();
 };
 
 class CReturnStatement : public CNode {
 public:
-	CReturnStatement(CNode* expression);
+	CReturnStatement(int params, ...);
+};
+
+class CEmptyStatement : public CNode {
+public:
+	CEmptyStatement();
 };
 
 class CArgumentList : public CNode {
 public:
-	CArgumentList(CNode* argumentList, CNode* expression);
+	CArgumentList(int params, ...);
 };
 
 class CExpression : public CNode {
 public:
-	CExpression(NODETYPE symbolType);
-	CExpression(NODETYPE symbolType, CExpression *expr1);
-	CExpression(NODETYPE symbolType, CExpression* expr1,CExpression *expr2);
+	CExpression(NODETYPE symbolType);	
 };
 
 class CAddition : public CExpression {
 public:
-	CAddition(CExpression* expression1, CExpression* expression2);
+	CAddition(int params, ...);
 	int virtual Evaluate() override;
 };
 
 class CMultiplication : public CExpression {
 public:
-	CMultiplication(CExpression* expression1, CExpression* expression2);
+	CMultiplication(int params, ...);
 };
 
 class CSubtraction : public CExpression {
 public:
-	CSubtraction(CExpression* expression1, CExpression* expression2);
+	CSubtraction(int params, ...);
 };
 
 class CDivision : public CExpression {
 public:
-	CDivision(CExpression* expression1, CExpression* expression2);
+	CDivision(int params, ...);
 };
 
 class CAssignment : public CExpression {
 public:
-	CAssignment(CExpression* expression1, CExpression* expression2);
+	CAssignment(int params, ...);
 };
 
 class CEqual : public CExpression {
 	public:
-	CEqual(CExpression* expression1, CExpression* expression2);
+	CEqual(int params, ...);
 };
 
 class CNotEqual : public CExpression {
 public:
-	CNotEqual(CExpression* expression1, CExpression* expression2);
+	CNotEqual(int params, ...);
 };
 
 class CNegation : public CExpression {
 public:
-	CNegation(CExpression* expression);
+	CNegation(int params, ...);
+};
+
+class CFunctionCall : public CExpression {
+public:
+	CFunctionCall(int params, ...);
 };
 
 class CAnd : public CExpression {
 public:
-	CAnd(CExpression* expression1, CExpression* expression2);
+	CAnd(int params, ...);
 };
 
 class COr : public CExpression {
 public:
-	COr(CExpression* expression1, CExpression* expression2);
+	COr(int params, ...);
 };
 
 class CPower : public CExpression {
 public:
-	CPower(CExpression* expression1, CExpression* expression2);
+	CPower(int params, ...);
 };
 
 class CModulo : public CExpression {
 public:
-	CModulo(CExpression* expression1, CExpression* expression2);
+	CModulo(int params, ...);
 };
 
 class CNot : public CExpression {
 public:
-	CNot(CExpression* expression);
+	CNot(int params, ...);
 };
 
 class CGreater : public CExpression {
 public:
-	CGreater(CExpression* expression1, CExpression* expression2);
+	CGreater(int params, ...);
 };
 
 class CGreaterEqual : public CExpression {
 public:
-	CGreaterEqual(CExpression* expression1, CExpression* expression2);
+	CGreaterEqual(int params, ...);
 };
 
 class CIdentity: public CExpression {
 public:
-	CIdentity(CExpression* expression);
+	CIdentity(int params, ...);
 };
 
 class CLessThan : public CExpression {
 public:
-	CLessThan(CExpression* expression1, CExpression* expression2);
+	CLessThan(int params, ...);
 };
 
 class CLessEqual : public CExpression {
 public:
-	CLessEqual(CExpression* expression1, CExpression* expression2);
+	CLessEqual(int params, ...);
 };
 
 class CGreaterThan : public CExpression {
 public:
-	CGreaterThan(CExpression* expression1, CExpression* expression2);
+	CGreaterThan(int params, ...);
 };
 
 class CVARIABLE : public CExpression {

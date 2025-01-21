@@ -1,17 +1,22 @@
 #pragma once
+#include <list>
 #include <map>
 #include <string>
-#include "Tree.h"
 class SymbolTable;
+class CNode;
 using namespace std;
 
 typedef enum SymbolType {
-	Integer,
-	Float,
-	Double,
-	Char,
+	Variable,
 	Function
 } SYMBOLTYPE;
+
+typedef enum TypeSpecifier {
+	INT,
+	DOUBLE,
+	FLOAT,
+	CHAR,
+} TYPE_SPECIFIER;
 
 class CScopeSystem
 {
@@ -30,9 +35,11 @@ class CSymbol{
 	public:
 	string name;	
 	SYMBOLTYPE type;
+	CNode* node;
 	CSymbol(string name, SYMBOLTYPE type) {
 		this->name = name;
 		this->type = type;
+		node = nullptr;
 	}
 };
 
@@ -47,29 +54,37 @@ class CVariableSymbol : public CSymbol {
 	union vValue GetValue() {
 		return value;
 	}
+public:
+	CVariableSymbol(string name, SYMBOLTYPE type) :
+	CSymbol(name, Variable) {
+	}
 };
 
 class CFunctionSymbol : public CSymbol {
-	CNode* functionBody;	
-	CFunctionSymbol(string name, CNode* node, CNode* functionBody) : CSymbol(name, node) {
-		this->functionBody = functionBody;		
+	CNode* functionBody;
+	CFunctionSymbol(string name, CNode* node, CNode* functionBody) :
+	CSymbol(name, Function) {
+		this->functionBody = functionBody;
 	}
+};
 
 
 class SymbolTable {
 private:	
-	SymbolTable *parent;
-	map<std::string, CSymbol*> *table;
-	static SymbolTable *_instance;
+	SymbolTable *m_parent;
+	list<SymbolTable*>* m_childScopes;
+	int m_level;
+	map<std::string, CSymbol*> *m_table;	
+	static SymbolTable *ms_instance;
 	SymbolTable();
-public:		
-	CNode* GetSymbol(string symbolName);
+public:
+	CSymbol* GetSymbol(string symbolName);
 
 	static SymbolTable *GetSymbolTable()	{
-		if (_instance == NULL) {
-			_instance = new SymbolTable();
+		if (ms_instance == NULL) {
+			ms_instance = new SymbolTable();
 		}
-		return _instance;
+		return ms_instance;
 		
 	}
 

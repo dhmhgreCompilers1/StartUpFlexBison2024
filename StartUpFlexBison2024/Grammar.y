@@ -24,12 +24,14 @@ extern FILE *yyin;
 };
 
 %verbose
-%error-verbose
+%define parse.error verbose
 %locations
 
 
-%start expression_list
-%token <node> NUMBER IDENTIFIER NE GE LE AND OR
+%start translation_unit
+%token <node> NUMBER IDENTIFIER NE GE LE AND OR INT
+FLOAT CHAR DOUBLE WHILE DO FOR IF ELSE RETURN BREAK CONTINUE
+%nonassoc IFPREC
 %right '='
 %left AND 
 %left OR
@@ -38,117 +40,121 @@ extern FILE *yyin;
 %left '*' '/' '%'
 %left '^'
 %right '!'
-%type <node> expression expression_list 
+%nonassoc ELSE
+%type <node> expression  declarations declaration function_declarations
+function_declaration parameter_list parameter type_specifier statements
+statement compound_statement while_statement do_while_statement
+for_statement if_statement continue_statement break_statement 
+return_statement  argument_list translation_unit
 %%
 
-translation_unit: declarations function_declarations statements	
-			| declarations statements
-			| function_declarations statements
-			| statements
+translation_unit: declarations function_declarations statements	{ root = $$ = new CTranslationUnit(3,$1,$2,$3);}
+			| declarations statements { root = $$ = new CTranslationUnit(2,$1,$2);}
+			| function_declarations statements { root = $$ = new CTranslationUnit(2,$1,$2);}
+			| statements { root = $$ = new CTranslationUnit(1,$1);}
 			;
 
-declarations: declarations declaration
-			| declaration
+declarations: declarations declaration { $$ = new CDeclarations(2,$1,$2); }
+			| declaration { $$ = new CDeclarations(1,$1); }
 			;
 
-declaration: type_specifier IDENTIFIER ';' 			
+declaration: type_specifier IDENTIFIER ';' 	{ $$ = new CDeclaration(2,$1,$2); }		
 			;
 
-function_declarations: function_declarations function_declaration
-			| function_declaration
+function_declarations: function_declarations function_declaration { $$ = new CFunctionDeclarations(2,$1,$2); }
+			| function_declaration { $$ = new CFunctionDeclarations(1,$1); }
 			;
 
 
-function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements '}'
-					| type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}'
-					| type_specifier IDENTIFIER '(' parameter_list ')' '{' statements '}'
-					| type_specifier IDENTIFIER '(' parameter_list ')' '{' '}'
+function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements '}' { $$ = new CFunctionDeclaration(5,$1,$2,$4,$7,$8); }  
+					| type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}' { $$ = new CFunctionDeclaration(4,$1,$2,$4,$7); }
+					| type_specifier IDENTIFIER '(' parameter_list ')' '{' statements '}' { $$ = new CFunctionDeclaration(4,$1,$2,$4,$7); }
+					| type_specifier IDENTIFIER '(' parameter_list ')' '{' '}' { $$ = new CFunctionDeclaration(3,$1,$2,$4); }
 			;
-parameter_list: parameter_list ',' parameter
-			| parameter
+parameter_list: parameter_list ',' parameter { $$ = new CParameterList(2,$1,$3); }
+			| parameter { $$ = new CParameterList(1,$1); }
 			;
-parameter: type_specifier IDENTIFIER
-			;
-
-type_specifier: INT 
-			| FLOAT 
-			| DOUBLE 
-			| CHAR 
+parameter: type_specifier IDENTIFIER { $$ = new CParameter(2,$1,$2); }
 			;
 
-statements: statements statement
-			| statement
+type_specifier: INT  { $$ = new CTypeSpecifier(INT); }
+			| FLOAT  { $$ = new CTypeSpecifier(FLOAT); } 
+			| DOUBLE { $$ = new CTypeSpecifier(DOUBLE); }
+			| CHAR { $$ = new CTypeSpecifier(CHAR); } 
 			;
 
-statement : expression ';'
-		  | while_statement
-		  | if_statement
-		  | for_statement
-		  | return_statement
-		  | switch_statement
-		  | break_statement
-		  | continue_statement
-		  | ';' /* empty statement */
-		  | compound_statement
+statements: statements statement { $$ = new CStatements(2,$1,$2); }
+			| statement { $$ = new CStatements(1,$1); }
+			;
+
+statement : expression ';' { $$ = new CExpressionStatement(1,$1); }
+		  | do_while_statement { $$ = new CDoWhileStatement(1,$1); }
+		  | while_statement { $$ = new CWhileStatement(1,$1); }
+		  | if_statement { $$ = new CIfStatement(1,$1); }
+		  | for_statement { $$ = new CForStatement(1,$1); }
+		  | return_statement { $$ = new CReturnStatement(1,$1);}		  
+		  | break_statement  { $$ = new CBreakStatement(); }
+		  | continue_statement { $$ = new CContinueStatement(); }
+		  | ';'   { $$ = new CEmptyStatement(); }
+		  | compound_statement { $$ = new CCompoundStatement(1,$1); }
 		  ;
 
-compound_statement: '{' statements '}'
-				 | '{'  '}'
+compound_statement: '{' statements '}' { $$ = new CCompoundStatement(1,$2); }
+				 | '{'  '}' { $$ = new CCompoundStatement(0); }
 				;
 
-while_statement:  WHILE '(' expression ')' statement
-				| WHILE '(' expression ')' ';'
+while_statement:  WHILE '(' expression ')' statement { $$ = new CWhileStatement(2,$3,$5); }
 				;
-do_while_statement: DO statement WHILE '(' expression ')' ';'
+do_while_statement: DO statement WHILE '(' expression ')' ';' { $$ = new CDoWhileStatement(2,$2,$5); }
 				;
-for_statement: FOR '(' expression ';' expression ';' expression ')' statement
-			 | FOR '(' expression ';' expression ';' ')' statement
-			 | FOR '(' expression ';' ';' expression ')' statement
-			 | FOR '(' expression ';' ';' ')' statement
-			 | FOR '(' ';' expression ';' expression ')' statement
-			 | FOR '(' ';' expression ';' ')' statement
-			 | FOR '(' ';' ';' expression ')' statement
-			 | FOR '(' ';' ';' ')' statement
+for_statement: FOR '(' expression ';' expression ';' expression ')' statement { $$ = new CForStatement(4,$3,$5,$7,$9); }
+			 | FOR '(' expression ';' expression ';' ')' statement { $$ = new CForStatement(3,$3,$5,$8); }
+			 | FOR '(' expression ';' ';' expression ')' statement { $$ = new CForStatement(3,$3,$6,$8); }
+			 | FOR '(' expression ';' ';' ')' statement { $$ = new CForStatement(2,$3,$7); }
+			 | FOR '(' ';' expression ';' expression ')' statement { $$ = new CForStatement(3,$4,$6,$8); }
+			 | FOR '(' ';' expression ';' ')' statement { $$ = new CForStatement(2,$4,$7); }
+			 | FOR '(' ';' ';' expression ')' statement { $$ = new CForStatement(2,$5,$7); }
+			 | FOR '(' ';' ';' ')' statement { $$ = new CForStatement(0); }
 			 ;
-if_statement: IF '(' expression ')' statement
-		| IF '(' expression ')' statement ELSE statement
+if_statement: IF '(' expression ')' statement  %prec IFPREC { $$= new CIfStatement(2,$3,$5); }
+		| IF '(' expression ')' statement ELSE statement  { $$ = new CIfStatement(3,$3,$5,$7); }
 		;
 
-continue_statement: CONTINUE ';'
+continue_statement: CONTINUE ';' { $$ = new CContinueStatement(); }
 				;
-break_statement: BREAK ';'
+break_statement: BREAK ';' { $$ = new CBreakStatement(); }
 				;
-return_statement: RETURN expression ';'
-				| RETURN ';'
+return_statement: RETURN expression ';'	{ $$ = new CReturnStatement(1,$2); }
+				| RETURN ';' { $$ = new CReturnStatement(0); }
 				;
 
 expression : 
-    expression '+' expression	{ $$ = new CAddition((CExpression *)$1,(CExpression *)$3); }
-  | expression '-' expression	{ $$ = new CSubtraction((CExpression *)$1,(CExpression *)$3); }
-  | expression '*' expression	{ $$ = new CMultiplication((CExpression *)$1,(CExpression *)$3); }
-  | expression '/' expression	{ $$ = new CDivision((CExpression *)$1,(CExpression *)$3); }	 
-  | expression '%' expression	{ $$ = new CModulo((CExpression *)$1,(CExpression *)$3); }	 
-  | IDENTIFIER '=' expression	{ $$ = new CAssignment((CExpression *)$1,(CExpression *)$3); }
-  | '-' expression	{ $$ = new CNegation((CExpression *)$2); }
-  | '+' expression	{ $$ = new CIdentity((CExpression *)$2); }
-  | expression '^' expression	{ $$ = new CPower((CExpression *)$1,(CExpression *)$3); }
+    expression '+' expression	{ $$ = new CAddition(2,$1,$3); }
+  | expression '-' expression	{ $$ = new CSubtraction(2,$1,$3); }
+  | expression '*' expression	{ $$ = new CMultiplication(2,$1,$3); }
+  | expression '/' expression	{ $$ = new CDivision(2,$1,$3); }	 
+  | expression '%' expression	{ $$ = new CModulo(2,$1,$3); }	 
+  | IDENTIFIER '=' expression	{ $$ = new CAssignment(2,$1,$3); }
+  | '-' expression	{ $$ = new CNegation(1,$2); }
+  | '+' expression	{ $$ = new CIdentity(1,$2); }
+  | expression '^' expression	{ $$ = new CPower(2,$1,$3); }
   | '(' expression ')'	{ $$ = $2; }
-  | expression '>' expression { $$ = new CGreaterThan((CExpression *)$1,(CExpression *)$3); }
-  | expression '<' expression { $$ = new CLessThan((CExpression *)$1,(CExpression *)$3); }
-  | expression EQ expression { $$ = new CEqual((CExpression *)$1,(CExpression *)$3); }
-  | expression NE expression { $$ = new CNotEqual((CExpression *)$1,(CExpression *)$3); }
-  | expression GE expression { $$ = new CGreaterEqual((CExpression *)$1,(CExpression *)$3); }
-  | expression LE expression { $$ = new CLessEqual((CExpression *)$1,(CExpression *)$3); }
-  | expression AND expression { $$ = new CAnd((CExpression *)$1,(CExpression *)$3); }
-  | expression OR expression { $$ = new COr((CExpression *)$1,(CExpression *)$3); }
-  | '!' expression { $$ = new CNot((CExpression *)$2); }
+  | expression '>' expression { $$ = new CGreaterThan(2,$1,$3); }
+  | expression '<' expression { $$ = new CLessThan(2,$1,$3); }
+  | expression EQ expression { $$ = new CEqual(2,$1,$3); }
+  | expression NE expression { $$ = new CNotEqual(2,$1,$3); }
+  | expression GE expression { $$ = new CGreaterEqual(2,$1,$3); }
+  | expression LE expression { $$ = new CLessEqual(2,$1,$3); }
+  | expression AND expression { $$ = new CAnd(2,$1,$3); }
+  | expression OR expression { $$ = new COr(2,$1,$3); }
+  | '!' expression { $$ = new CNot(1,$2); }
   | IDENTIFIER { $$=$1; }
-  | IDENTIFIER '(' argument_list ')' { $$ = new CFunctionCall($1, $3); })
+  | IDENTIFIER '(' argument_list ')' { $$ = new CFunctionCall(2,$1,$3); }
   | NUMBER  	{ $$=$1; }
 	;
 
-argument_list: argument_list  ',' expression  { root =$$ = new CExpressionList($1,$2);  }
-	| expression				{ root= $$ = new CExpressionList($1); } 
+argument_list: argument_list  ',' expression  { $$ = new CArgumentList(2,$1,$3);  }
+	| expression				{ root= $$ = new CArgumentList(1,$1); } 
 	;
 
 %%

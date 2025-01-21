@@ -11,7 +11,7 @@ string g_nodeNames[] = {
     "PARAMETER_LIST", "PARAMETER", "TYPE_SPECIFIER", "STATEMENTS", "STATEMENT",
     "COMPOUND_STATEMENT", "WHILE_STATEMENT", "DO_WHILE_STATEMENT", "FOR_STATEMENT",
     "IF_STATEMENT", "CONTINUE_STATEMENT", "BREAK_STATEMENT", "RETURN_STATEMENT",
-    "EMPTY_STATEMENT",
+	"EMPTY_STATEMENT", "EXPRESSION_STATEMENT",
     "ARGUMENT_LIST", "EXPRESSION", "SEPARATOR", "NUMBER", "VARIABLE", "ADDITION",
     "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT", "EQUAL", "NOT_EQUAL",
     "NEGATION", "AND", "OR", "POWER", "MODULO", "NOT", "GREATER", "GREATER_EQUAL",
@@ -34,19 +34,10 @@ void CNode::AppendNodeName(string str) {
 } // inline function
 
 
-CNode::CNode(NODETYPE symbolType,int count, ...) {
+CNode::CNode(NODETYPE symbolType) {
 	_symbolType = symbolType;	
 	_serial = _serialCounter++;
-	_children = new list<CNode*>();
-	va_list args;
-	va_start(args, count);
-	CNode* child ;
-	for ( int i = 0; i < count; i++) {
-		child = va_arg(args, CNode*);
-		_children->push_back(child);
-		child->SetParent(this);				
-	}
-	va_end(args);
+	_children = new list<CNode*>();	
 	// SymbolName = NODETYPE_SERIALNUMBER
 	_symbolNameGV = "\""+g_nodeNames[_symbolType] + "_" + to_string(_serial) + "\"";
 }
@@ -80,136 +71,221 @@ int CNode::Evaluate() {
 	return 0;
 }
 
+#define GETARGS(count_param) va_list args; \
+va_start(args, count_param); \
+CNode* child; \
+for (int i = 0; i < count_param; i++) { \
+	child = va_arg(args, CNode*); \
+	_children->push_back(child); \
+	child->SetParent(this); \
+} \
+va_end(args);
 
-CTranslationUnit::CTranslationUnit(CNode* declarations, CNode* functions, CNode* statements) :
-CNode(TRANSLATION_UNIT, 3, declarations, functions, statements) {
+CTranslationUnit::CTranslationUnit(int params,...) :
+CNode(TRANSLATION_UNIT) {
+	GETARGS(params)
 }
 
-CDeclarations::CDeclarations(CNode* declarations, CNode* declaration) :
-CNode(DECLARATIONS, 2, declarations, declaration) {
+CDeclarations::CDeclarations(int params,...) :
+CNode(DECLARATIONS) {
+	GETARGS(params)
 }
 
-CDeclaration::CDeclaration(CNode* typeSpecifier, CNode* identifier) :
-CNode(DECLARATION, 2, typeSpecifier, identifier) {
+CDeclaration::CDeclaration(int params,...) :
+CNode(DECLARATION) {
+	GETARGS(params)
 }
 
-CFunctionDeclarations::CFunctionDeclarations(CNode* functionDeclarations, CNode* functionDeclaration) :
-
-
-CExpression::CExpression(NODETYPE symbolType) :CNode(symbolType, 0) {}
-
-
-CExpression::CExpression(NODETYPE symbolType, CExpression *expression) :
-CNode(symbolType,1,expression) {
+CFunctionDeclaration::CFunctionDeclaration(int params,...)
+	: CNode(FUNCTION_DECLARATION) {
+	GETARGS(params)
 }
 
-CExpression::CExpression(NODETYPE symbolType, CExpression* expression1,
-	CExpression* expression2) : CNode(symbolType, 2,expression1, expression2) {
+CParameterList::CParameterList(int params, ...) :
+	CNode(PARAMETER_LIST) {
+	GETARGS(params)
 }
 
-CAddition::CAddition(CExpression* expression1, CExpression* expression2) :
-CExpression(ADDITION, expression1, expression2) {
+CParameter::CParameter(int params, ...) :
+	CNode(PARAMETER) {
+	GETARGS(params)
 }
 
-int CAddition::Evaluate()
-{
-	int op1,op2;
-	list<CNode*>::iterator it = _children->begin();
-
-	// VISIT
-	op1 =  (*it)->Evaluate();
-	it++;
-	op2 = (*it)->Evaluate();
-
-	// POSTORDER
-	return op1+op2;
+CTypeSpecifier::CTypeSpecifier(TYPE_SPECIFIER typespecifier) :
+	CNode(TYPESPECIFIER) {	
 }
 
-CMultiplication::CMultiplication(CExpression* expression1, CExpression* expression2) :
-CExpression(MULTIPLICATION, expression1, expression2) {
+CStatements::CStatements(int params, ...) :
+	CNode(STATEMENTS) {
+	GETARGS(params)
 }
 
-CSubtraction::CSubtraction(CExpression* expression1, CExpression* expression2) :
-CExpression(SUBTRACTION, expression1, expression2) {
+CStatement::CStatement(int params,...) :
+CNode(STATEMENT) {
+	GETARGS(params)
 }
 
-CDivision::CDivision(CExpression* expression1, CExpression* expression2) :
-CExpression(DIVISION, expression1, expression2) {
+CExpressionStatement::CExpressionStatement(int params, ...) :
+CNode(EXPRESSION_STATEMENT) {
+	GETARGS(params)
 }
 
-CAssignment::CAssignment(CExpression* expression1, CExpression* expression2) :
-CExpression(ASSIGNMENT, expression1, expression2) {
+CCompoundStatement::CCompoundStatement(int params, ...) :
+CNode(COMPOUND_STATEMENT) {
+	GETARGS(params)
 }
 
-CEqual::CEqual(CExpression* expression1, CExpression* expression2)
-: CExpression(EQUAL, expression1, expression2) 
-{
+CWhileStatement::CWhileStatement(int params, ...) :
+	CNode(WHILE_STATEMENT) {
+	GETARGS(params)
 }
 
-CNotEqual::CNotEqual(CExpression* expression1, CExpression* expression2)
-	: CExpression(NOT_EQUAL, expression1, expression2)
-{
+CDoWhileStatement::CDoWhileStatement(int params, ...) :
+	CNode(DO_WHILE_STATEMENT) {
+	GETARGS(params)
 }
 
-CNegation::CNegation(CExpression* expression)
-	: CExpression(NEGATION, expression)
-{
+CForStatement::CForStatement(int params, ...) :
+	CNode(FOR_STATEMENT) {
+	GETARGS(params)
 }
 
-CAnd::CAnd(CExpression* expression1, CExpression* expression2)
-: CExpression(AND, expression1, expression2){
+CIfStatement::CIfStatement(int params, ...) :
+	CNode(IF_STATEMENT) {
+	GETARGS(params)
 }
 
-COr::COr(CExpression* expression1, CExpression* expression2)
-	: CExpression(OR, expression1, expression2)		
-{
+CContinueStatement::CContinueStatement() :
+	CNode(CONTINUE_STATEMENT) {
 }
 
-CPower::CPower(CExpression* expression1, CExpression* expression2)
-	: CExpression(POWER, expression1, expression2)
-{
+CBreakStatement::CBreakStatement() :
+	CNode(BREAK_STATEMENT) {
 }
 
-CModulo::CModulo(CExpression* expression1, CExpression* expression2)
-	: CExpression(MODULO, expression1, expression2)
-
-{
+CReturnStatement::CReturnStatement(int params, ...) :
+	CNode(RETURN_STATEMENT) {
+	GETARGS(params)
 }
 
-CNot::CNot(CExpression* expression)
-	: CExpression(NOT, expression)
-{
+CEmptyStatement::CEmptyStatement() :
+	CNode(EMPTY_STATEMENT) {
 }
 
-CGreater::CGreater(CExpression* expression1, CExpression* expression2)
-	: CExpression(GREATER, expression1, expression2)
-{
+CArgumentList::CArgumentList(int params, ...) :
+	CNode(ARGUMENT_LIST) {
+	GETARGS(params)
 }
 
-CGreaterEqual::CGreaterEqual(CExpression* expression1, CExpression* expression2)
-	: CExpression(GREATER_EQUAL, expression1, expression2)
-{
+CAddition::CAddition(int params, ...) :
+	CExpression(ADDITION) {
+	GETARGS(params)
 }
 
-CIdentity::CIdentity(CExpression* expression)
-	:	 CExpression(IDENTITY, expression)
-{
+CFunctionDeclarations::CFunctionDeclarations(int params, ...) :
+CNode(FUNCTION_DECLARATIONS) {
+	GETARGS(params)
 }
 
-CLessThan::CLessThan(CExpression* expression1, CExpression* expression2)
-	: CExpression(LESS_THAN, expression1, expression2)
+CExpression::CExpression(NODETYPE symbolType) :
+CNode(symbolType) {}
 
-{
+
+
+CMultiplication::CMultiplication(int params,...) :
+CExpression(MULTIPLICATION) {
+	GETARGS(params)
 }
 
-CLessEqual::CLessEqual(CExpression* expression1, CExpression* expression2)
-	: CExpression(LESS_EQUAL, expression1, expression2)
-{
+CSubtraction::CSubtraction(int params,...) :
+CExpression(SUBTRACTION) {
+	GETARGS(params)
 }
 
-CGreaterThan::CGreaterThan(CExpression* expression1, CExpression* expression2)
-	: CExpression(GREATER_THAN, expression1, expression2)
-{
+CDivision::CDivision(int params,...) :
+CExpression(DIVISION) {
+	GETARGS(params)
+}
+
+CAssignment::CAssignment(int params,...) :
+CExpression(ASSIGNMENT) {
+	GETARGS(params)
+}
+
+CEqual::CEqual(int params,...)
+: CExpression(EQUAL){
+	GETARGS(params)
+}
+
+CNotEqual::CNotEqual(int params,...)
+: CExpression(NOT_EQUAL){
+	GETARGS(params)
+}
+
+CNegation::CNegation(int params,...)
+: CExpression(NEGATION){
+	GETARGS(params)
+}
+
+CAnd::CAnd(int params,...)
+: CExpression(AND){
+	GETARGS(params)
+}
+
+COr::COr(int params,...)
+: CExpression(OR){
+	GETARGS(params)
+}
+
+CPower::CPower(int params,...)
+: CExpression(POWER){
+	GETARGS(params)
+}
+
+CModulo::CModulo(int params,...)
+: CExpression(MODULO) {
+	GETARGS(params)
+}
+
+CNot::CNot(int params,...)
+: CExpression(NOT){
+	GETARGS(params)
+}
+
+CGreater::CGreater(int params,...)
+: CExpression(GREATER){
+	GETARGS(params)
+}
+
+CGreaterEqual::CGreaterEqual(int params,...)
+	: CExpression(GREATER_EQUAL){
+	GETARGS(params)
+}
+
+CIdentity::CIdentity(int params,...)
+:	 CExpression(IDENTITY){
+	GETARGS(params)
+}
+
+CLessThan::CLessThan(int params,...)
+	: CExpression(LESS_THAN) {
+	GETARGS(params)
+}
+
+
+CLessEqual::CLessEqual(int params, ...)
+	: CExpression(LESS_EQUAL){
+	GETARGS(params)
+}
+
+CGreaterThan::CGreaterThan(int params, ...)
+	: CExpression(GREATER_THAN){
+	GETARGS(params)
+}
+
+CFunctionCall::CFunctionCall(int params, ...)
+	: CExpression(FUNCTION_CALL) {
+	GETARGS(params)
 }
 
 CVARIABLE::CVARIABLE(string name) :

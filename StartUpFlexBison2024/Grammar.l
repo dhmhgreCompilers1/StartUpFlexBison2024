@@ -47,7 +47,7 @@
 	SymbolTable *symbolTable;
 	symbolTable = SymbolTable::GetSymbolTable();
 	
-	val->node = symbolTable->GetSymbol(yytext);
+	val->node = symbolTable->GetSymbol(yytext)->node;
 	return yy::parser::token::IDENTIFIER;
 }
 

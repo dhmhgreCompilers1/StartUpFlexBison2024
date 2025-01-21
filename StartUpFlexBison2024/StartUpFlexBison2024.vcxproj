@@ -54,7 +54,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
-    <Import Project="..\..\..\..\..\..\FlexBison\custom_build_rules\win_flex_bison_custom_build.props" />
+    <Import Project="C:\flexbison\custom_build_rules\win_flex_bison\win_flex_bison_custom_build.props" />
   </ImportGroup>
   <ImportGroup Label="Shared">
   </ImportGroup>
@@ -134,6 +134,7 @@
     <Bison Include="Grammar.y" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EvaluatePass.cpp" />
     <ClCompile Include="Grammar.flex.cpp" />
     <ClCompile Include="Grammar.tab.cpp" />
     <ClCompile Include="main.cpp" />
@@ -160,6 +161,6 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\..\..\..\..\..\FlexBison\custom_build_rules\win_flex_bison_custom_build.targets" />
+    <Import Project="C:\flexbison\custom_build_rules\win_flex_bison\win_flex_bison_custom_build.targets" />
   </ImportGroup>
 </Project>

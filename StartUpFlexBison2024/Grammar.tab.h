@@ -254,7 +254,20 @@ namespace yy {
     LE = 262,                      // LE
     AND = 263,                     // AND
     OR = 264,                      // OR
-    EQ = 265                       // EQ
+    INT = 265,                     // INT
+    FLOAT = 266,                   // FLOAT
+    CHAR = 267,                    // CHAR
+    DOUBLE = 268,                  // DOUBLE
+    WHILE = 269,                   // WHILE
+    DO = 270,                      // DO
+    FOR = 271,                     // FOR
+    IF = 272,                      // IF
+    ELSE = 273,                    // ELSE
+    RETURN = 274,                  // RETURN
+    BREAK = 275,                   // BREAK
+    CONTINUE = 276,                // CONTINUE
+    IFPREC = 277,                  // IFPREC
+    EQ = 278                       // EQ
       };
       /// Backward compatibility alias (Bison 3.6).
       typedef token_kind_type yytokentype;
@@ -271,7 +284,7 @@ namespace yy {
     {
       enum symbol_kind_type
       {
-        YYNTOKENS = 24, ///< Number of tokens.
+        YYNTOKENS = 40, ///< Number of tokens.
         S_YYEMPTY = -2,
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
@@ -283,24 +296,57 @@ namespace yy {
         S_LE = 7,                                // LE
         S_AND = 8,                               // AND
         S_OR = 9,                                // OR
-        S_10_ = 10,                              // '='
-        S_11_ = 11,                              // '>'
-        S_12_ = 12,                              // '<'
-        S_EQ = 13,                               // EQ
-        S_14_ = 14,                              // '+'
-        S_15_ = 15,                              // '-'
-        S_16_ = 16,                              // '*'
-        S_17_ = 17,                              // '/'
-        S_18_ = 18,                              // '%'
-        S_19_ = 19,                              // '^'
-        S_20_ = 20,                              // '!'
-        S_21_ = 21,                              // ';'
-        S_22_ = 22,                              // '('
-        S_23_ = 23,                              // ')'
-        S_YYACCEPT = 24,                         // $accept
-        S_expression_list = 25,                  // expression_list
-        S_separator = 26,                        // separator
-        S_expression = 27                        // expression
+        S_INT = 10,                              // INT
+        S_FLOAT = 11,                            // FLOAT
+        S_CHAR = 12,                             // CHAR
+        S_DOUBLE = 13,                           // DOUBLE
+        S_WHILE = 14,                            // WHILE
+        S_DO = 15,                               // DO
+        S_FOR = 16,                              // FOR
+        S_IF = 17,                               // IF
+        S_ELSE = 18,                             // ELSE
+        S_RETURN = 19,                           // RETURN
+        S_BREAK = 20,                            // BREAK
+        S_CONTINUE = 21,                         // CONTINUE
+        S_IFPREC = 22,                           // IFPREC
+        S_23_ = 23,                              // '='
+        S_24_ = 24,                              // '>'
+        S_25_ = 25,                              // '<'
+        S_EQ = 26,                               // EQ
+        S_27_ = 27,                              // '+'
+        S_28_ = 28,                              // '-'
+        S_29_ = 29,                              // '*'
+        S_30_ = 30,                              // '/'
+        S_31_ = 31,                              // '%'
+        S_32_ = 32,                              // '^'
+        S_33_ = 33,                              // '!'
+        S_34_ = 34,                              // ';'
+        S_35_ = 35,                              // '('
+        S_36_ = 36,                              // ')'
+        S_37_ = 37,                              // '{'
+        S_38_ = 38,                              // '}'
+        S_39_ = 39,                              // ','
+        S_YYACCEPT = 40,                         // $accept
+        S_translation_unit = 41,                 // translation_unit
+        S_declarations = 42,                     // declarations
+        S_declaration = 43,                      // declaration
+        S_function_declarations = 44,            // function_declarations
+        S_function_declaration = 45,             // function_declaration
+        S_parameter_list = 46,                   // parameter_list
+        S_parameter = 47,                        // parameter
+        S_type_specifier = 48,                   // type_specifier
+        S_statements = 49,                       // statements
+        S_statement = 50,                        // statement
+        S_compound_statement = 51,               // compound_statement
+        S_while_statement = 52,                  // while_statement
+        S_do_while_statement = 53,               // do_while_statement
+        S_for_statement = 54,                    // for_statement
+        S_if_statement = 55,                     // if_statement
+        S_continue_statement = 56,               // continue_statement
+        S_break_statement = 57,                  // break_statement
+        S_return_statement = 58,                 // return_statement
+        S_expression = 59,                       // expression
+        S_argument_list = 60                     // argument_list
       };
     };
 
@@ -512,7 +558,7 @@ namespace yy {
 
 
     /// Stored state numbers (used for stacks).
-    typedef signed char state_type;
+    typedef unsigned char state_type;
 
     /// The arguments of the error message.
     int yy_syntax_error_arguments_ (const context& yyctx,
@@ -552,7 +598,7 @@ namespace yy {
     // Tables.
     // YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
     // STATE-NUM.
-    static const signed char yypact_[];
+    static const short yypact_[];
 
     // YYDEFACT[STATE-NUM] -- Default reduction number in state STATE-NUM.
     // Performed when YYTABLE does not specify something else to do.  Zero
@@ -568,9 +614,9 @@ namespace yy {
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const signed char yytable_[];
+    static const unsigned char yytable_[];
 
-    static const signed char yycheck_[];
+    static const short yycheck_[];
 
     // YYSTOS[STATE-NUM] -- The symbol kind of the accessing symbol of
     // state STATE-NUM.
@@ -585,7 +631,7 @@ namespace yy {
 
 #if YYDEBUG
     // YYRLINE[YYN] -- Source line where rule number YYN was defined.
-    static const signed char yyrline_[];
+    static const unsigned char yyrline_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
     virtual void yy_reduce_print_ (int r) const;
     /// Print the state stack on the debug stream.
@@ -812,9 +858,9 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 133,     ///< Last index in yytable_.
-      yynnts_ = 4,  ///< Number of nonterminal symbols.
-      yyfinal_ = 14 ///< Termination state number.
+      yylast_ = 760,     ///< Last index in yytable_.
+      yynnts_ = 21,  ///< Number of nonterminal symbols.
+      yyfinal_ = 53 ///< Termination state number.
     };
 
 
@@ -823,7 +869,7 @@ namespace yy {
 
 
 } // yy
-#line 827 "Grammar.tab.h"
+#line 873 "Grammar.tab.h"
 
 
 
