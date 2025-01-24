@@ -14,7 +14,7 @@ CSymbol* SymbolTable::GetSymbol(string symbolName) {
 		return it->second;
 	}
 	else {
-		CSymbol* node = new CVariableSymbol(symbolName,Variable);
+		CSymbol* node = new CVariableSymbol(symbolName);
 		m_table->insert(pair<string, CSymbol*>(symbolName, node));
 		return node;
 	}

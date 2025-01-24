@@ -48,7 +48,7 @@
 #line 3 "Grammar.y"
 
 	#include <map>
-	#include <string>
+	#include <string>	
 	#include "Tree.h"
 	using namespace std;
 	extern map<string, int> symbol_table;
@@ -206,7 +206,7 @@ namespace yy {
     /// Symbol semantic values.
     union value_type
     {
-#line 22 "Grammar.y"
+#line 23 "Grammar.y"
 
 	CNode *node;
 

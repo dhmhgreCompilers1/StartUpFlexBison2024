@@ -48,7 +48,7 @@ class CVariableSymbol : public CSymbol {
 		return value;
 	}
 public:
-	CVariableSymbol(string name, SYMBOLTYPE type) :
+	CVariableSymbol(string name) :
 		CSymbol(name, Variable) {
 	}
 };
@@ -116,6 +116,14 @@ public:
 			instance = new CScopeSystem();
 		}
 		return instance;
+	}
+
+	void AddSymbol(string symbolName, CSymbol* symbol) {
+		currentScope->AddSymbol(symbol);
+	}
+
+	CSymbol* GetSymbol(string symbolName) {
+		return currentScope->GetSymbol(symbolName);
 	}
 
 	void Debug_ScopeSystem() {

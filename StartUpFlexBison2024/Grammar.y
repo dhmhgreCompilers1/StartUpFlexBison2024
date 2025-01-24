@@ -2,7 +2,7 @@
 
 %code requires{
 	#include <map>
-	#include <string>
+	#include <string>	
 	#include "Tree.h"
 	using namespace std;
 	extern map<string, int> symbol_table;
@@ -14,6 +14,7 @@ using namespace std;
 #include <stdlib.h>
 #include "Tree.h"
 #include "grammar.tab.h"
+#include "Facade.h"
 #include <cmath>
 extern int yylex(yy::parser::value_type *val, yy::parser::location_type* loc);
 extern FILE *yyin;
@@ -58,7 +59,12 @@ declarations: declarations declaration { $$ = new CDeclarations(2,$1,$2); }
 			| declaration { $$ = new CDeclarations(1,$1); }
 			;
 
-declaration: type_specifier IDENTIFIER ';' 	{ $$ = new CDeclaration(2,$1,$2); }		
+declaration: type_specifier IDENTIFIER ';' 	{ 
+								CFacade *facade = CFacade::GetInstance();
+								CSymbol *symbol = new CVariableSymbol(((CIDENTIFIER *)$2)->m_name);
+								facade->GetScopeSystem()->AddSymbol(((CIDENTIFIER *)$2)->m_name, symbol);
+								$$ = new CDeclaration(2,$1,$2); 
+								}		
 			;
 
 function_declarations: function_declarations function_declaration { $$ = new CFunctionDeclarations(2,$1,$2); }

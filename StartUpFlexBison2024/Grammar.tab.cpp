@@ -44,11 +44,12 @@ using namespace std;
 #include <stdlib.h>
 #include "Tree.h"
 #include "grammar.tab.h"
+#include "Facade.h"
 #include <cmath>
 extern int yylex(yy::parser::value_type *val, yy::parser::location_type* loc);
 extern FILE *yyin;
 
-#line 52 "Grammar.tab.cpp"
+#line 53 "Grammar.tab.cpp"
 
 
 #include "Grammar.tab.h"
@@ -145,7 +146,7 @@ extern FILE *yyin;
 #define YYRECOVERING()  (!!yyerrstatus_)
 
 namespace yy {
-#line 149 "Grammar.tab.cpp"
+#line 150 "Grammar.tab.cpp"
 
   /// Build a parser object.
   parser::parser ()
@@ -615,457 +616,462 @@ namespace yy {
           switch (yyn)
             {
   case 2: // translation_unit: declarations function_declarations statements
-#line 51 "Grammar.y"
+#line 52 "Grammar.y"
                                                                 { root = (yylhs.value.node) = new CTranslationUnit(3,(yystack_[2].value.node),(yystack_[1].value.node),(yystack_[0].value.node));}
-#line 621 "Grammar.tab.cpp"
+#line 622 "Grammar.tab.cpp"
     break;
 
   case 3: // translation_unit: declarations statements
-#line 52 "Grammar.y"
+#line 53 "Grammar.y"
                                                   { root = (yylhs.value.node) = new CTranslationUnit(2,(yystack_[1].value.node),(yystack_[0].value.node));}
-#line 627 "Grammar.tab.cpp"
+#line 628 "Grammar.tab.cpp"
     break;
 
   case 4: // translation_unit: function_declarations statements
-#line 53 "Grammar.y"
+#line 54 "Grammar.y"
                                                            { root = (yylhs.value.node) = new CTranslationUnit(2,(yystack_[1].value.node),(yystack_[0].value.node));}
-#line 633 "Grammar.tab.cpp"
+#line 634 "Grammar.tab.cpp"
     break;
 
   case 5: // translation_unit: statements
-#line 54 "Grammar.y"
+#line 55 "Grammar.y"
                                      { root = (yylhs.value.node) = new CTranslationUnit(1,(yystack_[0].value.node));}
-#line 639 "Grammar.tab.cpp"
+#line 640 "Grammar.tab.cpp"
     break;
 
   case 6: // declarations: declarations declaration
-#line 57 "Grammar.y"
+#line 58 "Grammar.y"
                                        { (yylhs.value.node) = new CDeclarations(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
-#line 645 "Grammar.tab.cpp"
+#line 646 "Grammar.tab.cpp"
     break;
 
   case 7: // declarations: declaration
-#line 58 "Grammar.y"
+#line 59 "Grammar.y"
                                       { (yylhs.value.node) = new CDeclarations(1,(yystack_[0].value.node)); }
-#line 651 "Grammar.tab.cpp"
+#line 652 "Grammar.tab.cpp"
     break;
 
   case 8: // declaration: type_specifier IDENTIFIER ';'
-#line 61 "Grammar.y"
-                                                { (yylhs.value.node) = new CDeclaration(2,(yystack_[2].value.node),(yystack_[1].value.node)); }
-#line 657 "Grammar.tab.cpp"
-    break;
-
-  case 9: // function_declarations: function_declarations function_declaration
-#line 64 "Grammar.y"
-                                                                  { (yylhs.value.node) = new CFunctionDeclarations(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
+#line 62 "Grammar.y"
+                                                { 
+								CFacade *facade = CFacade::GetInstance();
+								CSymbol *symbol = new CVariableSymbol(((CIDENTIFIER *)(yystack_[1].value.node))->m_name);
+								facade->GetScopeSystem()->AddSymbol(((CIDENTIFIER *)(yystack_[1].value.node))->m_name, symbol);
+								(yylhs.value.node) = new CDeclaration(2,(yystack_[2].value.node),(yystack_[1].value.node)); 
+								}
 #line 663 "Grammar.tab.cpp"
     break;
 
-  case 10: // function_declarations: function_declaration
-#line 65 "Grammar.y"
-                                               { (yylhs.value.node) = new CFunctionDeclarations(1,(yystack_[0].value.node)); }
+  case 9: // function_declarations: function_declarations function_declaration
+#line 70 "Grammar.y"
+                                                                  { (yylhs.value.node) = new CFunctionDeclarations(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
 #line 669 "Grammar.tab.cpp"
     break;
 
-  case 11: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements '}'
-#line 69 "Grammar.y"
-                                                                                                       { (yylhs.value.node) = new CFunctionDeclaration(5,(yystack_[8].value.node),(yystack_[7].value.node),(yystack_[5].value.node),(yystack_[2].value.node),(yystack_[1].value.node)); }
+  case 10: // function_declarations: function_declaration
+#line 71 "Grammar.y"
+                                               { (yylhs.value.node) = new CFunctionDeclarations(1,(yystack_[0].value.node)); }
 #line 675 "Grammar.tab.cpp"
     break;
 
-  case 12: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}'
-#line 70 "Grammar.y"
-                                                                                                                { (yylhs.value.node) = new CFunctionDeclaration(4,(yystack_[7].value.node),(yystack_[6].value.node),(yystack_[4].value.node),(yystack_[1].value.node)); }
+  case 11: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements '}'
+#line 75 "Grammar.y"
+                                                                                                       { (yylhs.value.node) = new CFunctionDeclaration(5,(yystack_[8].value.node),(yystack_[7].value.node),(yystack_[5].value.node),(yystack_[2].value.node),(yystack_[1].value.node)); }
 #line 681 "Grammar.tab.cpp"
     break;
 
-  case 13: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' statements '}'
-#line 71 "Grammar.y"
-                                                                                                              { (yylhs.value.node) = new CFunctionDeclaration(4,(yystack_[7].value.node),(yystack_[6].value.node),(yystack_[4].value.node),(yystack_[1].value.node)); }
+  case 12: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}'
+#line 76 "Grammar.y"
+                                                                                                                { (yylhs.value.node) = new CFunctionDeclaration(4,(yystack_[7].value.node),(yystack_[6].value.node),(yystack_[4].value.node),(yystack_[1].value.node)); }
 #line 687 "Grammar.tab.cpp"
     break;
 
-  case 14: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' '}'
-#line 72 "Grammar.y"
-                                                                                                   { (yylhs.value.node) = new CFunctionDeclaration(3,(yystack_[6].value.node),(yystack_[5].value.node),(yystack_[3].value.node)); }
+  case 13: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' statements '}'
+#line 77 "Grammar.y"
+                                                                                                              { (yylhs.value.node) = new CFunctionDeclaration(4,(yystack_[7].value.node),(yystack_[6].value.node),(yystack_[4].value.node),(yystack_[1].value.node)); }
 #line 693 "Grammar.tab.cpp"
     break;
 
-  case 15: // parameter_list: parameter_list ',' parameter
-#line 74 "Grammar.y"
-                                             { (yylhs.value.node) = new CParameterList(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 14: // function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' '}'
+#line 78 "Grammar.y"
+                                                                                                   { (yylhs.value.node) = new CFunctionDeclaration(3,(yystack_[6].value.node),(yystack_[5].value.node),(yystack_[3].value.node)); }
 #line 699 "Grammar.tab.cpp"
     break;
 
-  case 16: // parameter_list: parameter
-#line 75 "Grammar.y"
-                                    { (yylhs.value.node) = new CParameterList(1,(yystack_[0].value.node)); }
+  case 15: // parameter_list: parameter_list ',' parameter
+#line 80 "Grammar.y"
+                                             { (yylhs.value.node) = new CParameterList(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 705 "Grammar.tab.cpp"
     break;
 
-  case 17: // parameter: type_specifier IDENTIFIER
-#line 77 "Grammar.y"
-                                     { (yylhs.value.node) = new CParameter(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
+  case 16: // parameter_list: parameter
+#line 81 "Grammar.y"
+                                    { (yylhs.value.node) = new CParameterList(1,(yystack_[0].value.node)); }
 #line 711 "Grammar.tab.cpp"
     break;
 
-  case 18: // type_specifier: INT
-#line 80 "Grammar.y"
-                     { (yylhs.value.node) = new CTypeSpecifier(INT); }
+  case 17: // parameter: type_specifier IDENTIFIER
+#line 83 "Grammar.y"
+                                     { (yylhs.value.node) = new CParameter(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
 #line 717 "Grammar.tab.cpp"
     break;
 
-  case 19: // type_specifier: FLOAT
-#line 81 "Grammar.y"
-                                 { (yylhs.value.node) = new CTypeSpecifier(FLOAT); }
+  case 18: // type_specifier: INT
+#line 86 "Grammar.y"
+                     { (yylhs.value.node) = new CTypeSpecifier(INT); }
 #line 723 "Grammar.tab.cpp"
     break;
 
-  case 20: // type_specifier: DOUBLE
-#line 82 "Grammar.y"
-                                 { (yylhs.value.node) = new CTypeSpecifier(DOUBLE); }
+  case 19: // type_specifier: FLOAT
+#line 87 "Grammar.y"
+                                 { (yylhs.value.node) = new CTypeSpecifier(FLOAT); }
 #line 729 "Grammar.tab.cpp"
     break;
 
-  case 21: // type_specifier: CHAR
-#line 83 "Grammar.y"
-                               { (yylhs.value.node) = new CTypeSpecifier(CHAR); }
+  case 20: // type_specifier: DOUBLE
+#line 88 "Grammar.y"
+                                 { (yylhs.value.node) = new CTypeSpecifier(DOUBLE); }
 #line 735 "Grammar.tab.cpp"
     break;
 
-  case 22: // statements: statements statement
-#line 86 "Grammar.y"
-                                 { (yylhs.value.node) = new CStatements(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
+  case 21: // type_specifier: CHAR
+#line 89 "Grammar.y"
+                               { (yylhs.value.node) = new CTypeSpecifier(CHAR); }
 #line 741 "Grammar.tab.cpp"
     break;
 
-  case 23: // statements: statement
-#line 87 "Grammar.y"
-                                    { (yylhs.value.node) = new CStatements(1,(yystack_[0].value.node)); }
+  case 22: // statements: statements statement
+#line 92 "Grammar.y"
+                                 { (yylhs.value.node) = new CStatements(2,(yystack_[1].value.node),(yystack_[0].value.node)); }
 #line 747 "Grammar.tab.cpp"
     break;
 
-  case 24: // statement: expression ';'
-#line 90 "Grammar.y"
-                           { (yylhs.value.node) = new CExpressionStatement(1,(yystack_[1].value.node)); }
+  case 23: // statements: statement
+#line 93 "Grammar.y"
+                                    { (yylhs.value.node) = new CStatements(1,(yystack_[0].value.node)); }
 #line 753 "Grammar.tab.cpp"
     break;
 
-  case 25: // statement: do_while_statement
-#line 91 "Grammar.y"
-                                       { (yylhs.value.node) = new CDoWhileStatement(1,(yystack_[0].value.node)); }
+  case 24: // statement: expression ';'
+#line 96 "Grammar.y"
+                           { (yylhs.value.node) = new CExpressionStatement(1,(yystack_[1].value.node)); }
 #line 759 "Grammar.tab.cpp"
     break;
 
-  case 26: // statement: while_statement
-#line 92 "Grammar.y"
-                                    { (yylhs.value.node) = new CWhileStatement(1,(yystack_[0].value.node)); }
+  case 25: // statement: do_while_statement
+#line 97 "Grammar.y"
+                                       { (yylhs.value.node) = new CDoWhileStatement(1,(yystack_[0].value.node)); }
 #line 765 "Grammar.tab.cpp"
     break;
 
-  case 27: // statement: if_statement
-#line 93 "Grammar.y"
-                                 { (yylhs.value.node) = new CIfStatement(1,(yystack_[0].value.node)); }
+  case 26: // statement: while_statement
+#line 98 "Grammar.y"
+                                    { (yylhs.value.node) = new CWhileStatement(1,(yystack_[0].value.node)); }
 #line 771 "Grammar.tab.cpp"
     break;
 
-  case 28: // statement: for_statement
-#line 94 "Grammar.y"
-                                  { (yylhs.value.node) = new CForStatement(1,(yystack_[0].value.node)); }
+  case 27: // statement: if_statement
+#line 99 "Grammar.y"
+                                 { (yylhs.value.node) = new CIfStatement(1,(yystack_[0].value.node)); }
 #line 777 "Grammar.tab.cpp"
     break;
 
-  case 29: // statement: return_statement
-#line 95 "Grammar.y"
-                                     { (yylhs.value.node) = new CReturnStatement(1,(yystack_[0].value.node));}
+  case 28: // statement: for_statement
+#line 100 "Grammar.y"
+                                  { (yylhs.value.node) = new CForStatement(1,(yystack_[0].value.node)); }
 #line 783 "Grammar.tab.cpp"
     break;
 
-  case 30: // statement: break_statement
-#line 96 "Grammar.y"
-                                     { (yylhs.value.node) = new CBreakStatement(); }
+  case 29: // statement: return_statement
+#line 101 "Grammar.y"
+                                     { (yylhs.value.node) = new CReturnStatement(1,(yystack_[0].value.node));}
 #line 789 "Grammar.tab.cpp"
     break;
 
-  case 31: // statement: continue_statement
-#line 97 "Grammar.y"
-                                       { (yylhs.value.node) = new CContinueStatement(); }
+  case 30: // statement: break_statement
+#line 102 "Grammar.y"
+                                     { (yylhs.value.node) = new CBreakStatement(); }
 #line 795 "Grammar.tab.cpp"
     break;
 
-  case 32: // statement: ';'
-#line 98 "Grammar.y"
-                          { (yylhs.value.node) = new CEmptyStatement(); }
+  case 31: // statement: continue_statement
+#line 103 "Grammar.y"
+                                       { (yylhs.value.node) = new CContinueStatement(); }
 #line 801 "Grammar.tab.cpp"
     break;
 
-  case 33: // statement: compound_statement
-#line 99 "Grammar.y"
-                                       { (yylhs.value.node) = new CCompoundStatement(1,(yystack_[0].value.node)); }
+  case 32: // statement: ';'
+#line 104 "Grammar.y"
+                          { (yylhs.value.node) = new CEmptyStatement(); }
 #line 807 "Grammar.tab.cpp"
     break;
 
-  case 34: // compound_statement: '{' statements '}'
-#line 102 "Grammar.y"
-                                       { (yylhs.value.node) = new CCompoundStatement(1,(yystack_[1].value.node)); }
+  case 33: // statement: compound_statement
+#line 105 "Grammar.y"
+                                       { (yylhs.value.node) = new CCompoundStatement(1,(yystack_[0].value.node)); }
 #line 813 "Grammar.tab.cpp"
     break;
 
-  case 35: // compound_statement: '{' '}'
-#line 103 "Grammar.y"
-                                            { (yylhs.value.node) = new CCompoundStatement(0); }
+  case 34: // compound_statement: '{' statements '}'
+#line 108 "Grammar.y"
+                                       { (yylhs.value.node) = new CCompoundStatement(1,(yystack_[1].value.node)); }
 #line 819 "Grammar.tab.cpp"
     break;
 
-  case 36: // while_statement: WHILE '(' expression ')' statement
-#line 106 "Grammar.y"
-                                                     { (yylhs.value.node) = new CWhileStatement(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 35: // compound_statement: '{' '}'
+#line 109 "Grammar.y"
+                                            { (yylhs.value.node) = new CCompoundStatement(0); }
 #line 825 "Grammar.tab.cpp"
     break;
 
-  case 37: // do_while_statement: DO statement WHILE '(' expression ')' ';'
-#line 108 "Grammar.y"
-                                                              { (yylhs.value.node) = new CDoWhileStatement(2,(yystack_[5].value.node),(yystack_[2].value.node)); }
+  case 36: // while_statement: WHILE '(' expression ')' statement
+#line 112 "Grammar.y"
+                                                     { (yylhs.value.node) = new CWhileStatement(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 831 "Grammar.tab.cpp"
     break;
 
-  case 38: // for_statement: FOR '(' expression ';' expression ';' expression ')' statement
-#line 110 "Grammar.y"
-                                                                              { (yylhs.value.node) = new CForStatement(4,(yystack_[6].value.node),(yystack_[4].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 37: // do_while_statement: DO statement WHILE '(' expression ')' ';'
+#line 114 "Grammar.y"
+                                                              { (yylhs.value.node) = new CDoWhileStatement(2,(yystack_[5].value.node),(yystack_[2].value.node)); }
 #line 837 "Grammar.tab.cpp"
     break;
 
-  case 39: // for_statement: FOR '(' expression ';' expression ';' ')' statement
-#line 111 "Grammar.y"
-                                                                               { (yylhs.value.node) = new CForStatement(3,(yystack_[5].value.node),(yystack_[3].value.node),(yystack_[0].value.node)); }
+  case 38: // for_statement: FOR '(' expression ';' expression ';' expression ')' statement
+#line 116 "Grammar.y"
+                                                                              { (yylhs.value.node) = new CForStatement(4,(yystack_[6].value.node),(yystack_[4].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 843 "Grammar.tab.cpp"
     break;
 
-  case 40: // for_statement: FOR '(' expression ';' ';' expression ')' statement
-#line 112 "Grammar.y"
-                                                                               { (yylhs.value.node) = new CForStatement(3,(yystack_[5].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 39: // for_statement: FOR '(' expression ';' expression ';' ')' statement
+#line 117 "Grammar.y"
+                                                                               { (yylhs.value.node) = new CForStatement(3,(yystack_[5].value.node),(yystack_[3].value.node),(yystack_[0].value.node)); }
 #line 849 "Grammar.tab.cpp"
     break;
 
-  case 41: // for_statement: FOR '(' expression ';' ';' ')' statement
-#line 113 "Grammar.y"
-                                                                    { (yylhs.value.node) = new CForStatement(2,(yystack_[4].value.node),(yystack_[0].value.node)); }
+  case 40: // for_statement: FOR '(' expression ';' ';' expression ')' statement
+#line 118 "Grammar.y"
+                                                                               { (yylhs.value.node) = new CForStatement(3,(yystack_[5].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 855 "Grammar.tab.cpp"
     break;
 
-  case 42: // for_statement: FOR '(' ';' expression ';' expression ')' statement
-#line 114 "Grammar.y"
-                                                                               { (yylhs.value.node) = new CForStatement(3,(yystack_[4].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 41: // for_statement: FOR '(' expression ';' ';' ')' statement
+#line 119 "Grammar.y"
+                                                                    { (yylhs.value.node) = new CForStatement(2,(yystack_[4].value.node),(yystack_[0].value.node)); }
 #line 861 "Grammar.tab.cpp"
     break;
 
-  case 43: // for_statement: FOR '(' ';' expression ';' ')' statement
-#line 115 "Grammar.y"
-                                                                    { (yylhs.value.node) = new CForStatement(2,(yystack_[3].value.node),(yystack_[0].value.node)); }
+  case 42: // for_statement: FOR '(' ';' expression ';' expression ')' statement
+#line 120 "Grammar.y"
+                                                                               { (yylhs.value.node) = new CForStatement(3,(yystack_[4].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 867 "Grammar.tab.cpp"
     break;
 
-  case 44: // for_statement: FOR '(' ';' ';' expression ')' statement
-#line 116 "Grammar.y"
-                                                                    { (yylhs.value.node) = new CForStatement(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 43: // for_statement: FOR '(' ';' expression ';' ')' statement
+#line 121 "Grammar.y"
+                                                                    { (yylhs.value.node) = new CForStatement(2,(yystack_[3].value.node),(yystack_[0].value.node)); }
 #line 873 "Grammar.tab.cpp"
     break;
 
-  case 45: // for_statement: FOR '(' ';' ';' ')' statement
-#line 117 "Grammar.y"
-                                                         { (yylhs.value.node) = new CForStatement(0); }
+  case 44: // for_statement: FOR '(' ';' ';' expression ')' statement
+#line 122 "Grammar.y"
+                                                                    { (yylhs.value.node) = new CForStatement(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 879 "Grammar.tab.cpp"
     break;
 
-  case 46: // if_statement: IF '(' expression ')' statement
-#line 119 "Grammar.y"
-                                                            { (yylhs.value.node)= new CIfStatement(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 45: // for_statement: FOR '(' ';' ';' ')' statement
+#line 123 "Grammar.y"
+                                                         { (yylhs.value.node) = new CForStatement(0); }
 #line 885 "Grammar.tab.cpp"
     break;
 
-  case 47: // if_statement: IF '(' expression ')' statement ELSE statement
-#line 120 "Grammar.y"
-                                                                  { (yylhs.value.node) = new CIfStatement(3,(yystack_[4].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 46: // if_statement: IF '(' expression ')' statement
+#line 125 "Grammar.y"
+                                                            { (yylhs.value.node)= new CIfStatement(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 891 "Grammar.tab.cpp"
     break;
 
-  case 48: // continue_statement: CONTINUE ';'
-#line 123 "Grammar.y"
-                                 { (yylhs.value.node) = new CContinueStatement(); }
+  case 47: // if_statement: IF '(' expression ')' statement ELSE statement
+#line 126 "Grammar.y"
+                                                                  { (yylhs.value.node) = new CIfStatement(3,(yystack_[4].value.node),(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 897 "Grammar.tab.cpp"
     break;
 
-  case 49: // break_statement: BREAK ';'
-#line 125 "Grammar.y"
-                           { (yylhs.value.node) = new CBreakStatement(); }
+  case 48: // continue_statement: CONTINUE ';'
+#line 129 "Grammar.y"
+                                 { (yylhs.value.node) = new CContinueStatement(); }
 #line 903 "Grammar.tab.cpp"
     break;
 
-  case 50: // return_statement: RETURN expression ';'
-#line 127 "Grammar.y"
-                                        { (yylhs.value.node) = new CReturnStatement(1,(yystack_[1].value.node)); }
+  case 49: // break_statement: BREAK ';'
+#line 131 "Grammar.y"
+                           { (yylhs.value.node) = new CBreakStatement(); }
 #line 909 "Grammar.tab.cpp"
     break;
 
-  case 51: // return_statement: RETURN ';'
-#line 128 "Grammar.y"
-                                             { (yylhs.value.node) = new CReturnStatement(0); }
+  case 50: // return_statement: RETURN expression ';'
+#line 133 "Grammar.y"
+                                        { (yylhs.value.node) = new CReturnStatement(1,(yystack_[1].value.node)); }
 #line 915 "Grammar.tab.cpp"
     break;
 
-  case 52: // expression: expression '+' expression
-#line 132 "Grammar.y"
-                                { (yylhs.value.node) = new CAddition(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 51: // return_statement: RETURN ';'
+#line 134 "Grammar.y"
+                                             { (yylhs.value.node) = new CReturnStatement(0); }
 #line 921 "Grammar.tab.cpp"
     break;
 
-  case 53: // expression: expression '-' expression
-#line 133 "Grammar.y"
-                                { (yylhs.value.node) = new CSubtraction(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 52: // expression: expression '+' expression
+#line 138 "Grammar.y"
+                                { (yylhs.value.node) = new CAddition(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 927 "Grammar.tab.cpp"
     break;
 
-  case 54: // expression: expression '*' expression
-#line 134 "Grammar.y"
-                                { (yylhs.value.node) = new CMultiplication(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 53: // expression: expression '-' expression
+#line 139 "Grammar.y"
+                                { (yylhs.value.node) = new CSubtraction(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 933 "Grammar.tab.cpp"
     break;
 
-  case 55: // expression: expression '/' expression
-#line 135 "Grammar.y"
-                                { (yylhs.value.node) = new CDivision(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 54: // expression: expression '*' expression
+#line 140 "Grammar.y"
+                                { (yylhs.value.node) = new CMultiplication(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 939 "Grammar.tab.cpp"
     break;
 
-  case 56: // expression: expression '%' expression
-#line 136 "Grammar.y"
-                                { (yylhs.value.node) = new CModulo(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 55: // expression: expression '/' expression
+#line 141 "Grammar.y"
+                                { (yylhs.value.node) = new CDivision(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 945 "Grammar.tab.cpp"
     break;
 
-  case 57: // expression: IDENTIFIER '=' expression
-#line 137 "Grammar.y"
-                                { (yylhs.value.node) = new CAssignment(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 56: // expression: expression '%' expression
+#line 142 "Grammar.y"
+                                { (yylhs.value.node) = new CModulo(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 951 "Grammar.tab.cpp"
     break;
 
-  case 58: // expression: '-' expression
-#line 138 "Grammar.y"
-                        { (yylhs.value.node) = new CNegation(1,(yystack_[0].value.node)); }
+  case 57: // expression: IDENTIFIER '=' expression
+#line 143 "Grammar.y"
+                                { (yylhs.value.node) = new CAssignment(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 957 "Grammar.tab.cpp"
     break;
 
-  case 59: // expression: '+' expression
-#line 139 "Grammar.y"
-                        { (yylhs.value.node) = new CIdentity(1,(yystack_[0].value.node)); }
+  case 58: // expression: '-' expression
+#line 144 "Grammar.y"
+                        { (yylhs.value.node) = new CNegation(1,(yystack_[0].value.node)); }
 #line 963 "Grammar.tab.cpp"
     break;
 
-  case 60: // expression: expression '^' expression
-#line 140 "Grammar.y"
-                                { (yylhs.value.node) = new CPower(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 59: // expression: '+' expression
+#line 145 "Grammar.y"
+                        { (yylhs.value.node) = new CIdentity(1,(yystack_[0].value.node)); }
 #line 969 "Grammar.tab.cpp"
     break;
 
-  case 61: // expression: '(' expression ')'
-#line 141 "Grammar.y"
-                        { (yylhs.value.node) = (yystack_[1].value.node); }
+  case 60: // expression: expression '^' expression
+#line 146 "Grammar.y"
+                                { (yylhs.value.node) = new CPower(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 975 "Grammar.tab.cpp"
     break;
 
-  case 62: // expression: expression '>' expression
-#line 142 "Grammar.y"
-                              { (yylhs.value.node) = new CGreaterThan(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 61: // expression: '(' expression ')'
+#line 147 "Grammar.y"
+                        { (yylhs.value.node) = (yystack_[1].value.node); }
 #line 981 "Grammar.tab.cpp"
     break;
 
-  case 63: // expression: expression '<' expression
-#line 143 "Grammar.y"
-                              { (yylhs.value.node) = new CLessThan(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 62: // expression: expression '>' expression
+#line 148 "Grammar.y"
+                              { (yylhs.value.node) = new CGreaterThan(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 987 "Grammar.tab.cpp"
     break;
 
-  case 64: // expression: expression EQ expression
-#line 144 "Grammar.y"
-                             { (yylhs.value.node) = new CEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 63: // expression: expression '<' expression
+#line 149 "Grammar.y"
+                              { (yylhs.value.node) = new CLessThan(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 993 "Grammar.tab.cpp"
     break;
 
-  case 65: // expression: expression NE expression
-#line 145 "Grammar.y"
-                             { (yylhs.value.node) = new CNotEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 64: // expression: expression EQ expression
+#line 150 "Grammar.y"
+                             { (yylhs.value.node) = new CEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 999 "Grammar.tab.cpp"
     break;
 
-  case 66: // expression: expression GE expression
-#line 146 "Grammar.y"
-                             { (yylhs.value.node) = new CGreaterEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 65: // expression: expression NE expression
+#line 151 "Grammar.y"
+                             { (yylhs.value.node) = new CNotEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 1005 "Grammar.tab.cpp"
     break;
 
-  case 67: // expression: expression LE expression
-#line 147 "Grammar.y"
-                             { (yylhs.value.node) = new CLessEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 66: // expression: expression GE expression
+#line 152 "Grammar.y"
+                             { (yylhs.value.node) = new CGreaterEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 1011 "Grammar.tab.cpp"
     break;
 
-  case 68: // expression: expression AND expression
-#line 148 "Grammar.y"
-                              { (yylhs.value.node) = new CAnd(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 67: // expression: expression LE expression
+#line 153 "Grammar.y"
+                             { (yylhs.value.node) = new CLessEqual(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 1017 "Grammar.tab.cpp"
     break;
 
-  case 69: // expression: expression OR expression
-#line 149 "Grammar.y"
-                             { (yylhs.value.node) = new COr(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
+  case 68: // expression: expression AND expression
+#line 154 "Grammar.y"
+                              { (yylhs.value.node) = new CAnd(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 1023 "Grammar.tab.cpp"
     break;
 
-  case 70: // expression: '!' expression
-#line 150 "Grammar.y"
-                   { (yylhs.value.node) = new CNot(1,(yystack_[0].value.node)); }
+  case 69: // expression: expression OR expression
+#line 155 "Grammar.y"
+                             { (yylhs.value.node) = new COr(2,(yystack_[2].value.node),(yystack_[0].value.node)); }
 #line 1029 "Grammar.tab.cpp"
     break;
 
-  case 71: // expression: IDENTIFIER
-#line 151 "Grammar.y"
-               { (yylhs.value.node)=(yystack_[0].value.node); }
+  case 70: // expression: '!' expression
+#line 156 "Grammar.y"
+                   { (yylhs.value.node) = new CNot(1,(yystack_[0].value.node)); }
 #line 1035 "Grammar.tab.cpp"
     break;
 
-  case 72: // expression: IDENTIFIER '(' argument_list ')'
-#line 152 "Grammar.y"
-                                     { (yylhs.value.node) = new CFunctionCall(2,(yystack_[3].value.node),(yystack_[1].value.node)); }
+  case 71: // expression: IDENTIFIER
+#line 157 "Grammar.y"
+               { (yylhs.value.node)=(yystack_[0].value.node); }
 #line 1041 "Grammar.tab.cpp"
     break;
 
-  case 73: // expression: INTEGER
-#line 153 "Grammar.y"
-                { (yylhs.value.node)=(yystack_[0].value.node); }
+  case 72: // expression: IDENTIFIER '(' argument_list ')'
+#line 158 "Grammar.y"
+                                     { (yylhs.value.node) = new CFunctionCall(2,(yystack_[3].value.node),(yystack_[1].value.node)); }
 #line 1047 "Grammar.tab.cpp"
     break;
 
-  case 74: // expression: FLOAT
-#line 154 "Grammar.y"
-                        { (yylhs.value.node)=(yystack_[0].value.node); }
+  case 73: // expression: INTEGER
+#line 159 "Grammar.y"
+                { (yylhs.value.node)=(yystack_[0].value.node); }
 #line 1053 "Grammar.tab.cpp"
     break;
 
-  case 75: // argument_list: argument_list ',' expression
-#line 157 "Grammar.y"
-                                              { (yylhs.value.node) = new CArgumentList(2,(yystack_[2].value.node),(yystack_[0].value.node));  }
+  case 74: // expression: FLOAT
+#line 160 "Grammar.y"
+                        { (yylhs.value.node)=(yystack_[0].value.node); }
 #line 1059 "Grammar.tab.cpp"
     break;
 
-  case 76: // argument_list: expression
-#line 158 "Grammar.y"
-                                                { root= (yylhs.value.node) = new CArgumentList(1,(yystack_[0].value.node)); }
+  case 75: // argument_list: argument_list ',' expression
+#line 163 "Grammar.y"
+                                              { (yylhs.value.node) = new CArgumentList(2,(yystack_[2].value.node),(yystack_[0].value.node));  }
 #line 1065 "Grammar.tab.cpp"
     break;
 
+  case 76: // argument_list: expression
+#line 164 "Grammar.y"
+                                                { root= (yylhs.value.node) = new CArgumentList(1,(yystack_[0].value.node)); }
+#line 1071 "Grammar.tab.cpp"
+    break;
 
-#line 1069 "Grammar.tab.cpp"
+
+#line 1075 "Grammar.tab.cpp"
 
             default:
               break;
@@ -1733,14 +1739,14 @@ namespace yy {
   const unsigned char
   parser::yyrline_[] =
   {
-       0,    51,    51,    52,    53,    54,    57,    58,    61,    64,
-      65,    69,    70,    71,    72,    74,    75,    77,    80,    81,
-      82,    83,    86,    87,    90,    91,    92,    93,    94,    95,
-      96,    97,    98,    99,   102,   103,   106,   108,   110,   111,
-     112,   113,   114,   115,   116,   117,   119,   120,   123,   125,
-     127,   128,   132,   133,   134,   135,   136,   137,   138,   139,
-     140,   141,   142,   143,   144,   145,   146,   147,   148,   149,
-     150,   151,   152,   153,   154,   157,   158
+       0,    52,    52,    53,    54,    55,    58,    59,    62,    70,
+      71,    75,    76,    77,    78,    80,    81,    83,    86,    87,
+      88,    89,    92,    93,    96,    97,    98,    99,   100,   101,
+     102,   103,   104,   105,   108,   109,   112,   114,   116,   117,
+     118,   119,   120,   121,   122,   123,   125,   126,   129,   131,
+     133,   134,   138,   139,   140,   141,   142,   143,   144,   145,
+     146,   147,   148,   149,   150,   151,   152,   153,   154,   155,
+     156,   157,   158,   159,   160,   163,   164
   };
 
   void
@@ -1820,9 +1826,9 @@ namespace yy {
   }
 
 } // yy
-#line 1824 "Grammar.tab.cpp"
+#line 1830 "Grammar.tab.cpp"
 
-#line 161 "Grammar.y"
+#line 167 "Grammar.y"
 
 
 

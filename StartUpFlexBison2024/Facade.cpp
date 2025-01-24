@@ -28,3 +28,13 @@ void CFacade::EmitParseTree()
 	dotFile->close();
 	system("dot -Tgif graph.dot -o graph.gif");
 }
+
+
+CFacade* CFacade::instance = nullptr;
+CFacade* CFacade::GetInstance(bool debugTree) {
+	if (instance == nullptr) {
+		instance = new CFacade(debugTree);
+	}
+	return instance;
+}
+

@@ -2,7 +2,7 @@
 #include "grammar.tab.h"
 
 int main(int argc, char** argv) {
-	CFacade* facade = new CFacade(true);
+	CFacade* facade = CFacade::GetInstance(true);
 	facade->Parse(argv[1]);
 	return 0;
 }
