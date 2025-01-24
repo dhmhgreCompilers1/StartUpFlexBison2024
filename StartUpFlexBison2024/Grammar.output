@@ -91,10 +91,11 @@ Grammar
    69           | '!' expression
    70           | IDENTIFIER
    71           | IDENTIFIER '(' argument_list ')'
-   72           | NUMBER
+   72           | INTEGER
+   73           | FLOAT
 
-   73 argument_list: argument_list ',' expression
-   74              | expression
+   74 argument_list: argument_list ',' expression
+   75              | expression
 
 
 Terminals, with rules where they appear
@@ -106,7 +107,7 @@ Terminals, with rules where they appear
     ')' (41) 10 11 12 13 35 36 37 38 39 40 41 42 43 44 45 46 60 71
     '*' (42) 53
     '+' (43) 51 58
-    ',' (44) 14 73
+    ',' (44) 14 74
     '-' (45) 52 57
     '/' (47) 54
     ';' (59) 7 23 31 36 37 38 39 40 41 42 43 44 47 48 49 50
@@ -117,7 +118,7 @@ Terminals, with rules where they appear
     '{' (123) 10 11 12 13 33 34
     '}' (125) 10 11 12 13 33 34
     error (256)
-    NUMBER <node> (258) 72
+    INTEGER <node> (258) 72
     IDENTIFIER <node> (259) 7 10 11 12 13 16 56 70 71
     NE <node> (260) 64
     GE <node> (261) 65
@@ -125,7 +126,7 @@ Terminals, with rules where they appear
     AND <node> (263) 67
     OR <node> (264) 68
     INT <node> (265) 17
-    FLOAT <node> (266) 18
+    FLOAT <node> (266) 18 73
     CHAR <node> (267) 20
     DOUBLE <node> (268) 19
     WHILE <node> (269) 35 36
@@ -199,18 +200,18 @@ Nonterminals, with rules where they appear
         on left: 49 50
         on right: 28
     expression <node> (59)
-        on left: 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72
-        on right: 23 35 36 37 38 39 40 41 42 43 45 46 49 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 73 74
+        on left: 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 70 71 72 73
+        on right: 23 35 36 37 38 39 40 41 42 43 45 46 49 51 52 53 54 55 56 57 58 59 60 61 62 63 64 65 66 67 68 69 74 75
     argument_list <node> (60)
-        on left: 73 74
-        on right: 71 73
+        on left: 74 75
+        on right: 71 74
 
 
 State 0
 
     0 $accept: . translation_unit $end
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     INT         shift, and go to state 3
     FLOAT       shift, and go to state 4
@@ -251,7 +252,7 @@ State 0
 
 State 1
 
-   72 expression: NUMBER .
+   72 expression: INTEGER .
 
     $default  reduce using rule 72 (expression)
 
@@ -278,8 +279,10 @@ State 3
 State 4
 
    18 type_specifier: FLOAT .
+   73 expression: FLOAT .
 
-    $default  reduce using rule 18 (type_specifier)
+    IDENTIFIER  reduce using rule 18 (type_specifier)
+    $default    reduce using rule 73 (expression)
 
 
 State 5
@@ -307,8 +310,9 @@ State 8
 
    36 do_while_statement: DO . statement WHILE '(' expression ')' ';'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -323,7 +327,7 @@ State 8
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    statement           go to state 40
+    statement           go to state 41
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -346,7 +350,7 @@ State 9
    43              | FOR . '(' ';' ';' expression ')' statement
    44              | FOR . '(' ';' ';' ')' statement
 
-    '('  shift, and go to state 41
+    '('  shift, and go to state 42
 
 
 State 10
@@ -354,7 +358,7 @@ State 10
    45 if_statement: IF . '(' expression ')' statement
    46             | IF . '(' expression ')' statement ELSE statement
 
-    '('  shift, and go to state 42
+    '('  shift, and go to state 43
 
 
 State 11
@@ -362,51 +366,39 @@ State 11
    49 return_statement: RETURN . expression ';'
    50                 | RETURN . ';'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
-    ';'         shift, and go to state 43
+    ';'         shift, and go to state 44
     '('         shift, and go to state 18
 
-    expression  go to state 44
+    expression  go to state 45
 
 
 State 12
 
    48 break_statement: BREAK . ';'
 
-    ';'  shift, and go to state 45
+    ';'  shift, and go to state 46
 
 
 State 13
 
    47 continue_statement: CONTINUE . ';'
 
-    ';'  shift, and go to state 46
+    ';'  shift, and go to state 47
 
 
 State 14
 
    58 expression: '+' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    '('         shift, and go to state 18
-
-    expression  go to state 47
-
-
-State 15
-
-   57 expression: '-' . expression
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -415,18 +407,34 @@ State 15
     expression  go to state 48
 
 
-State 16
+State 15
 
-   69 expression: '!' . expression
+   57 expression: '-' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
 
     expression  go to state 49
+
+
+State 16
+
+   69 expression: '!' . expression
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    '('         shift, and go to state 18
+
+    expression  go to state 50
 
 
 State 17
@@ -440,14 +448,15 @@ State 18
 
    60 expression: '(' . expression ')'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
 
-    expression  go to state 50
+    expression  go to state 51
 
 
 State 19
@@ -455,8 +464,9 @@ State 19
    33 compound_statement: '{' . statements '}'
    34                   | '{' . '}'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -470,9 +480,9 @@ State 19
     ';'         shift, and go to state 17
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
-    '}'         shift, and go to state 51
+    '}'         shift, and go to state 52
 
-    statements          go to state 52
+    statements          go to state 53
     statement           go to state 27
     compound_statement  go to state 28
     while_statement     go to state 29
@@ -489,7 +499,7 @@ State 20
 
     0 $accept: translation_unit . $end
 
-    $end  shift, and go to state 53
+    $end  shift, and go to state 54
 
 
 State 21
@@ -498,7 +508,7 @@ State 21
     2                 | declarations . statements
     5 declarations: declarations . declaration
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     INT         shift, and go to state 3
     FLOAT       shift, and go to state 4
@@ -518,11 +528,11 @@ State 21
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    declaration            go to state 54
-    function_declarations  go to state 55
+    declaration            go to state 55
+    function_declarations  go to state 56
     function_declaration   go to state 24
     type_specifier         go to state 25
-    statements             go to state 56
+    statements             go to state 57
     statement              go to state 27
     compound_statement     go to state 28
     while_statement        go to state 29
@@ -547,7 +557,7 @@ State 23
     3 translation_unit: function_declarations . statements
     8 function_declarations: function_declarations . function_declaration
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     INT         shift, and go to state 3
     FLOAT       shift, and go to state 4
@@ -567,9 +577,9 @@ State 23
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    function_declaration  go to state 57
-    type_specifier        go to state 58
-    statements            go to state 59
+    function_declaration  go to state 58
+    type_specifier        go to state 59
+    statements            go to state 60
     statement             go to state 27
     compound_statement    go to state 28
     while_statement       go to state 29
@@ -597,7 +607,7 @@ State 25
    12                     | type_specifier . IDENTIFIER '(' parameter_list ')' '{' statements '}'
    13                     | type_specifier . IDENTIFIER '(' parameter_list ')' '{' '}'
 
-    IDENTIFIER  shift, and go to state 60
+    IDENTIFIER  shift, and go to state 61
 
 
 State 26
@@ -605,8 +615,9 @@ State 26
     4 translation_unit: statements .
    21 statements: statements . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -623,7 +634,7 @@ State 26
 
     $default  reduce using rule 4 (translation_unit)
 
-    statement           go to state 61
+    statement           go to state 62
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -716,74 +727,84 @@ State 36
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ';'  shift, and go to state 76
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ';'  shift, and go to state 77
 
 
 State 37
 
    56 expression: IDENTIFIER '=' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
 
-    expression  go to state 77
+    expression  go to state 78
 
 
 State 38
 
    71 expression: IDENTIFIER '(' . argument_list ')'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
 
-    expression     go to state 78
-    argument_list  go to state 79
+    expression     go to state 79
+    argument_list  go to state 80
 
 
 State 39
 
    35 while_statement: WHILE '(' . expression ')' statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
 
-    expression  go to state 80
+    expression  go to state 81
 
 
 State 40
 
-   36 do_while_statement: DO statement . WHILE '(' expression ')' ';'
+   73 expression: FLOAT .
 
-    WHILE  shift, and go to state 81
+    $default  reduce using rule 73 (expression)
 
 
 State 41
+
+   36 do_while_statement: DO statement . WHILE '(' expression ')' ';'
+
+    WHILE  shift, and go to state 82
+
+
+State 42
 
    37 for_statement: FOR '(' . expression ';' expression ';' expression ')' statement
    38              | FOR '(' . expression ';' expression ';' ')' statement
@@ -794,27 +815,13 @@ State 41
    43              | FOR '(' . ';' ';' expression ')' statement
    44              | FOR '(' . ';' ';' ')' statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
-    ';'         shift, and go to state 82
-    '('         shift, and go to state 18
-
-    expression  go to state 83
-
-
-State 42
-
-   45 if_statement: IF '(' . expression ')' statement
-   46             | IF '(' . expression ')' statement ELSE statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
+    ';'         shift, and go to state 83
     '('         shift, and go to state 18
 
     expression  go to state 84
@@ -822,12 +829,28 @@ State 42
 
 State 43
 
+   45 if_statement: IF '(' . expression ')' statement
+   46             | IF '(' . expression ')' statement ELSE statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    '('         shift, and go to state 18
+
+    expression  go to state 85
+
+
+State 44
+
    50 return_statement: RETURN ';' .
 
     $default  reduce using rule 50 (return_statement)
 
 
-State 44
+State 45
 
    49 return_statement: RETURN expression . ';'
    51 expression: expression . '+' expression
@@ -845,38 +868,38 @@ State 44
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ';'  shift, and go to state 85
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ';'  shift, and go to state 86
 
 
-State 45
+State 46
 
    48 break_statement: BREAK ';' .
 
     $default  reduce using rule 48 (break_statement)
 
 
-State 46
+State 47
 
    47 continue_statement: CONTINUE ';' .
 
     $default  reduce using rule 47 (continue_statement)
 
 
-State 47
+State 48
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -894,15 +917,15 @@ State 47
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 58 (expression)
 
 
-State 48
+State 49
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -920,15 +943,15 @@ State 48
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 57 (expression)
 
 
-State 49
+State 50
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -949,7 +972,7 @@ State 49
     $default  reduce using rule 69 (expression)
 
 
-State 50
+State 51
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -967,37 +990,38 @@ State 50
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 86
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 87
 
 
-State 51
+State 52
 
    34 compound_statement: '{' '}' .
 
     $default  reduce using rule 34 (compound_statement)
 
 
-State 52
+State 53
 
    21 statements: statements . statement
    33 compound_statement: '{' statements . '}'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -1011,9 +1035,9 @@ State 52
     ';'         shift, and go to state 17
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
-    '}'         shift, and go to state 87
+    '}'         shift, and go to state 88
 
-    statement           go to state 61
+    statement           go to state 62
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -1025,26 +1049,26 @@ State 52
     expression          go to state 36
 
 
-State 53
+State 54
 
     0 $accept: translation_unit $end .
 
     $default  accept
 
 
-State 54
+State 55
 
     5 declarations: declarations declaration .
 
     $default  reduce using rule 5 (declarations)
 
 
-State 55
+State 56
 
     1 translation_unit: declarations function_declarations . statements
     8 function_declarations: function_declarations . function_declaration
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     INT         shift, and go to state 3
     FLOAT       shift, and go to state 4
@@ -1064,9 +1088,9 @@ State 55
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    function_declaration  go to state 57
-    type_specifier        go to state 58
-    statements            go to state 88
+    function_declaration  go to state 58
+    type_specifier        go to state 59
+    statements            go to state 89
     statement             go to state 27
     compound_statement    go to state 28
     while_statement       go to state 29
@@ -1079,13 +1103,14 @@ State 55
     expression            go to state 36
 
 
-State 56
+State 57
 
     2 translation_unit: declarations statements .
    21 statements: statements . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -1102,7 +1127,7 @@ State 56
 
     $default  reduce using rule 2 (translation_unit)
 
-    statement           go to state 61
+    statement           go to state 62
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -1114,30 +1139,31 @@ State 56
     expression          go to state 36
 
 
-State 57
+State 58
 
     8 function_declarations: function_declarations function_declaration .
 
     $default  reduce using rule 8 (function_declarations)
 
 
-State 58
+State 59
 
    10 function_declaration: type_specifier . IDENTIFIER '(' parameter_list ')' '{' declarations statements '}'
    11                     | type_specifier . IDENTIFIER '(' parameter_list ')' '{' declarations '}'
    12                     | type_specifier . IDENTIFIER '(' parameter_list ')' '{' statements '}'
    13                     | type_specifier . IDENTIFIER '(' parameter_list ')' '{' '}'
 
-    IDENTIFIER  shift, and go to state 89
+    IDENTIFIER  shift, and go to state 90
 
 
-State 59
+State 60
 
     3 translation_unit: function_declarations statements .
    21 statements: statements . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -1154,7 +1180,7 @@ State 59
 
     $default  reduce using rule 3 (translation_unit)
 
-    statement           go to state 61
+    statement           go to state 62
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -1166,7 +1192,7 @@ State 59
     expression          go to state 36
 
 
-State 60
+State 61
 
     7 declaration: type_specifier IDENTIFIER . ';'
    10 function_declaration: type_specifier IDENTIFIER . '(' parameter_list ')' '{' declarations statements '}'
@@ -1174,37 +1200,24 @@ State 60
    12                     | type_specifier IDENTIFIER . '(' parameter_list ')' '{' statements '}'
    13                     | type_specifier IDENTIFIER . '(' parameter_list ')' '{' '}'
 
-    ';'  shift, and go to state 90
-    '('  shift, and go to state 91
+    ';'  shift, and go to state 91
+    '('  shift, and go to state 92
 
 
-State 61
+State 62
 
    21 statements: statements statement .
 
     $default  reduce using rule 21 (statements)
 
 
-State 62
+State 63
 
    64 expression: expression NE . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    '('         shift, and go to state 18
-
-    expression  go to state 92
-
-
-State 63
-
-   65 expression: expression GE . expression
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1215,10 +1228,11 @@ State 63
 
 State 64
 
-   66 expression: expression LE . expression
+   65 expression: expression GE . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1229,10 +1243,11 @@ State 64
 
 State 65
 
-   67 expression: expression AND . expression
+   66 expression: expression LE . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1243,10 +1258,11 @@ State 65
 
 State 66
 
-   68 expression: expression OR . expression
+   67 expression: expression AND . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1257,10 +1273,11 @@ State 66
 
 State 67
 
-   61 expression: expression '>' . expression
+   68 expression: expression OR . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1271,10 +1288,11 @@ State 67
 
 State 68
 
-   62 expression: expression '<' . expression
+   61 expression: expression '>' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1285,10 +1303,11 @@ State 68
 
 State 69
 
-   63 expression: expression EQ . expression
+   62 expression: expression '<' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1299,10 +1318,11 @@ State 69
 
 State 70
 
-   51 expression: expression '+' . expression
+   63 expression: expression EQ . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1313,10 +1333,11 @@ State 70
 
 State 71
 
-   52 expression: expression '-' . expression
+   51 expression: expression '+' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1327,10 +1348,11 @@ State 71
 
 State 72
 
-   53 expression: expression '*' . expression
+   52 expression: expression '-' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1341,10 +1363,11 @@ State 72
 
 State 73
 
-   54 expression: expression '/' . expression
+   53 expression: expression '*' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1355,10 +1378,11 @@ State 73
 
 State 74
 
-   55 expression: expression '%' . expression
+   54 expression: expression '/' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1369,10 +1393,11 @@ State 74
 
 State 75
 
-   59 expression: expression '^' . expression
+   55 expression: expression '%' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -1383,12 +1408,27 @@ State 75
 
 State 76
 
+   59 expression: expression '^' . expression
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    '('         shift, and go to state 18
+
+    expression  go to state 106
+
+
+State 77
+
    23 statement: expression ';' .
 
     $default  reduce using rule 23 (statement)
 
 
-State 77
+State 78
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1406,25 +1446,25 @@ State 77
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 56 (expression)
 
 
-State 78
+State 79
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1440,36 +1480,36 @@ State 78
    66           | expression . LE expression
    67           | expression . AND expression
    68           | expression . OR expression
-   74 argument_list: expression .
+   75 argument_list: expression .
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
-    $default  reduce using rule 74 (argument_list)
-
-
-State 79
-
-   71 expression: IDENTIFIER '(' argument_list . ')'
-   73 argument_list: argument_list . ',' expression
-
-    ')'  shift, and go to state 106
-    ','  shift, and go to state 107
+    $default  reduce using rule 75 (argument_list)
 
 
 State 80
+
+   71 expression: IDENTIFIER '(' argument_list . ')'
+   74 argument_list: argument_list . ',' expression
+
+    ')'  shift, and go to state 107
+    ','  shift, and go to state 108
+
+
+State 81
 
    35 while_statement: WHILE '(' expression . ')' statement
    51 expression: expression . '+' expression
@@ -1487,49 +1527,50 @@ State 80
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 108
-
-
-State 81
-
-   36 do_while_statement: DO statement WHILE . '(' expression ')' ';'
-
-    '('  shift, and go to state 109
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 109
 
 
 State 82
+
+   36 do_while_statement: DO statement WHILE . '(' expression ')' ';'
+
+    '('  shift, and go to state 110
+
+
+State 83
 
    41 for_statement: FOR '(' ';' . expression ';' expression ')' statement
    42              | FOR '(' ';' . expression ';' ')' statement
    43              | FOR '(' ';' . ';' expression ')' statement
    44              | FOR '(' ';' . ';' ')' statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
-    ';'         shift, and go to state 110
+    ';'         shift, and go to state 111
     '('         shift, and go to state 18
 
-    expression  go to state 111
+    expression  go to state 112
 
 
-State 83
+State 84
 
    37 for_statement: FOR '(' expression . ';' expression ';' expression ')' statement
    38              | FOR '(' expression . ';' expression ';' ')' statement
@@ -1550,24 +1591,24 @@ State 83
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ';'  shift, and go to state 112
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ';'  shift, and go to state 113
 
 
-State 84
+State 85
 
    45 if_statement: IF '(' expression . ')' statement
    46             | IF '(' expression . ')' statement ELSE statement
@@ -1586,51 +1627,52 @@ State 84
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 113
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 114
 
 
-State 85
+State 86
 
    49 return_statement: RETURN expression ';' .
 
     $default  reduce using rule 49 (return_statement)
 
 
-State 86
+State 87
 
    60 expression: '(' expression ')' .
 
     $default  reduce using rule 60 (expression)
 
 
-State 87
+State 88
 
    33 compound_statement: '{' statements '}' .
 
     $default  reduce using rule 33 (compound_statement)
 
 
-State 88
+State 89
 
     1 translation_unit: declarations function_declarations statements .
    21 statements: statements . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -1647,7 +1689,7 @@ State 88
 
     $default  reduce using rule 1 (translation_unit)
 
-    statement           go to state 61
+    statement           go to state 62
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -1659,24 +1701,24 @@ State 88
     expression          go to state 36
 
 
-State 89
+State 90
 
    10 function_declaration: type_specifier IDENTIFIER . '(' parameter_list ')' '{' declarations statements '}'
    11                     | type_specifier IDENTIFIER . '(' parameter_list ')' '{' declarations '}'
    12                     | type_specifier IDENTIFIER . '(' parameter_list ')' '{' statements '}'
    13                     | type_specifier IDENTIFIER . '(' parameter_list ')' '{' '}'
 
-    '('  shift, and go to state 91
+    '('  shift, and go to state 92
 
 
-State 90
+State 91
 
     7 declaration: type_specifier IDENTIFIER ';' .
 
     $default  reduce using rule 7 (declaration)
 
 
-State 91
+State 92
 
    10 function_declaration: type_specifier IDENTIFIER '(' . parameter_list ')' '{' declarations statements '}'
    11                     | type_specifier IDENTIFIER '(' . parameter_list ')' '{' declarations '}'
@@ -1684,16 +1726,16 @@ State 91
    13                     | type_specifier IDENTIFIER '(' . parameter_list ')' '{' '}'
 
     INT     shift, and go to state 3
-    FLOAT   shift, and go to state 4
+    FLOAT   shift, and go to state 115
     CHAR    shift, and go to state 5
     DOUBLE  shift, and go to state 6
 
-    parameter_list  go to state 114
-    parameter       go to state 115
-    type_specifier  go to state 116
+    parameter_list  go to state 116
+    parameter       go to state 117
+    type_specifier  go to state 118
 
 
-State 92
+State 93
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1711,17 +1753,17 @@ State 92
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 64 (expression)
 
 
-State 93
+State 94
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1739,17 +1781,17 @@ State 93
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 65 (expression)
 
 
-State 94
+State 95
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1767,49 +1809,14 @@ State 94
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 66 (expression)
-
-
-State 95
-
-   51 expression: expression . '+' expression
-   52           | expression . '-' expression
-   53           | expression . '*' expression
-   54           | expression . '/' expression
-   55           | expression . '%' expression
-   59           | expression . '^' expression
-   61           | expression . '>' expression
-   62           | expression . '<' expression
-   63           | expression . EQ expression
-   64           | expression . NE expression
-   65           | expression . GE expression
-   66           | expression . LE expression
-   67           | expression . AND expression
-   67           | expression AND expression .
-   68           | expression . OR expression
-
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-
-    $default  reduce using rule 67 (expression)
 
 
 State 96
@@ -1827,26 +1834,61 @@ State 96
    65           | expression . GE expression
    66           | expression . LE expression
    67           | expression . AND expression
+   67           | expression AND expression .
+   68           | expression . OR expression
+
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+
+    $default  reduce using rule 67 (expression)
+
+
+State 97
+
+   51 expression: expression . '+' expression
+   52           | expression . '-' expression
+   53           | expression . '*' expression
+   54           | expression . '/' expression
+   55           | expression . '%' expression
+   59           | expression . '^' expression
+   61           | expression . '>' expression
+   62           | expression . '<' expression
+   63           | expression . EQ expression
+   64           | expression . NE expression
+   65           | expression . GE expression
+   66           | expression . LE expression
+   67           | expression . AND expression
    68           | expression . OR expression
    68           | expression OR expression .
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 68 (expression)
 
 
-State 97
+State 98
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1864,17 +1906,17 @@ State 97
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 61 (expression)
 
 
-State 98
+State 99
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1892,17 +1934,17 @@ State 98
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 62 (expression)
 
 
-State 99
+State 100
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1920,17 +1962,17 @@ State 99
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 63 (expression)
 
 
-State 100
+State 101
 
    51 expression: expression . '+' expression
    51           | expression '+' expression .
@@ -1948,15 +1990,15 @@ State 100
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 51 (expression)
 
 
-State 101
+State 102
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -1974,15 +2016,15 @@ State 101
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 52 (expression)
 
 
-State 102
+State 103
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -2000,12 +2042,12 @@ State 102
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '^'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 53 (expression)
 
 
-State 103
+State 104
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -2023,12 +2065,12 @@ State 103
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '^'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 54 (expression)
 
 
-State 104
+State 105
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -2046,12 +2088,12 @@ State 104
    67           | expression . AND expression
    68           | expression . OR expression
 
-    '^'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
     $default  reduce using rule 55 (expression)
 
 
-State 105
+State 106
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -2072,33 +2114,35 @@ State 105
     $default  reduce using rule 59 (expression)
 
 
-State 106
+State 107
 
    71 expression: IDENTIFIER '(' argument_list ')' .
 
     $default  reduce using rule 71 (expression)
 
 
-State 107
+State 108
 
-   73 argument_list: argument_list ',' . expression
+   74 argument_list: argument_list ',' . expression
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
 
-    expression  go to state 117
+    expression  go to state 119
 
 
-State 108
+State 109
 
    35 while_statement: WHILE '(' expression ')' . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2113,7 +2157,7 @@ State 108
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    statement           go to state 118
+    statement           go to state 120
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -2125,37 +2169,39 @@ State 108
     expression          go to state 36
 
 
-State 109
+State 110
 
    36 do_while_statement: DO statement WHILE '(' . expression ')' ';'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
-
-    expression  go to state 119
-
-
-State 110
-
-   43 for_statement: FOR '(' ';' ';' . expression ')' statement
-   44              | FOR '(' ';' ';' . ')' statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    '('         shift, and go to state 18
-    ')'         shift, and go to state 120
 
     expression  go to state 121
 
 
 State 111
+
+   43 for_statement: FOR '(' ';' ';' . expression ')' statement
+   44              | FOR '(' ';' ';' . ')' statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    '('         shift, and go to state 18
+    ')'         shift, and go to state 122
+
+    expression  go to state 123
+
+
+State 112
 
    41 for_statement: FOR '(' ';' expression . ';' expression ')' statement
    42              | FOR '(' ';' expression . ';' ')' statement
@@ -2174,48 +2220,50 @@ State 111
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ';'  shift, and go to state 122
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ';'  shift, and go to state 124
 
 
-State 112
+State 113
 
    37 for_statement: FOR '(' expression ';' . expression ';' expression ')' statement
    38              | FOR '(' expression ';' . expression ';' ')' statement
    39              | FOR '(' expression ';' . ';' expression ')' statement
    40              | FOR '(' expression ';' . ';' ')' statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
-    ';'         shift, and go to state 123
+    ';'         shift, and go to state 125
     '('         shift, and go to state 18
 
-    expression  go to state 124
+    expression  go to state 126
 
 
-State 113
+State 114
 
    45 if_statement: IF '(' expression ')' . statement
    46             | IF '(' expression ')' . statement ELSE statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2230,7 +2278,7 @@ State 113
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    statement           go to state 125
+    statement           go to state 127
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -2242,7 +2290,14 @@ State 113
     expression          go to state 36
 
 
-State 114
+State 115
+
+   18 type_specifier: FLOAT .
+
+    $default  reduce using rule 18 (type_specifier)
+
+
+State 116
 
    10 function_declaration: type_specifier IDENTIFIER '(' parameter_list . ')' '{' declarations statements '}'
    11                     | type_specifier IDENTIFIER '(' parameter_list . ')' '{' declarations '}'
@@ -2250,25 +2305,25 @@ State 114
    13                     | type_specifier IDENTIFIER '(' parameter_list . ')' '{' '}'
    14 parameter_list: parameter_list . ',' parameter
 
-    ')'  shift, and go to state 126
-    ','  shift, and go to state 127
+    ')'  shift, and go to state 128
+    ','  shift, and go to state 129
 
 
-State 115
+State 117
 
    15 parameter_list: parameter .
 
     $default  reduce using rule 15 (parameter_list)
 
 
-State 116
+State 118
 
    16 parameter: type_specifier . IDENTIFIER
 
-    IDENTIFIER  shift, and go to state 128
+    IDENTIFIER  shift, and go to state 130
 
 
-State 117
+State 119
 
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -2284,34 +2339,34 @@ State 117
    66           | expression . LE expression
    67           | expression . AND expression
    68           | expression . OR expression
-   73 argument_list: argument_list ',' expression .
+   74 argument_list: argument_list ',' expression .
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
 
-    $default  reduce using rule 73 (argument_list)
+    $default  reduce using rule 74 (argument_list)
 
 
-State 118
+State 120
 
    35 while_statement: WHILE '(' expression ')' statement .
 
     $default  reduce using rule 35 (while_statement)
 
 
-State 119
+State 121
 
    36 do_while_statement: DO statement WHILE '(' expression . ')' ';'
    51 expression: expression . '+' expression
@@ -2329,29 +2384,30 @@ State 119
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 129
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 131
 
 
-State 120
+State 122
 
    44 for_statement: FOR '(' ';' ';' ')' . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2366,7 +2422,7 @@ State 120
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    statement           go to state 130
+    statement           go to state 132
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -2378,7 +2434,7 @@ State 120
     expression          go to state 36
 
 
-State 121
+State 123
 
    43 for_statement: FOR '(' ';' ';' expression . ')' statement
    51 expression: expression . '+' expression
@@ -2396,46 +2452,31 @@ State 121
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 131
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 133
 
 
-State 122
+State 124
 
    41 for_statement: FOR '(' ';' expression ';' . expression ')' statement
    42              | FOR '(' ';' expression ';' . ')' statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    '('         shift, and go to state 18
-    ')'         shift, and go to state 132
-
-    expression  go to state 133
-
-
-State 123
-
-   39 for_statement: FOR '(' expression ';' ';' . expression ')' statement
-   40              | FOR '(' expression ';' ';' . ')' statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
@@ -2445,7 +2486,24 @@ State 123
     expression  go to state 135
 
 
-State 124
+State 125
+
+   39 for_statement: FOR '(' expression ';' ';' . expression ')' statement
+   40              | FOR '(' expression ';' ';' . ')' statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    '('         shift, and go to state 18
+    ')'         shift, and go to state 136
+
+    expression  go to state 137
+
+
+State 126
 
    37 for_statement: FOR '(' expression ';' expression . ';' expression ')' statement
    38              | FOR '(' expression ';' expression . ';' ')' statement
@@ -2464,83 +2522,84 @@ State 124
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ';'  shift, and go to state 136
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ';'  shift, and go to state 138
 
 
-State 125
+State 127
 
    45 if_statement: IF '(' expression ')' statement .
    46             | IF '(' expression ')' statement . ELSE statement
 
-    ELSE  shift, and go to state 137
+    ELSE  shift, and go to state 139
 
     $default  reduce using rule 45 (if_statement)
 
 
-State 126
+State 128
 
    10 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' . '{' declarations statements '}'
    11                     | type_specifier IDENTIFIER '(' parameter_list ')' . '{' declarations '}'
    12                     | type_specifier IDENTIFIER '(' parameter_list ')' . '{' statements '}'
    13                     | type_specifier IDENTIFIER '(' parameter_list ')' . '{' '}'
 
-    '{'  shift, and go to state 138
+    '{'  shift, and go to state 140
 
 
-State 127
+State 129
 
    14 parameter_list: parameter_list ',' . parameter
 
     INT     shift, and go to state 3
-    FLOAT   shift, and go to state 4
+    FLOAT   shift, and go to state 115
     CHAR    shift, and go to state 5
     DOUBLE  shift, and go to state 6
 
-    parameter       go to state 139
-    type_specifier  go to state 116
+    parameter       go to state 141
+    type_specifier  go to state 118
 
 
-State 128
+State 130
 
    16 parameter: type_specifier IDENTIFIER .
 
     $default  reduce using rule 16 (parameter)
 
 
-State 129
+State 131
 
    36 do_while_statement: DO statement WHILE '(' expression ')' . ';'
 
-    ';'  shift, and go to state 140
+    ';'  shift, and go to state 142
 
 
-State 130
+State 132
 
    44 for_statement: FOR '(' ';' ';' ')' statement .
 
     $default  reduce using rule 44 (for_statement)
 
 
-State 131
+State 133
 
    43 for_statement: FOR '(' ';' ';' expression ')' . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2555,7 +2614,7 @@ State 131
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    statement           go to state 141
+    statement           go to state 143
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -2565,81 +2624,15 @@ State 131
     break_statement     go to state 34
     return_statement    go to state 35
     expression          go to state 36
-
-
-State 132
-
-   42 for_statement: FOR '(' ';' expression ';' ')' . statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    WHILE       shift, and go to state 7
-    DO          shift, and go to state 8
-    FOR         shift, and go to state 9
-    IF          shift, and go to state 10
-    RETURN      shift, and go to state 11
-    BREAK       shift, and go to state 12
-    CONTINUE    shift, and go to state 13
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    ';'         shift, and go to state 17
-    '('         shift, and go to state 18
-    '{'         shift, and go to state 19
-
-    statement           go to state 142
-    compound_statement  go to state 28
-    while_statement     go to state 29
-    do_while_statement  go to state 30
-    for_statement       go to state 31
-    if_statement        go to state 32
-    continue_statement  go to state 33
-    break_statement     go to state 34
-    return_statement    go to state 35
-    expression          go to state 36
-
-
-State 133
-
-   41 for_statement: FOR '(' ';' expression ';' expression . ')' statement
-   51 expression: expression . '+' expression
-   52           | expression . '-' expression
-   53           | expression . '*' expression
-   54           | expression . '/' expression
-   55           | expression . '%' expression
-   59           | expression . '^' expression
-   61           | expression . '>' expression
-   62           | expression . '<' expression
-   63           | expression . EQ expression
-   64           | expression . NE expression
-   65           | expression . GE expression
-   66           | expression . LE expression
-   67           | expression . AND expression
-   68           | expression . OR expression
-
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 143
 
 
 State 134
 
-   40 for_statement: FOR '(' expression ';' ';' ')' . statement
+   42 for_statement: FOR '(' ';' expression ';' ')' . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2668,6 +2661,74 @@ State 134
 
 State 135
 
+   41 for_statement: FOR '(' ';' expression ';' expression . ')' statement
+   51 expression: expression . '+' expression
+   52           | expression . '-' expression
+   53           | expression . '*' expression
+   54           | expression . '/' expression
+   55           | expression . '%' expression
+   59           | expression . '^' expression
+   61           | expression . '>' expression
+   62           | expression . '<' expression
+   63           | expression . EQ expression
+   64           | expression . NE expression
+   65           | expression . GE expression
+   66           | expression . LE expression
+   67           | expression . AND expression
+   68           | expression . OR expression
+
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 145
+
+
+State 136
+
+   40 for_statement: FOR '(' expression ';' ';' ')' . statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    WHILE       shift, and go to state 7
+    DO          shift, and go to state 8
+    FOR         shift, and go to state 9
+    IF          shift, and go to state 10
+    RETURN      shift, and go to state 11
+    BREAK       shift, and go to state 12
+    CONTINUE    shift, and go to state 13
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    ';'         shift, and go to state 17
+    '('         shift, and go to state 18
+    '{'         shift, and go to state 19
+
+    statement           go to state 146
+    compound_statement  go to state 28
+    while_statement     go to state 29
+    do_while_statement  go to state 30
+    for_statement       go to state 31
+    if_statement        go to state 32
+    continue_statement  go to state 33
+    break_statement     go to state 34
+    return_statement    go to state 35
+    expression          go to state 36
+
+
+State 137
+
    39 for_statement: FOR '(' expression ';' ';' expression . ')' statement
    51 expression: expression . '+' expression
    52           | expression . '-' expression
@@ -2684,45 +2745,47 @@ State 135
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 145
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 147
 
 
-State 136
+State 138
 
    37 for_statement: FOR '(' expression ';' expression ';' . expression ')' statement
    38              | FOR '(' expression ';' expression ';' . ')' statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     '+'         shift, and go to state 14
     '-'         shift, and go to state 15
     '!'         shift, and go to state 16
     '('         shift, and go to state 18
-    ')'         shift, and go to state 146
+    ')'         shift, and go to state 148
 
-    expression  go to state 147
+    expression  go to state 149
 
 
-State 137
+State 139
 
    46 if_statement: IF '(' expression ')' statement ELSE . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2737,7 +2800,7 @@ State 137
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
 
-    statement           go to state 148
+    statement           go to state 150
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -2749,14 +2812,14 @@ State 137
     expression          go to state 36
 
 
-State 138
+State 140
 
    10 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' . declarations statements '}'
    11                     | type_specifier IDENTIFIER '(' parameter_list ')' '{' . declarations '}'
    12                     | type_specifier IDENTIFIER '(' parameter_list ')' '{' . statements '}'
    13                     | type_specifier IDENTIFIER '(' parameter_list ')' '{' . '}'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     INT         shift, and go to state 3
     FLOAT       shift, and go to state 4
@@ -2775,12 +2838,12 @@ State 138
     ';'         shift, and go to state 17
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
-    '}'         shift, and go to state 149
+    '}'         shift, and go to state 151
 
-    declarations        go to state 150
+    declarations        go to state 152
     declaration         go to state 22
-    type_specifier      go to state 151
-    statements          go to state 152
+    type_specifier      go to state 153
+    statements          go to state 154
     statement           go to state 27
     compound_statement  go to state 28
     while_statement     go to state 29
@@ -2793,111 +2856,41 @@ State 138
     expression          go to state 36
 
 
-State 139
+State 141
 
    14 parameter_list: parameter_list ',' parameter .
 
     $default  reduce using rule 14 (parameter_list)
 
 
-State 140
+State 142
 
    36 do_while_statement: DO statement WHILE '(' expression ')' ';' .
 
     $default  reduce using rule 36 (do_while_statement)
 
 
-State 141
+State 143
 
    43 for_statement: FOR '(' ';' ';' expression ')' statement .
 
     $default  reduce using rule 43 (for_statement)
 
 
-State 142
+State 144
 
    42 for_statement: FOR '(' ';' expression ';' ')' statement .
 
     $default  reduce using rule 42 (for_statement)
 
 
-State 143
+State 145
 
    41 for_statement: FOR '(' ';' expression ';' expression ')' . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
-    WHILE       shift, and go to state 7
-    DO          shift, and go to state 8
-    FOR         shift, and go to state 9
-    IF          shift, and go to state 10
-    RETURN      shift, and go to state 11
-    BREAK       shift, and go to state 12
-    CONTINUE    shift, and go to state 13
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    ';'         shift, and go to state 17
-    '('         shift, and go to state 18
-    '{'         shift, and go to state 19
-
-    statement           go to state 153
-    compound_statement  go to state 28
-    while_statement     go to state 29
-    do_while_statement  go to state 30
-    for_statement       go to state 31
-    if_statement        go to state 32
-    continue_statement  go to state 33
-    break_statement     go to state 34
-    return_statement    go to state 35
-    expression          go to state 36
-
-
-State 144
-
-   40 for_statement: FOR '(' expression ';' ';' ')' statement .
-
-    $default  reduce using rule 40 (for_statement)
-
-
-State 145
-
-   39 for_statement: FOR '(' expression ';' ';' expression ')' . statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    WHILE       shift, and go to state 7
-    DO          shift, and go to state 8
-    FOR         shift, and go to state 9
-    IF          shift, and go to state 10
-    RETURN      shift, and go to state 11
-    BREAK       shift, and go to state 12
-    CONTINUE    shift, and go to state 13
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    ';'         shift, and go to state 17
-    '('         shift, and go to state 18
-    '{'         shift, and go to state 19
-
-    statement           go to state 154
-    compound_statement  go to state 28
-    while_statement     go to state 29
-    do_while_statement  go to state 30
-    for_statement       go to state 31
-    if_statement        go to state 32
-    continue_statement  go to state 33
-    break_statement     go to state 34
-    return_statement    go to state 35
-    expression          go to state 36
-
-
-State 146
-
-   38 for_statement: FOR '(' expression ';' expression ';' ')' . statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -2924,7 +2917,80 @@ State 146
     expression          go to state 36
 
 
+State 146
+
+   40 for_statement: FOR '(' expression ';' ';' ')' statement .
+
+    $default  reduce using rule 40 (for_statement)
+
+
 State 147
+
+   39 for_statement: FOR '(' expression ';' ';' expression ')' . statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    WHILE       shift, and go to state 7
+    DO          shift, and go to state 8
+    FOR         shift, and go to state 9
+    IF          shift, and go to state 10
+    RETURN      shift, and go to state 11
+    BREAK       shift, and go to state 12
+    CONTINUE    shift, and go to state 13
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    ';'         shift, and go to state 17
+    '('         shift, and go to state 18
+    '{'         shift, and go to state 19
+
+    statement           go to state 156
+    compound_statement  go to state 28
+    while_statement     go to state 29
+    do_while_statement  go to state 30
+    for_statement       go to state 31
+    if_statement        go to state 32
+    continue_statement  go to state 33
+    break_statement     go to state 34
+    return_statement    go to state 35
+    expression          go to state 36
+
+
+State 148
+
+   38 for_statement: FOR '(' expression ';' expression ';' ')' . statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    WHILE       shift, and go to state 7
+    DO          shift, and go to state 8
+    FOR         shift, and go to state 9
+    IF          shift, and go to state 10
+    RETURN      shift, and go to state 11
+    BREAK       shift, and go to state 12
+    CONTINUE    shift, and go to state 13
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    ';'         shift, and go to state 17
+    '('         shift, and go to state 18
+    '{'         shift, and go to state 19
+
+    statement           go to state 157
+    compound_statement  go to state 28
+    while_statement     go to state 29
+    do_while_statement  go to state 30
+    for_statement       go to state 31
+    if_statement        go to state 32
+    continue_statement  go to state 33
+    break_statement     go to state 34
+    return_statement    go to state 35
+    expression          go to state 36
+
+
+State 149
 
    37 for_statement: FOR '(' expression ';' expression ';' expression . ')' statement
    51 expression: expression . '+' expression
@@ -2942,44 +3008,44 @@ State 147
    67           | expression . AND expression
    68           | expression . OR expression
 
-    NE   shift, and go to state 62
-    GE   shift, and go to state 63
-    LE   shift, and go to state 64
-    AND  shift, and go to state 65
-    OR   shift, and go to state 66
-    '>'  shift, and go to state 67
-    '<'  shift, and go to state 68
-    EQ   shift, and go to state 69
-    '+'  shift, and go to state 70
-    '-'  shift, and go to state 71
-    '*'  shift, and go to state 72
-    '/'  shift, and go to state 73
-    '%'  shift, and go to state 74
-    '^'  shift, and go to state 75
-    ')'  shift, and go to state 156
+    NE   shift, and go to state 63
+    GE   shift, and go to state 64
+    LE   shift, and go to state 65
+    AND  shift, and go to state 66
+    OR   shift, and go to state 67
+    '>'  shift, and go to state 68
+    '<'  shift, and go to state 69
+    EQ   shift, and go to state 70
+    '+'  shift, and go to state 71
+    '-'  shift, and go to state 72
+    '*'  shift, and go to state 73
+    '/'  shift, and go to state 74
+    '%'  shift, and go to state 75
+    '^'  shift, and go to state 76
+    ')'  shift, and go to state 158
 
 
-State 148
+State 150
 
    46 if_statement: IF '(' expression ')' statement ELSE statement .
 
     $default  reduce using rule 46 (if_statement)
 
 
-State 149
+State 151
 
    13 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' '}' .
 
     $default  reduce using rule 13 (function_declaration)
 
 
-State 150
+State 152
 
     5 declarations: declarations . declaration
    10 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations . statements '}'
    11                     | type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations . '}'
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
     INT         shift, and go to state 3
     FLOAT       shift, and go to state 4
@@ -2998,53 +3064,12 @@ State 150
     ';'         shift, and go to state 17
     '('         shift, and go to state 18
     '{'         shift, and go to state 19
-    '}'         shift, and go to state 157
+    '}'         shift, and go to state 159
 
-    declaration         go to state 54
-    type_specifier      go to state 151
-    statements          go to state 158
+    declaration         go to state 55
+    type_specifier      go to state 153
+    statements          go to state 160
     statement           go to state 27
-    compound_statement  go to state 28
-    while_statement     go to state 29
-    do_while_statement  go to state 30
-    for_statement       go to state 31
-    if_statement        go to state 32
-    continue_statement  go to state 33
-    break_statement     go to state 34
-    return_statement    go to state 35
-    expression          go to state 36
-
-
-State 151
-
-    7 declaration: type_specifier . IDENTIFIER ';'
-
-    IDENTIFIER  shift, and go to state 159
-
-
-State 152
-
-   12 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' statements . '}'
-   21 statements: statements . statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    WHILE       shift, and go to state 7
-    DO          shift, and go to state 8
-    FOR         shift, and go to state 9
-    IF          shift, and go to state 10
-    RETURN      shift, and go to state 11
-    BREAK       shift, and go to state 12
-    CONTINUE    shift, and go to state 13
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    ';'         shift, and go to state 17
-    '('         shift, and go to state 18
-    '{'         shift, and go to state 19
-    '}'         shift, and go to state 160
-
-    statement           go to state 61
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -3058,71 +3083,19 @@ State 152
 
 State 153
 
-   41 for_statement: FOR '(' ';' expression ';' expression ')' statement .
+    7 declaration: type_specifier . IDENTIFIER ';'
 
-    $default  reduce using rule 41 (for_statement)
+    IDENTIFIER  shift, and go to state 161
 
 
 State 154
 
-   39 for_statement: FOR '(' expression ';' ';' expression ')' statement .
-
-    $default  reduce using rule 39 (for_statement)
-
-
-State 155
-
-   38 for_statement: FOR '(' expression ';' expression ';' ')' statement .
-
-    $default  reduce using rule 38 (for_statement)
-
-
-State 156
-
-   37 for_statement: FOR '(' expression ';' expression ';' expression ')' . statement
-
-    NUMBER      shift, and go to state 1
-    IDENTIFIER  shift, and go to state 2
-    WHILE       shift, and go to state 7
-    DO          shift, and go to state 8
-    FOR         shift, and go to state 9
-    IF          shift, and go to state 10
-    RETURN      shift, and go to state 11
-    BREAK       shift, and go to state 12
-    CONTINUE    shift, and go to state 13
-    '+'         shift, and go to state 14
-    '-'         shift, and go to state 15
-    '!'         shift, and go to state 16
-    ';'         shift, and go to state 17
-    '('         shift, and go to state 18
-    '{'         shift, and go to state 19
-
-    statement           go to state 161
-    compound_statement  go to state 28
-    while_statement     go to state 29
-    do_while_statement  go to state 30
-    for_statement       go to state 31
-    if_statement        go to state 32
-    continue_statement  go to state 33
-    break_statement     go to state 34
-    return_statement    go to state 35
-    expression          go to state 36
-
-
-State 157
-
-   11 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}' .
-
-    $default  reduce using rule 11 (function_declaration)
-
-
-State 158
-
-   10 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements . '}'
+   12 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' statements . '}'
    21 statements: statements . statement
 
-    NUMBER      shift, and go to state 1
+    INTEGER     shift, and go to state 1
     IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
     WHILE       shift, and go to state 7
     DO          shift, and go to state 8
     FOR         shift, and go to state 9
@@ -3138,7 +3111,61 @@ State 158
     '{'         shift, and go to state 19
     '}'         shift, and go to state 162
 
-    statement           go to state 61
+    statement           go to state 62
+    compound_statement  go to state 28
+    while_statement     go to state 29
+    do_while_statement  go to state 30
+    for_statement       go to state 31
+    if_statement        go to state 32
+    continue_statement  go to state 33
+    break_statement     go to state 34
+    return_statement    go to state 35
+    expression          go to state 36
+
+
+State 155
+
+   41 for_statement: FOR '(' ';' expression ';' expression ')' statement .
+
+    $default  reduce using rule 41 (for_statement)
+
+
+State 156
+
+   39 for_statement: FOR '(' expression ';' ';' expression ')' statement .
+
+    $default  reduce using rule 39 (for_statement)
+
+
+State 157
+
+   38 for_statement: FOR '(' expression ';' expression ';' ')' statement .
+
+    $default  reduce using rule 38 (for_statement)
+
+
+State 158
+
+   37 for_statement: FOR '(' expression ';' expression ';' expression ')' . statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    WHILE       shift, and go to state 7
+    DO          shift, and go to state 8
+    FOR         shift, and go to state 9
+    IF          shift, and go to state 10
+    RETURN      shift, and go to state 11
+    BREAK       shift, and go to state 12
+    CONTINUE    shift, and go to state 13
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    ';'         shift, and go to state 17
+    '('         shift, and go to state 18
+    '{'         shift, and go to state 19
+
+    statement           go to state 163
     compound_statement  go to state 28
     while_statement     go to state 29
     do_while_statement  go to state 30
@@ -3152,26 +3179,68 @@ State 158
 
 State 159
 
-    7 declaration: type_specifier IDENTIFIER . ';'
+   11 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations '}' .
 
-    ';'  shift, and go to state 90
+    $default  reduce using rule 11 (function_declaration)
 
 
 State 160
+
+   10 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements . '}'
+   21 statements: statements . statement
+
+    INTEGER     shift, and go to state 1
+    IDENTIFIER  shift, and go to state 2
+    FLOAT       shift, and go to state 40
+    WHILE       shift, and go to state 7
+    DO          shift, and go to state 8
+    FOR         shift, and go to state 9
+    IF          shift, and go to state 10
+    RETURN      shift, and go to state 11
+    BREAK       shift, and go to state 12
+    CONTINUE    shift, and go to state 13
+    '+'         shift, and go to state 14
+    '-'         shift, and go to state 15
+    '!'         shift, and go to state 16
+    ';'         shift, and go to state 17
+    '('         shift, and go to state 18
+    '{'         shift, and go to state 19
+    '}'         shift, and go to state 164
+
+    statement           go to state 62
+    compound_statement  go to state 28
+    while_statement     go to state 29
+    do_while_statement  go to state 30
+    for_statement       go to state 31
+    if_statement        go to state 32
+    continue_statement  go to state 33
+    break_statement     go to state 34
+    return_statement    go to state 35
+    expression          go to state 36
+
+
+State 161
+
+    7 declaration: type_specifier IDENTIFIER . ';'
+
+    ';'  shift, and go to state 91
+
+
+State 162
 
    12 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' statements '}' .
 
     $default  reduce using rule 12 (function_declaration)
 
 
-State 161
+State 163
 
    37 for_statement: FOR '(' expression ';' expression ';' expression ')' statement .
 
     $default  reduce using rule 37 (for_statement)
 
 
-State 162
+State 164
 
    10 function_declaration: type_specifier IDENTIFIER '(' parameter_list ')' '{' declarations statements '}' .
 

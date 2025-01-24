@@ -12,6 +12,18 @@
 
 %%
  loc->step ();
+"int" return yy::parser::token::INT;
+"float" return yy::parser::token::FLOAT;
+"char" return yy::parser::token::CHAR;
+"double" return yy::parser::token::DOUBLE;
+"while" return yy::parser::token::WHILE;
+"do" return yy::parser::token::DO;
+"for" return yy::parser::token::FOR;
+"if" return yy::parser::token::IF;
+"else" return yy::parser::token::ELSE;
+"return" return yy::parser::token::RETURN;
+"break" return yy::parser::token::BREAK;
+"continue" return yy::parser::token::CONTINUE;
 
 ";" return ';';
 "+" return '+';
@@ -39,15 +51,18 @@
 
 
 0|[1-9][0-9]* {
-	val->node = new CNUMBER(atoi(yytext));	
-	return yy::parser::token::NUMBER;
+	val->node = new CINTEGER(atoi(yytext));	
+	return yy::parser::token::INTEGER;
 }
 
+[1-9][0-9]*\.[0-9]+([eE][+-]?[0-9]+)? {
+	val->node = new CFLOAT(atof(yytext));
+	return yy::parser::token::FLOAT;
+}
+
+
 [a-zA-Z][a-zA-Z0-9]* {
-	//SymbolTable *symbolTable;
-	//symbolTable = SymbolTable::GetSymbolTable();
-	
-	//val->node = symbolTable->GetSymbol(yytext)->node;
+	val->node = new CIDENTIFIER(yytext);
 	return yy::parser::token::IDENTIFIER;
 }
 

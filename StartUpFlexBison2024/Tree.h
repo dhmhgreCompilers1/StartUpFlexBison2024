@@ -5,7 +5,7 @@
 #include <fstream>
 #include <stdlib.h>
 #include "SymbolTable.h"
-class CNUMBER;
+class CINTEGER;
 class CNode;
 using namespace std;
 
@@ -18,7 +18,7 @@ typedef enum NodeType {
 	COMPOUND_STATEMENT, WHILE_STATEMENT, DO_WHILE_STATEMENT, FOR_STATEMENT,
 	IF_STATEMENT, CONTINUE_STATEMENT, BREAK_STATEMENT, RETURN_STATEMENT,
 	EMPTY_STATEMENT, EXPRESSION_STATEMENT,
-	ARGUMENT_LIST, EXPRESSION, SEPARATOR, NUMBER, VARIABLE, ADDITION,
+	ARGUMENT_LIST, EXPRESSION, SEPARATOR, INTEGER_, FLOAT_, VARIABLE, ADDITION,
 	SUBTRACTION, MULTIPLICATION, DIVISION, ASSIGNMENT, EQUAL, NOT_EQUAL,
 	NEGATION, AND, OR, POWER, MODULO, NOT, GREATER, GREATER_EQUAL,
 	IDENTITY, LESS_THAN, LESS_EQUAL, GREATER_THAN, FUNCTION_CALL	
@@ -261,21 +261,27 @@ public:
 	CGreaterThan(int params, ...);
 };
 
-class CVARIABLE : public CExpression {
+class CIDENTIFIER : public CExpression {
 public:
 	string m_name;
-	CVARIABLE(string name);
+	CIDENTIFIER(string name);
 };
 
 /*class CNumberExpression : CExpression {
 public:
-	CNumberExpression(CNUMBER value);
+	CNumberExpression(CINTEGER value);
 };*/
 
-class CNUMBER : public CExpression {
+class CINTEGER : public CExpression {
 public :
-	CNUMBER(int value);
+	CINTEGER(int value);
 	int m_value;
+};
+
+class CFLOAT : public CExpression {
+public:
+    CFLOAT(float value);
+    float m_value;
 };
 
 

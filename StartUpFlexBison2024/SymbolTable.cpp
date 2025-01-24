@@ -1,5 +1,6 @@
 #include "SymbolTable.h"
 
+CScopeSystem *CScopeSystem::instance =nullptr;
 
 SymbolTable::SymbolTable(){
 	m_table = new map<std::string, CSymbol*>();

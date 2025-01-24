@@ -247,7 +247,7 @@ namespace yy {
     YYEOF = 0,                     // "end of file"
     YYerror = 256,                 // error
     YYUNDEF = 257,                 // "invalid token"
-    NUMBER = 258,                  // NUMBER
+    INTEGER = 258,                 // INTEGER
     IDENTIFIER = 259,              // IDENTIFIER
     NE = 260,                      // NE
     GE = 261,                      // GE
@@ -289,7 +289,7 @@ namespace yy {
         S_YYEOF = 0,                             // "end of file"
         S_YYerror = 1,                           // error
         S_YYUNDEF = 2,                           // "invalid token"
-        S_NUMBER = 3,                            // NUMBER
+        S_INTEGER = 3,                           // INTEGER
         S_IDENTIFIER = 4,                        // IDENTIFIER
         S_NE = 5,                                // NE
         S_GE = 6,                                // GE
@@ -614,7 +614,7 @@ namespace yy {
     // YYTABLE[YYPACT[STATE-NUM]] -- What to do in state STATE-NUM.  If
     // positive, shift that token.  If negative, reduce the rule whose
     // number is the opposite.  If YYTABLE_NINF, syntax error.
-    static const unsigned char yytable_[];
+    static const short yytable_[];
 
     static const short yycheck_[];
 
@@ -858,9 +858,9 @@ namespace yy {
     /// Constants.
     enum
     {
-      yylast_ = 760,     ///< Last index in yytable_.
+      yylast_ = 830,     ///< Last index in yytable_.
       yynnts_ = 21,  ///< Number of nonterminal symbols.
-      yyfinal_ = 53 ///< Termination state number.
+      yyfinal_ = 54 ///< Termination state number.
     };
 
 

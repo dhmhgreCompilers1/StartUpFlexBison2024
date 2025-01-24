@@ -112,6 +112,7 @@ public:
 		if (instance == nullptr) {
 			instance = new CScopeSystem();
 		}
+		return instance;
     }
 
     SymbolTable* GetCurrentScope() {

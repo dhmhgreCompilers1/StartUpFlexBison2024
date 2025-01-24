@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "grammar.tab.h"
+
 int CNode::_serialCounter = 0;
 CNode* root = NULL;
 string g_nodeNames[] = {
@@ -12,7 +14,7 @@ string g_nodeNames[] = {
     "COMPOUND_STATEMENT", "WHILE_STATEMENT", "DO_WHILE_STATEMENT", "FOR_STATEMENT",
     "IF_STATEMENT", "CONTINUE_STATEMENT", "BREAK_STATEMENT", "RETURN_STATEMENT",
 	"EMPTY_STATEMENT", "EXPRESSION_STATEMENT",
-    "ARGUMENT_LIST", "EXPRESSION", "SEPARATOR", "NUMBER", "VARIABLE", "ADDITION",
+    "ARGUMENT_LIST", "EXPRESSION", "SEPARATOR", "INTEGER", "FLOAT", "VARIABLE", "ADDITION",
     "SUBTRACTION", "MULTIPLICATION", "DIVISION", "ASSIGNMENT", "EQUAL", "NOT_EQUAL",
     "NEGATION", "AND", "OR", "POWER", "MODULO", "NOT", "GREATER", "GREATER_EQUAL",
     "IDENTITY", "LESS_THAN", "LESS_EQUAL", "GREATER_THAN", "FUNCTION_CALL"
@@ -297,14 +299,22 @@ CFunctionCall::CFunctionCall(int params, ...)
 	GETARGS(params)
 }
 
-CVARIABLE::CVARIABLE(string name) :
+CIDENTIFIER::CIDENTIFIER(string name) :
 CExpression(VARIABLE) {
 	m_name= name;
 	SetNodeName("\"" + g_nodeNames[GetNodeType()]+ "_"+ to_string(GetSerial()) +"_"+ name + "\"");
 }
 
-CNUMBER::CNUMBER(int value) :
-CExpression(NUMBER){
+CINTEGER::CINTEGER(int value) :
+CExpression(INTEGER_){
 	m_value = value;
 	SetNodeName("\"" + g_nodeNames[GetNodeType()] + "_" + to_string(GetSerial()) +"_" + to_string(value) + "\"");
 }
+
+CFLOAT::CFLOAT(float value)
+:CExpression(FLOAT_) 
+{
+	m_value = value;
+	SetNodeName("\"" + g_nodeNames[GetNodeType()] + "_" + to_string(GetSerial()) + "_" + to_string(value) + "\"");
+}
+

@@ -29,7 +29,7 @@ extern FILE *yyin;
 
 
 %start translation_unit
-%token <node> NUMBER IDENTIFIER NE GE LE AND OR INT
+%token <node> INTEGER IDENTIFIER NE GE LE AND OR INT
 FLOAT CHAR DOUBLE WHILE DO FOR IF ELSE RETURN BREAK CONTINUE
 %nonassoc IFPREC
 %right '='
@@ -150,7 +150,8 @@ expression :
   | '!' expression { $$ = new CNot(1,$2); }
   | IDENTIFIER { $$=$1; }
   | IDENTIFIER '(' argument_list ')' { $$ = new CFunctionCall(2,$1,$3); }
-  | NUMBER  	{ $$=$1; }
+  | INTEGER  	{ $$=$1; }
+  | FLOAT		{ $$=$1; }
 	;
 
 argument_list: argument_list  ',' expression  { $$ = new CArgumentList(2,$1,$3);  }
