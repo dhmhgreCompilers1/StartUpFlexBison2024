@@ -14,6 +14,7 @@ void CFacade::Parse(string sourceFileName) {
 
 	if (b_debugTree) {
 		EmitParseTree();
+		m_scopeSystem->Debug_ScopeSystem();
 	}
 }
 

@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include <list>
 #include <map>
 #include <string>
@@ -19,9 +20,9 @@ typedef enum TypeSpecifier {
 } TYPE_SPECIFIER;
 
 
-class CSymbol{
-	public:
-	string name;	
+class CSymbol {
+public:
+	string name;
 	SYMBOLTYPE type;
 	CNode* node;
 	CSymbol(string name, SYMBOLTYPE type) {
@@ -48,14 +49,14 @@ class CVariableSymbol : public CSymbol {
 	}
 public:
 	CVariableSymbol(string name, SYMBOLTYPE type) :
-	CSymbol(name, Variable) {
+		CSymbol(name, Variable) {
 	}
 };
 
 class CFunctionSymbol : public CSymbol {
 	CNode* functionBody;
 	CFunctionSymbol(string name, CNode* node, CNode* functionBody) :
-	CSymbol(name, Function) {
+		CSymbol(name, Function) {
 		this->functionBody = functionBody;
 	}
 };
@@ -67,7 +68,7 @@ class CFunctionSymbol : public CSymbol {
 	{
 	int i;			    Local Scope Level 2
 		i = 2;
-	}	
+	}
 	i +=2;
 	// i = 3
 }
@@ -78,12 +79,13 @@ class CFunctionSymbol : public CSymbol {
 
 
 class SymbolTable {
-private:	
-	SymbolTable *m_parent;
+	friend class CScopeSystem;
+private:
+	SymbolTable* m_parent;
 	list<SymbolTable*>* m_childScopes;
 	int m_level;
-	map<std::string, CSymbol*> *m_table;	
-	
+	map<std::string, CSymbol*>* m_table;
+
 public:
 	SymbolTable();
 	CSymbol* GetSymbol(string symbolName);
@@ -91,39 +93,48 @@ public:
 };
 
 class CScopeSystem {
-    map<string, SymbolTable*>* scopes;
-    SymbolTable* currentScope;
-    SymbolTable* rootScope;
+
+	map<string, SymbolTable*>* scopes;
+	SymbolTable* currentScope;
+	SymbolTable* rootScope;
 	static CScopeSystem* instance;
 
-    // Private constructor to prevent instantiation
-    CScopeSystem() {
-        scopes = new map<string, SymbolTable*>();
-        currentScope = rootScope = new SymbolTable();
-    }
+	// Private constructor to prevent instantiation
+	CScopeSystem() {
+		scopes = new map<string, SymbolTable*>();
+		currentScope = rootScope = new SymbolTable();
+	}
 
-    // Delete copy constructor and assignment operator
+	// Delete copy constructor and assignment operator
 	CScopeSystem(const CScopeSystem&) = delete;
-    CScopeSystem& operator=(const CScopeSystem&) = delete;
+	CScopeSystem& operator=(const CScopeSystem&) = delete;
 
 public:
-    // Static method to get the single instance of the class
-    static CScopeSystem* GetInstance() {
+	// Static method to get the single instance of the class
+	static CScopeSystem* GetInstance() {
 		if (instance == nullptr) {
 			instance = new CScopeSystem();
 		}
 		return instance;
-    }
+	}
 
-    SymbolTable* GetCurrentScope() {
-        return currentScope;
-    }
+	void Debug_ScopeSystem() {
+		// Debugging function to print the symbol tables
+		PrintScope(rootScope, 0);
+	}
 
-    void EnterScope() {
-        // Implementation for entering a new scope
-    }
+private:
+	void PrintScope(SymbolTable* scope, int level);
 
-    void LeaveScope() {
-        // Implementation for leaving the current scope
-    }
+	SymbolTable* GetCurrentScope() {
+		return currentScope;
+	}
+
+	void EnterScope() {
+		// Implementation for entering a new scope
+	}
+
+	void LeaveScope() {
+		// Implementation for leaving the current scope
+	}
 };
