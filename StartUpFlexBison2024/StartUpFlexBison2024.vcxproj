@@ -135,6 +135,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EvaluatePass.cpp" />
+    <ClCompile Include="Facade.cpp" />
     <ClCompile Include="Grammar.flex.cpp" />
     <ClCompile Include="Grammar.tab.cpp" />
     <ClCompile Include="main.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Tree.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Facade.h" />
     <ClInclude Include="Grammar.tab.h" />
     <ClInclude Include="location.hh" />
     <ClInclude Include="position.hh" />

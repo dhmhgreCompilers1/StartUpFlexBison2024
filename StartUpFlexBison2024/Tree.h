@@ -52,6 +52,7 @@ protected:
 class CTranslationUnit : public CNode {
 public:
 	CONSTRUCTOR(CTranslationUnit)
+	// CTranslationUnit(int params, ...);
 };
 
 class CDeclarations : public CNode{
@@ -86,7 +87,7 @@ public:
 
 class CTypeSpecifier : public CNode {
 public:
-	CONSTRUCTOR(CTypeSpecifier)
+	CTypeSpecifier(TYPE_SPECIFIER typespecifier);
 };
 
 class CStatements : public CNode {

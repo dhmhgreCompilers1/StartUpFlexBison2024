@@ -84,6 +84,15 @@ va_end(args);
 CTranslationUnit::CTranslationUnit(int params,...) :
 CNode(TRANSLATION_UNIT) {
 	GETARGS(params)
+	// va_list args;
+	// va_start(args, params);
+	// CNode* child;
+	// for (int i = 0; i < params; i++) {
+	// 	child = va_arg(args, CNode*);
+	// 	_children->push_back(child);
+	// 	child->SetParent(this);
+	//
+	// va_end(args);
 }
 
 CDeclarations::CDeclarations(int params,...) :

@@ -871,10 +871,10 @@ case 24:
 YY_RULE_SETUP
 #line 47 "Grammar.l"
 {
-	SymbolTable *symbolTable;
-	symbolTable = SymbolTable::GetSymbolTable();
+	//SymbolTable *symbolTable;
+	//symbolTable = SymbolTable::GetSymbolTable();
 	
-	val->node = symbolTable->GetSymbol(yytext)->node;
+	//val->node = symbolTable->GetSymbol(yytext)->node;
 	return yy::parser::token::IDENTIFIER;
 }
 	YY_BREAK

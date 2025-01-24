@@ -1,6 +1,5 @@
 #include "SymbolTable.h"
 
-SymbolTable* SymbolTable::ms_instance = NULL;
 
 SymbolTable::SymbolTable(){
 	m_table = new map<std::string, CSymbol*>();
@@ -16,5 +15,9 @@ CSymbol* SymbolTable::GetSymbol(string symbolName) {
 		m_table->insert(pair<string, CSymbol*>(symbolName, node));
 		return node;
 	}
+}
+
+void SymbolTable::AddSymbol(CSymbol* symbol) {
+	m_table->insert(pair<string, CSymbol*>(symbol->GetName(), symbol));
 }
 

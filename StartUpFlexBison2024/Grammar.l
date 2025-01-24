@@ -44,10 +44,10 @@
 }
 
 [a-zA-Z][a-zA-Z0-9]* {
-	SymbolTable *symbolTable;
-	symbolTable = SymbolTable::GetSymbolTable();
+	//SymbolTable *symbolTable;
+	//symbolTable = SymbolTable::GetSymbolTable();
 	
-	val->node = symbolTable->GetSymbol(yytext)->node;
+	//val->node = symbolTable->GetSymbol(yytext)->node;
 	return yy::parser::token::IDENTIFIER;
 }
 

@@ -1,23 +1,8 @@
-#include <iostream>
-#include <fstream>
+#include "Facade.h"
 #include "grammar.tab.h"
-extern FILE* yyin;
-
-int i;
-int j = i;
 
 int main(int argc, char** argv) {
-	CNode *_root;
-	ofstream *dotFile = new ofstream("graph.dot", ios::out);
-	fopen_s(&yyin, argv[1], "r");
-	yy::parser parser;
-	parser.parse();
-	_root = root;
-
-	(*dotFile) << "digraph G{\n";
-	root->PrintSyntaxTree(dotFile,NULL);
-	(*dotFile) << "}\n";
-	dotFile->close();
-	system("dot -Tgif graph.dot -o graph.gif");
+	CFacade* facade = new CFacade(true);
+	facade->Parse(argv[1]);
 	return 0;
 }
